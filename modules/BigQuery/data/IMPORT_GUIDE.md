@@ -7,11 +7,11 @@ This guide walks you through importing the sample datasets into **Google BigQuer
 ## 1. Dataset Overview
 
 The sample datasets are provided in two formats:
-* 📄 [`transactions.csv`](file:///Users/benjixxx/gcp-revision/data/transactions.csv) (Standard CSV with headers)
-* 📄 [`transactions.jsonl`](file:///Users/benjixxx/gcp-revision/data/transactions.jsonl) (Newline-delimited JSON)
+* [`transactions.csv`](./transactions.csv) (Standard CSV with headers)
+* [`transactions.jsonl`](./transactions.jsonl) (Newline-delimited JSON)
 
 ### Schema Definition
-Matches the Terraform definition in [`modules/database/main.tf`](file:///Users/benjixxx/gcp-revision/modules/database/main.tf):
+Matches the Terraform definition in [`modules/BigQuery/main.tf`](../main.tf):
 
 | Column Name | Type | Mode | Role |
 | :--- | :--- | :--- | :--- |
@@ -27,7 +27,7 @@ Matches the Terraform definition in [`modules/database/main.tf`](file:///Users/b
 
 ### Step 2.1 Set Environment Variables
 ```bash
-cd /Users/benjixxx/gcp-revision/data
+cd modules/BigQuery/data
 
 export PROJECT_ID=$(gcloud config get-value project)
 export DATASET_ID="analytics_dw"
@@ -44,7 +44,7 @@ bq mk --dataset \
 ```
 
 ### Step 2.3 Option A: Import CSV File Directly (Local File)
-Run this command from `/Users/benjixxx/gcp-revision/data`:
+Run this command from `modules/BigQuery/data`:
 
 ```bash
 bq load \

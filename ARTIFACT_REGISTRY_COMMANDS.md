@@ -10,7 +10,7 @@ Set your working environment variables in your terminal:
 
 ```bash
 # Navigate to the application directory
-cd /Users/benjixxx/gcp-revision/app
+cd app
 
 # Set environment variables
 export PROJECT_ID=$(gcloud config get-value project)
@@ -47,7 +47,7 @@ gcloud artifacts repositories create ${REPO_NAME} \
 > **Key Advantage:** Does not require Docker or Docker Desktop to be installed or running locally. Google Cloud handles the container compilation and push remotely in the cloud.
 
 ```bash
-cd /Users/benjixxx/gcp-revision/app
+cd app
 
 gcloud builds submit \
   --tag ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${TAG} .
@@ -66,7 +66,7 @@ gcloud auth configure-docker ${REGION}-docker.pkg.dev
 
 ### 3.2 Build the Docker Image Locally
 ```bash
-cd /Users/benjixxx/gcp-revision/app
+cd app
 
 docker build -t ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${TAG} .
 ```

@@ -186,19 +186,17 @@ BigQuery separates compute from storage completely:
 
 ---
 
-## 6. Hands-On Lab: Sample Dataset & Import
 ## Hands-On Lab: Sample Dataset & Import
 
-Sample datasets matching this module's Terraform schema are stored in [`data/`](file:///Users/benjixxx/gcp-revision/modules/database/data):
-Sample datasets matching this module's schema are stored in [`data/`](file:///Users/benjixxx/gcp-revision/modules/database/data):
-* 📄 [`data/transactions.csv`](file:///Users/benjixxx/gcp-revision/modules/database/data/transactions.csv) (CSV format)
-* 📄 [`data/transactions.jsonl`](file:///Users/benjixxx/gcp-revision/modules/database/data/transactions.jsonl) (Newline-delimited JSON)
+Sample datasets matching this module's schema are stored in [`data/`](./data):
+* [`data/transactions.csv`](./data/transactions.csv) (CSV format)
+* [`data/transactions.jsonl`](./data/transactions.jsonl) (Newline-delimited JSON)
 
 ### One-Liner Import Command
-Run from the `modules/database` directory:
+Run from the `modules/BigQuery` directory:
 
 ```bash
-cd /Users/benjixxx/gcp-revision/modules/database
+cd modules/BigQuery
 
 # 1. Create dataset (if needed)
 bq mk --dataset --location=EU $(gcloud config get-value project):analytics_dw

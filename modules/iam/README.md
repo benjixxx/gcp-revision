@@ -53,7 +53,7 @@ This module provisions a dedicated **Terraform Service Account** and grants full
 | :--- | :--- | :--- | :--- |
 | `project_id` | Target GCP Project ID | `string` | *(Required)* |
 | `sa_id` | Unique account ID for the Terraform Service Account | `string` | `"terraform-sa"` |
-| `personal_user_email` | Personal Google user email to bind to roles & impersonation | `string` | `"benjamin.laurent59@gmail.com"` |
+| `personal_user_email` | Personal Google user email to bind to roles & impersonation | `string` | `""` |
 | `additional_roles` | Optional list of extra roles to bind | `list(string)` | `[]` |
 
 ### Outputs
