@@ -36,10 +36,11 @@ help:
 	@echo "Examples:"
 	@echo "  make plan iam                 # Plan only module.iam"
 	@echo "  make apply iam                # Apply only module.iam"
-	@echo "  make plan network             # Plan only module.network"
-	@echo "  make apply serverless         # Apply only module.serverless"
+	@echo "  make destroy iam              # Destroy only module.iam (or make destroy-iam)"
 	@echo "  make plan bigquery            # Plan only module.bigquery"
-	@echo "  make destroy compute_engine   # Destroy only module.compute_engine"
+	@echo "  make apply bigquery           # Apply only module.bigquery"
+	@echo "  make destroy bigquery         # Destroy only module.bigquery (or make destroy-bigquery)"
+	@echo "  make destroy serverless       # Destroy only module.serverless (or make destroy-serverless)"
 	@echo ""
 	@echo "Available Modules:"
 	@echo "  - iam"
@@ -113,11 +114,17 @@ plan-iam:
 apply-iam:
 	terraform apply -var-file=$(VAR_FILE) -target=module.iam
 
+destroy-iam:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.iam
+
 plan-network:
 	terraform plan -var-file=$(VAR_FILE) -target=module.network
 
 apply-network:
 	terraform apply -var-file=$(VAR_FILE) -target=module.network
+
+destroy-network:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.network
 
 plan-storage:
 	terraform plan -var-file=$(VAR_FILE) -target=module.cloud_storage
@@ -125,11 +132,29 @@ plan-storage:
 apply-storage:
 	terraform apply -var-file=$(VAR_FILE) -target=module.cloud_storage
 
+destroy-storage:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.cloud_storage
+
+destroy-cloud-storage:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.cloud_storage
+
+destroy-cloud_storage:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.cloud_storage
+
 plan-compute:
 	terraform plan -var-file=$(VAR_FILE) -target=module.compute_engine
 
 apply-compute:
 	terraform apply -var-file=$(VAR_FILE) -target=module.compute_engine
+
+destroy-compute:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.compute_engine
+
+destroy-compute-engine:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.compute_engine
+
+destroy-compute_engine:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.compute_engine
 
 plan-gke:
 	terraform plan -var-file=$(VAR_FILE) -target=module.gke
@@ -137,15 +162,25 @@ plan-gke:
 apply-gke:
 	terraform apply -var-file=$(VAR_FILE) -target=module.gke
 
+destroy-gke:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.gke
+
 plan-serverless:
 	terraform plan -var-file=$(VAR_FILE) -target=module.serverless
 
 apply-serverless:
 	terraform apply -var-file=$(VAR_FILE) -target=module.serverless
 
+destroy-serverless:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.serverless
+
 plan-bigquery:
 	terraform plan -var-file=$(VAR_FILE) -target=module.bigquery
 
 apply-bigquery:
 	terraform apply -var-file=$(VAR_FILE) -target=module.bigquery
+
+destroy-bigquery:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.bigquery
+
 
