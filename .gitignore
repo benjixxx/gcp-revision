@@ -1,0 +1,82 @@
+# ===============================
+# Terraform Ignore Rules
+# ===============================
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files (CRITICAL: can contain plain text secrets)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude sensitive tfvars files that might hold real credentials
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# ===============================
+# Python Ignore Rules
+# ===============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# ===============================
+# Secrets & Environment Files
+# ===============================
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.p12
+
+# Service Account JSON keys (Crucial for GCP)
+*service_account*.json
+*credentials*.json
+*-key.json
+
+# ===============================
+# Operating System & IDE Files
+# ===============================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
