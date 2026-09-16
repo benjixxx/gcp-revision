@@ -18,4 +18,3 @@
 {"transaction_id": "TXN-1018", "customer_id": "CUST-004", "amount": 950.00, "status": "COMPLETED", "transaction_timestamp": "2026-09-16T17:15:30Z"}
 {"transaction_id": "TXN-1019", "customer_id": "CUST-006", "amount": 35.50, "status": "FAILED", "transaction_timestamp": "2026-09-16T18:50:45Z"}
 {"transaction_id": "TXN-1020", "customer_id": "CUST-001", "amount": 210.00, "status": "COMPLETED", "transaction_timestamp": "2026-09-16T20:10:00Z"}
-
