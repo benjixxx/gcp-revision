@@ -124,3 +124,31 @@ This module provisions Google Cloud Database and Analytics resources, focusing o
 | `gcloud spanner instances list` | List Cloud Spanner instances and node counts. |
 | `gcloud services enable bigquery.googleapis.com sqladmin.googleapis.com` | Enable BigQuery and Cloud SQL APIs. |
 
+---
+
+## 6. Hands-On Lab: Sample Dataset & Import
+
+Sample datasets matching this module's Terraform schema are stored in [`data/`](file:///Users/benjixxx/gcp-revision/modules/database/data):
+* 📄 [`data/transactions.csv`](file:///Users/benjixxx/gcp-revision/modules/database/data/transactions.csv) (CSV format)
+* 📄 [`data/transactions.jsonl`](file:///Users/benjixxx/gcp-revision/modules/database/data/transactions.jsonl) (Newline-delimited JSON)
+
+### One-Liner Import Command
+Run from the `modules/database` directory:
+
+```bash
+cd /Users/benjixxx/gcp-revision/modules/database
+
+# 1. Create dataset (if needed)
+bq mk --dataset --location=EU $(gcloud config get-value project):analytics_dw
+
+# 2. Load CSV directly with Partitioning and Clustering
+bq load \
+  --source_format=CSV \
+  --skip_leading_rows=1 \
+  --time_partitioning_field=transaction_timestamp \
+  --time_partitioning_type=DAY \
+  --clustering_fields=customer_id,status \
+  $(gcloud config get-value project):analytics_dw.transactions \
+  ./data/transactions.csv \
+  transaction_id:STRING,customer_id:STRING,amount:NUMERIC,status:STRING,transaction_timestamp:TIMESTAMP
+```

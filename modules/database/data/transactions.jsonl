@@ -1,0 +1,21 @@
+{"transaction_id": "TXN-1001", "customer_id": "CUST-001", "amount": 149.50, "status": "COMPLETED", "transaction_timestamp": "2026-09-14T08:15:30Z"}
+{"transaction_id": "TXN-1002", "customer_id": "CUST-002", "amount": 29.99, "status": "COMPLETED", "transaction_timestamp": "2026-09-14T09:22:10Z"}
+{"transaction_id": "TXN-1003", "customer_id": "CUST-001", "amount": 450.00, "status": "PENDING", "transaction_timestamp": "2026-09-14T11:05:45Z"}
+{"transaction_id": "TXN-1004", "customer_id": "CUST-003", "amount": 12.00, "status": "FAILED", "transaction_timestamp": "2026-09-14T14:40:12Z"}
+{"transaction_id": "TXN-1005", "customer_id": "CUST-004", "amount": 99.90, "status": "COMPLETED", "transaction_timestamp": "2026-09-14T18:50:00Z"}
+{"transaction_id": "TXN-1006", "customer_id": "CUST-002", "amount": 85.20, "status": "COMPLETED", "transaction_timestamp": "2026-09-15T07:10:15Z"}
+{"transaction_id": "TXN-1007", "customer_id": "CUST-005", "amount": 1250.00, "status": "COMPLETED", "transaction_timestamp": "2026-09-15T10:30:00Z"}
+{"transaction_id": "TXN-1008", "customer_id": "CUST-003", "amount": 64.75, "status": "FAILED", "transaction_timestamp": "2026-09-15T12:15:20Z"}
+{"transaction_id": "TXN-1009", "customer_id": "CUST-001", "amount": 310.50, "status": "COMPLETED", "transaction_timestamp": "2026-09-15T15:45:00Z"}
+{"transaction_id": "TXN-1010", "customer_id": "CUST-004", "amount": 22.00, "status": "PENDING", "transaction_timestamp": "2026-09-15T19:20:10Z"}
+{"transaction_id": "TXN-1011", "customer_id": "CUST-002", "amount": 18.50, "status": "COMPLETED", "transaction_timestamp": "2026-09-16T06:45:12Z"}
+{"transaction_id": "TXN-1012", "customer_id": "CUST-006", "amount": 540.00, "status": "COMPLETED", "transaction_timestamp": "2026-09-16T08:30:25Z"}
+{"transaction_id": "TXN-1013", "customer_id": "CUST-005", "amount": 89.00, "status": "FAILED", "transaction_timestamp": "2026-09-16T10:12:00Z"}
+{"transaction_id": "TXN-1014", "customer_id": "CUST-001", "amount": 75.25, "status": "COMPLETED", "transaction_timestamp": "2026-09-16T11:55:40Z"}
+{"transaction_id": "TXN-1015", "customer_id": "CUST-003", "amount": 320.00, "status": "COMPLETED", "transaction_timestamp": "2026-09-16T13:20:15Z"}
+{"transaction_id": "TXN-1016", "customer_id": "CUST-007", "amount": 45.00, "status": "PENDING", "transaction_timestamp": "2026-09-16T15:05:00Z"}
+{"transaction_id": "TXN-1017", "customer_id": "CUST-002", "amount": 110.00, "status": "COMPLETED", "transaction_timestamp": "2026-09-16T16:40:22Z"}
+{"transaction_id": "TXN-1018", "customer_id": "CUST-004", "amount": 950.00, "status": "COMPLETED", "transaction_timestamp": "2026-09-16T17:15:30Z"}
+{"transaction_id": "TXN-1019", "customer_id": "CUST-006", "amount": 35.50, "status": "FAILED", "transaction_timestamp": "2026-09-16T18:50:45Z"}
+{"transaction_id": "TXN-1020", "customer_id": "CUST-001", "amount": 210.00, "status": "COMPLETED", "transaction_timestamp": "2026-09-16T20:10:00Z"}
+
