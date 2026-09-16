@@ -4,109 +4,64 @@
 
 VAR_FILE := ./gcp.tfvars
 
-# Capture module argument from commands like:
-#   $ make plan iam
-#   $ make apply iam
-#   $ make destroy serverless
-SUPPORTED_ACTIONS := plan apply destroy
-FIRST_GOAL        := $(firstword $(MAKECMDGOALS))
-
-ifneq ($(filter $(FIRST_GOAL),$(SUPPORTED_ACTIONS)),)
-  TARGET_MODULE := $(word 2,$(MAKECMDGOALS))
-  # Treat the module name as a no-op target so Make doesn't error out
-  $(eval $(TARGET_MODULE):;@:)
-endif
-
-# Normalize module name (replace '-' with '_', e.g. cloud-storage -> cloud_storage)
-SELECTED_MOD := $(or $(TARGET_MODULE),$(MODULE))
-CLEAN_MOD    := $(subst -,_,$(SELECTED_MOD))
-
-.PHONY: help init fmt validate plan apply destroy
+.PHONY: help init fmt validate \
+        plan apply destroy \
+        plan-iam apply-iam destroy-iam \
+        plan-network apply-network destroy-network \
+        plan-storage apply-storage destroy-storage \
+        plan-compute apply-compute destroy-compute \
+        plan-gke apply-gke destroy-gke \
+        plan-serverless apply-serverless destroy-serverless \
+        plan-bigquery apply-bigquery destroy-bigquery
 
 # ------------------------------------------------------------------------------
-# Default Help Menu
+# Help Menu
 # ------------------------------------------------------------------------------
 help:
 	@echo "=================================================================="
 	@echo "              GCP Terraform Automation Helper                     "
 	@echo "=================================================================="
-	@echo "Usage Syntax:"
-	@echo "  make <action> <module>"
+	@echo "Global Commands:"
+	@echo "  make init                 # Initialize Terraform"
+	@echo "  make plan                 # Plan all modules"
+	@echo "  make apply                # Apply all modules"
+	@echo "  make destroy              # Destroy all modules"
+	@echo "  make fmt                  # Format all terraform files"
+	@echo "  make validate             # Validate configuration"
 	@echo ""
-	@echo "Examples:"
-	@echo "  make plan iam                 # Plan only module.iam"
-	@echo "  make apply iam                # Apply only module.iam"
-	@echo "  make destroy iam              # Destroy only module.iam (or make destroy-iam)"
-	@echo "  make plan bigquery            # Plan only module.bigquery"
-	@echo "  make apply bigquery           # Apply only module.bigquery"
-	@echo "  make destroy bigquery         # Destroy only module.bigquery (or make destroy-bigquery)"
-	@echo "  make destroy serverless       # Destroy only module.serverless (or make destroy-serverless)"
-	@echo ""
-	@echo "Available Modules:"
-	@echo "  - iam"
-	@echo "  - network"
-	@echo "  - cloud_storage  (or cloud-storage)"
-	@echo "  - compute_engine (or compute-engine)"
-	@echo "  - gke"
-	@echo "  - serverless"
-	@echo "  - bigquery"
-	@echo ""
-	@echo "Full Infrastructure Commands:"
-	@echo "  make init                     # Run terraform init"
-	@echo "  make plan                     # Plan entire infrastructure"
-	@echo "  make apply                    # Apply entire infrastructure"
-	@echo "  make destroy                  # Destroy entire infrastructure"
-	@echo "  make fmt                      # Format all terraform files"
-	@echo "  make validate                 # Validate terraform configuration"
+	@echo "Module Commands (Plan | Apply | Destroy):"
+	@echo "  make plan-iam             | make apply-iam             | make destroy-iam"
+	@echo "  make plan-network         | make apply-network         | make destroy-network"
+	@echo "  make plan-storage         | make apply-storage         | make destroy-storage"
+	@echo "  make plan-compute         | make apply-compute         | make destroy-compute"
+	@echo "  make plan-gke             | make apply-gke             | make destroy-gke"
+	@echo "  make plan-serverless      | make apply-serverless      | make destroy-serverless"
+	@echo "  make plan-bigquery        | make apply-bigquery        | make destroy-bigquery"
 	@echo "=================================================================="
 
 # ------------------------------------------------------------------------------
-# Core Terraform Commands
+# Core Global Commands
 # ------------------------------------------------------------------------------
 init:
-	@echo "==> Initializing Terraform..."
 	terraform init
 
 fmt:
-	@echo "==> Formatting Terraform files..."
 	terraform fmt -recursive
 
 validate:
-	@echo "==> Validating Terraform files..."
 	terraform validate
 
-# ------------------------------------------------------------------------------
-# Dynamic Plan / Apply / Destroy
-# ------------------------------------------------------------------------------
 plan:
-	@if [ -z "$(CLEAN_MOD)" ]; then \
-		echo "==> Planning ALL infrastructure..."; \
-		terraform plan -var-file=$(VAR_FILE); \
-	else \
-		echo "==> Planning target: module.$(CLEAN_MOD)..."; \
-		terraform plan -var-file=$(VAR_FILE) -target=module.$(CLEAN_MOD); \
-	fi
+	terraform plan -var-file=$(VAR_FILE)
 
 apply:
-	@if [ -z "$(CLEAN_MOD)" ]; then \
-		echo "==> Applying ALL infrastructure..."; \
-		terraform apply -var-file=$(VAR_FILE); \
-	else \
-		echo "==> Applying target: module.$(CLEAN_MOD)..."; \
-		terraform apply -var-file=$(VAR_FILE) -target=module.$(CLEAN_MOD); \
-	fi
+	terraform apply -var-file=$(VAR_FILE)
 
 destroy:
-	@if [ -z "$(CLEAN_MOD)" ]; then \
-		echo "==> WARNING: Destroying ALL infrastructure..."; \
-		terraform destroy -var-file=$(VAR_FILE); \
-	else \
-		echo "==> Destroying target: module.$(CLEAN_MOD)..."; \
-		terraform destroy -var-file=$(VAR_FILE) -target=module.$(CLEAN_MOD); \
-	fi
+	terraform destroy -var-file=$(VAR_FILE)
 
 # ------------------------------------------------------------------------------
-# Direct Shortcut Targets (e.g., make plan-iam, make apply-iam)
+# IAM Module
 # ------------------------------------------------------------------------------
 plan-iam:
 	terraform plan -var-file=$(VAR_FILE) -target=module.iam
@@ -117,6 +72,9 @@ apply-iam:
 destroy-iam:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.iam
 
+# ------------------------------------------------------------------------------
+# Network Module
+# ------------------------------------------------------------------------------
 plan-network:
 	terraform plan -var-file=$(VAR_FILE) -target=module.network
 
@@ -126,6 +84,9 @@ apply-network:
 destroy-network:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.network
 
+# ------------------------------------------------------------------------------
+# Cloud Storage Module
+# ------------------------------------------------------------------------------
 plan-storage:
 	terraform plan -var-file=$(VAR_FILE) -target=module.cloud_storage
 
@@ -135,12 +96,9 @@ apply-storage:
 destroy-storage:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.cloud_storage
 
-destroy-cloud-storage:
-	terraform destroy -var-file=$(VAR_FILE) -target=module.cloud_storage
-
-destroy-cloud_storage:
-	terraform destroy -var-file=$(VAR_FILE) -target=module.cloud_storage
-
+# ------------------------------------------------------------------------------
+# Compute Engine Module
+# ------------------------------------------------------------------------------
 plan-compute:
 	terraform plan -var-file=$(VAR_FILE) -target=module.compute_engine
 
@@ -150,12 +108,9 @@ apply-compute:
 destroy-compute:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.compute_engine
 
-destroy-compute-engine:
-	terraform destroy -var-file=$(VAR_FILE) -target=module.compute_engine
-
-destroy-compute_engine:
-	terraform destroy -var-file=$(VAR_FILE) -target=module.compute_engine
-
+# ------------------------------------------------------------------------------
+# GKE Module
+# ------------------------------------------------------------------------------
 plan-gke:
 	terraform plan -var-file=$(VAR_FILE) -target=module.gke
 
@@ -165,6 +120,9 @@ apply-gke:
 destroy-gke:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.gke
 
+# ------------------------------------------------------------------------------
+# Serverless Module (Cloud Run)
+# ------------------------------------------------------------------------------
 plan-serverless:
 	terraform plan -var-file=$(VAR_FILE) -target=module.serverless
 
@@ -174,6 +132,9 @@ apply-serverless:
 destroy-serverless:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.serverless
 
+# ------------------------------------------------------------------------------
+# BigQuery Module
+# ------------------------------------------------------------------------------
 plan-bigquery:
 	terraform plan -var-file=$(VAR_FILE) -target=module.bigquery
 
@@ -182,5 +143,3 @@ apply-bigquery:
 
 destroy-bigquery:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.bigquery
-
-
