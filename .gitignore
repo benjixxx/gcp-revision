@@ -10,6 +10,9 @@
 *.tfstate.backup
 .terraform.lock.hcl
 
+# exclude gcp vars
+gcp.tfvars
+
 # Crash log files
 crash.log
 crash.*.log

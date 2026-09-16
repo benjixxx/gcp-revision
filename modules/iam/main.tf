@@ -52,16 +52,6 @@ resource "google_project_iam_member" "terraform_sa_bindings" {
   member  = "serviceAccount:${google_service_account.terraform_sa.email}"
 }
 
-# ==============================================================================
-# 4. Project IAM Role Bindings for Personal Google Account
-# ==============================================================================
-resource "google_project_iam_member" "personal_user_bindings" {
-  for_each = var.personal_user_email != "" ? toset(local.terraform_roles) : toset([])
-
-  project = var.project_id
-  role    = each.value
-  member  = "user:${var.personal_user_email}"
-}
 
 # ==============================================================================
 # 5. Service Account Impersonation Permissions (Security Best Practice)

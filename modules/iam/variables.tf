@@ -5,13 +5,11 @@ variable "project_id" {
 
 variable "sa_id" {
   type        = string
-  default     = "terraform-sa"
   description = "Unique ID / name for the Terraform Service Account"
 }
 
 variable "personal_user_email" {
   type        = string
-  default     = "benjamin.laurent59@gmail.com"
   description = "Personal Google account email to receive direct role bindings and impersonation permissions"
 }
 
