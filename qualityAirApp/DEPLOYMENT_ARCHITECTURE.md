@@ -29,7 +29,7 @@ flowchart TD
         end
 
         subgraph LB_Layer ["Cloud HTTP(S) Load Balancing (Global)"]
-            FR["Global Forwarding Rule<br/>IP: 34.110.164.113 : Port 80"]
+            FR["Global Forwarding Rule<br/>Port 80 (Dynamic External IP)"]
             Proxy["Target HTTP Proxy<br/>(qualityair-vm-http-proxy)"]
             URLMap["URL Map<br/>(qualityair-vm-url-map)"]
             BackendSvc["Backend Service<br/>(qualityair-vm-backend)<br/>Port: 8080 | Mode: UTILIZATION"]
@@ -81,7 +81,7 @@ The following sequence diagram outlines how an end-user request travels through 
 sequenceDiagram
     autonumber
     actor User as Client Browser
-    participant GFE as Google Front End (GFE) / LB<br/>(34.110.164.113:80)
+    participant GFE as Google Front End (GFE) / LB<br/>(Port 80 Frontend)
     participant FW as VPC Firewall
     participant Gunicorn as VM Gunicorn / Flask<br/>(Port 8080)
     participant API as Open-Meteo Air Quality API
@@ -137,7 +137,7 @@ sequenceDiagram
 
 | Component | Technical Specification | GCP Resource |
 | :--- | :--- | :--- |
-| **Public Frontend IP** | `34.110.164.113` (Port 80) | `google_compute_global_forwarding_rule` |
+| **Public Frontend IP** | Dynamic External IP (Port 80) — Query via CLI | `google_compute_global_forwarding_rule` |
 | **HTTP Proxy & Routing** | Global URL Map & Target HTTP Proxy | `google_compute_target_http_proxy`, `google_compute_url_map` |
 | **Backend Service** | Port 8080, Protocol HTTP, Balancing Mode `UTILIZATION` | `google_compute_backend_service` |
 | **Health Check** | HTTP `GET /health` on port 8080, interval 5s, timeout 3s | `google_compute_health_check` |
@@ -162,6 +162,26 @@ sequenceDiagram
 ---
 
 ## 6. Operational Playbook
+
+### Retrieve the Load Balancer Public IP Address
+Use any of the following commands to fetch the dynamic public IP assigned to your Load Balancer:
+
+```bash
+# 1. Directly fetch only the IP via gcloud:
+gcloud compute forwarding-rules describe qualityair-vm-forwarding-rule --global --format="value(IPAddress)"
+
+# 2. Or list all forwarding rules:
+gcloud compute forwarding-rules list --global
+
+# 3. Or retrieve via Terraform outputs:
+terraform output load_balancer_ip
+```
+
+### Open the Application Dashboard Directly
+You can open the active frontend in your Mac browser without copying/pasting the IP:
+```bash
+open "http://$(gcloud compute forwarding-rules describe qualityair-vm-forwarding-rule --global --format='value(IPAddress)')"
+```
 
 ### Check Load Balancer Health Status
 ```bash
