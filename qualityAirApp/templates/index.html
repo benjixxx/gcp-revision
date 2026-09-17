@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Air Quality Dashboard | GCP Compute Engine & LB Monitor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            padding-bottom: 3rem;
+        }
+
+        .navbar-custom {
+            background-color: #0b1120;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .card-custom {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card-custom:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .badge-success { background-color: #15803d; color: #fff; }
+        .badge-info { background-color: #0284c7; color: #fff; }
+        .badge-warning { background-color: #d97706; color: #fff; }
+        .badge-orange { background-color: #ea580c; color: #fff; }
+        .badge-danger { background-color: #dc2626; color: #fff; }
+        .badge-dark { background-color: #7f1d1d; color: #fff; }
+        .badge-secondary { background-color: #475569; color: #fff; }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+        }
+
+        .stat-label {
+            font-size: 0.825rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .metric-pill {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .node-highlight {
+            background: linear-gradient(135deg, #1e3a8a, #0284c7);
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 0.4rem 0.8rem;
+            font-weight: 600;
+            font-family: monospace;
+            display: inline-block;
+        }
+
+        .progress-thin {
+            height: 6px;
+            background-color: #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-custom navbar-dark py-3 mb-4">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <i class="bi bi-clouds-fill text-info fs-3"></i>
+                <div>
+                    <span class="fw-bold">AirQuality<span class="text-info">App</span></span>
+                    <small class="d-block text-secondary" style="font-size: 0.75rem;">GCP Compute Engine &amp; Load Balancer Target</small>
+                </div>
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <a href="/health" class="btn btn-sm btn-outline-success" target="_blank">
+                    <i class="bi bi-heart-pulse-fill me-1"></i>/health
+                </a>
+                <a href="/api/air-quality" class="btn btn-sm btn-outline-info" target="_blank">
+                    <i class="bi bi-code-slash me-1"></i>/api/air-quality
+                </a>
+                <button class="btn btn-sm btn-primary" onclick="window.location.reload();">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Top Row: Load Balancer & Compute Engine Diagnostic Bar -->
+        <div class="row g-3 mb-4">
+            <!-- Node Identification Card -->
+            <div class="col-lg-7">
+                <div class="card card-custom p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="stat-label"><i class="bi bi-server me-1"></i>Serving Compute Instance (Load Balancer Node)</span>
+                        <span class="badge bg-primary">HTTP 200</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+                        <span class="node-highlight fs-5">
+                            <i class="bi bi-cpu me-1"></i>{{ instance.instance_name }}
+                        </span>
+                        <span class="badge bg-secondary">Zone: {{ instance.zone }}</span>
+                        <span class="badge bg-secondary">IP: {{ instance.internal_ip }}</span>
+                        <span class="badge bg-dark border border-secondary">Node Requests: {{ request_count }}</span>
+                    </div>
+                    <div class="row g-2 text-secondary small pt-2 border-top border-secondary">
+                        <div class="col-sm-6">
+                            <strong>Client / Proxy IP:</strong> <code>{{ client_ip }}</code>
+                        </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <strong>Node Uptime:</strong> {{ instance.uptime_seconds }}s
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compute Engine Resource Metrics Card -->
+            <div class="col-lg-5">
+                <div class="card card-custom p-3 h-100">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="stat-label"><i class="bi bi-speedometer2 me-1"></i>Compute Engine Telemetry</span>
+                        <span class="text-secondary small">{{ instance.machine_type }}</span>
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-4">
+                            <div class="metric-pill text-center">
+                                <small class="text-secondary d-block">Load 1m</small>
+                                <span class="fw-bold fs-6">{{ metrics.load_avg_1m }}</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="metric-pill text-center">
+                                <small class="text-secondary d-block">Load 5m</small>
+                                <span class="fw-bold fs-6">{{ metrics.load_avg_5m }}</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="metric-pill text-center">
+                                <small class="text-secondary d-block">Load 15m</small>
+                                <span class="fw-bold fs-6">{{ metrics.load_avg_15m }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between text-secondary small mb-1">
+                            <span>RAM Usage</span>
+                            <span>{{ metrics.memory_used_pct }}%</span>
+                        </div>
+                        <div class="progress progress-thin">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ metrics.memory_used_pct }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Outbound Network Egress Diagnostics Banner -->
+        <div class="row mb-4">
+            <div class="col-12">
+                {% if aqi_data.egress_ok %}
+                <div class="alert alert-success d-flex align-items-center justify-content-between m-0 border-0 bg-opacity-25 bg-success text-white py-2 px-3 rounded-3" role="alert">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        <div>
+                            <strong>Network Egress: CONNECTED</strong> — Outbound API calls to Open-Meteo succeeded (Latency: {{ aqi_data.api_latency_ms }} ms).
+                        </div>
+                    </div>
+                    <small class="text-light opacity-75">Updated: {{ aqi_data.fetched_at }}</small>
+                </div>
+                {% else %}
+                <div class="alert alert-warning border-0 bg-opacity-25 bg-warning text-white py-3 px-3 rounded-3" role="alert">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
+                        <strong class="text-warning">Network Egress: BLOCKED OR TIMED OUT</strong>
+                    </div>
+                    <div class="small text-light">
+                        {{ aqi_data.error_message }}
+                        <br>
+                        <strong>Troubleshooting tip:</strong> If this Compute Engine VM only has a private IP, ensure a <strong>Cloud NAT gateway</strong> and default route (<code>0.0.0.0/0 &rarr; default-internet-gateway</code>) are configured on your VPC.
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Main Title & Instructions -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="m-0 fw-bold"><i class="bi bi-globe-europe-africa text-info me-2"></i>Global Air Quality Overview</h4>
+            <div class="text-secondary small">
+                Source: <a href="https://open-meteo.com/" target="_blank" class="text-decoration-none text-info">Open-Meteo Air Quality API</a> (No API key required)
+            </div>
+        </div>
+
+        <!-- City Cards Grid -->
+        <div class="row g-3 mb-4">
+            {% for city in aqi_data.cities %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-custom h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h5 class="fw-bold mb-0">{{ city.name }}</h5>
+                            <small class="text-secondary">{{ city.country }}</small>
+                        </div>
+                        <span class="badge {{ city.badge_class }} py-2 px-2">{{ city.level }}</span>
+                    </div>
+
+                    <div class="d-flex align-items-baseline gap-2 my-2">
+                        <div class="stat-value text-white">{{ city.european_aqi }}</div>
+                        <div class="stat-label">European AQI</div>
+                        {% if city.status == 'FALLBACK' %}
+                        <span class="badge bg-danger ms-auto" style="font-size: 0.65rem;">NO EGRESS</span>
+                        {% else %}
+                        <span class="badge bg-success ms-auto" style="font-size: 0.65rem;">LIVE</span>
+                        {% endif %}
+                    </div>
+
+                    <p class="text-secondary small mb-3">{{ city.description }}</p>
+
+                    <!-- Pollutants Grid -->
+                    <div class="row g-2 pt-2 border-top border-secondary small">
+                        <div class="col-6">
+                            <span class="text-secondary">PM2.5:</span> <strong>{{ city.pm2_5 }}</strong> <span class="text-secondary">μg/m³</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="text-secondary">PM10:</span> <strong>{{ city.pm10 }}</strong> <span class="text-secondary">μg/m³</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="text-secondary">NO₂:</span> <strong>{{ city.no2 }}</strong> <span class="text-secondary">μg/m³</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="text-secondary">O₃:</span> <strong>{{ city.ozone }}</strong> <span class="text-secondary">μg/m³</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Load Balancer Testing Help Card -->
+        <div class="card card-custom p-4 mt-4">
+            <h5 class="fw-bold text-info"><i class="bi bi-lightbulb me-2"></i>Infrastructure Testing Checklist</h5>
+            <div class="row g-3 mt-1">
+                <div class="col-md-4">
+                    <div class="p-3 rounded-2 bg-dark border border-secondary h-100">
+                        <strong class="text-white d-block mb-1">1. Outbound Egress / Cloud NAT</strong>
+                        <p class="text-secondary small m-0">
+                            When VMs run without public external IPs, they require <strong>Cloud NAT</strong> to reach the external Open-Meteo API. Watch the green/yellow banner above to verify egress connectivity.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-2 bg-dark border border-secondary h-100">
+                        <strong class="text-white d-block mb-1">2. Load Balancer Distribution</strong>
+                        <p class="text-secondary small m-0">
+                            Deploy this app across a Managed Instance Group (MIG). Refresh the page through the Load Balancer IP to observe the <strong>Serving Instance</strong> hostname switch between VM instances.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-2 bg-dark border border-secondary h-100">
+                        <strong class="text-white d-block mb-1">3. Health Checks & Monitoring</strong>
+                        <p class="text-secondary small m-0">
+                            Configure your Load Balancer Health Check on <strong>HTTP /health</strong> on port <strong>8080</strong> (or 80). Monitor uptime and system load telemetry.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
