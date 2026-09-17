@@ -2,7 +2,6 @@
 # 1. Standalone Compute Engine Instance (Used when enable_load_balancer = false)
 # ==============================================================================
 resource "google_compute_instance" "vm_instance" {
-  count        = var.enable_load_balancer ? 0 : 1
   name         = var.instance_name
   machine_type = var.machine_type
   zone         = var.zone
