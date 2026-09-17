@@ -12,9 +12,9 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   network_interface {
+    network    = var.subnet_id == null ? var.network : null
     subnetwork = var.subnet_id
 
-    # Omit access_config block for a private VM (secure by default with IAP)
     dynamic "access_config" {
       for_each = var.enable_public_ip ? [1] : []
       content {}
@@ -26,11 +26,14 @@ resource "google_compute_instance" "vm_instance" {
     scopes = ["cloud-platform"]
   }
 
-  tags = ["ssh-enabled", "${var.environment}-node"]
+  tags = ["ssh-enabled", "http-server", "${var.environment}-node"]
 
-  metadata = {
-    enable-oslogin = "TRUE"
-  }
+  metadata = merge(
+    {
+      enable-oslogin = "TRUE"
+    },
+    var.startup_script != null ? { startup-script = var.startup_script } : {}
+  )
 
   labels = {
     environment = var.environment

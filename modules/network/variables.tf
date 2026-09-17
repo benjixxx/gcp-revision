@@ -22,6 +22,12 @@ variable "subnet_cidr" {
   description = "Primary CIDR block for the subnetwork"
 }
 
+variable "enable_gke_ranges" {
+  type        = bool
+  default     = false
+  description = "Whether to create secondary IP ranges for GKE pods and services"
+}
+
 variable "pods_range_name" {
   type        = string
   default     = "gke-pods"

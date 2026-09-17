@@ -11,14 +11,20 @@ resource "google_compute_subnetwork" "subnet" {
   network                  = google_compute_network.vpc_network.id
   private_ip_google_access = true
 
-  secondary_ip_range {
-    range_name    = var.pods_range_name
-    ip_cidr_range = var.pods_cidr
+  dynamic "secondary_ip_range" {
+    for_each = var.enable_gke_ranges ? [1] : []
+    content {
+      range_name    = var.pods_range_name
+      ip_cidr_range = var.pods_cidr
+    }
   }
 
-  secondary_ip_range {
-    range_name    = var.services_range_name
-    ip_cidr_range = var.services_cidr
+  dynamic "secondary_ip_range" {
+    for_each = var.enable_gke_ranges ? [1] : []
+    content {
+      range_name    = var.services_range_name
+      ip_cidr_range = var.services_cidr
+    }
   }
 }
 

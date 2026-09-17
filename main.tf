@@ -47,7 +47,9 @@ module "compute_engine" {
   instance_name         = var.instance_name
   machine_type          = var.compute_machine_type
   zone                  = var.zone
-  subnet_id             = module.network.subnet_id
+  network               = "default"
+  subnet_id             = null # Set to module.network.subnet_id if you want to use your custom VPC later
+  enable_public_ip      = true
   service_account_email = module.iam.terraform_service_account_email
   environment           = var.environment
 }
