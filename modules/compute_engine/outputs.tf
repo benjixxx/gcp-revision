@@ -1,29 +1,29 @@
 # ==============================================================================
-# Standalone VM Outputs (Available when enable_load_balancer = false)
+# VM Instance Outputs
 # ==============================================================================
 output "instance_id" {
-  description = "The server-assigned unique identifier of the standalone instance"
-  value       = try(google_compute_instance.vm_instance[0].instance_id, null)
+  description = "The server-assigned unique identifier of the VM instance"
+  value       = google_compute_instance.vm_instance.instance_id
 }
 
 output "instance_name" {
-  description = "The name of the standalone VM instance"
-  value       = try(google_compute_instance.vm_instance[0].name, null)
+  description = "The name of the VM instance"
+  value       = google_compute_instance.vm_instance.name
 }
 
 output "internal_ip" {
-  description = "The primary internal IP address of the standalone instance"
-  value       = try(google_compute_instance.vm_instance[0].network_interface[0].network_ip, null)
+  description = "The primary internal IP address of the instance"
+  value       = google_compute_instance.vm_instance.network_interface[0].network_ip
 }
 
 output "external_ip" {
-  description = "The external IP address of the standalone instance"
-  value       = try(google_compute_instance.vm_instance[0].network_interface[0].access_config[0].nat_ip, null)
+  description = "The external IP address of the instance (if enabled)"
+  value       = try(google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip, null)
 }
 
 output "self_link" {
-  description = "The URI of the standalone instance"
-  value       = try(google_compute_instance.vm_instance[0].self_link, null)
+  description = "The URI of the instance"
+  value       = google_compute_instance.vm_instance.self_link
 }
 
 # ==============================================================================
