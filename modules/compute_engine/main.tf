@@ -1,4 +1,19 @@
 # ==============================================================================
+# 0. Dedicated Keyless Service Account (Principle of Least Privilege)
+# ==============================================================================
+resource "google_service_account" "vm_sa" {
+  account_id   = "${var.instance_name}-sa"
+  display_name = "Quality Air VM Service Account"
+  description  = "Dedicated keyless service account for Quality Air Compute Engine instances"
+}
+
+resource "google_storage_bucket_iam_member" "vm_sa_storage_viewer" {
+  bucket = var.bucket_name
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${google_service_account.vm_sa.email}"
+}
+
+# ==============================================================================
 # 1. Standalone Compute Engine Instance (Used when enable_load_balancer = false)
 # ==============================================================================
 resource "google_compute_instance" "vm_instance" {
@@ -25,7 +40,7 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   service_account {
-    email  = var.service_account_email
+    email  = var.service_account_email != null ? var.service_account_email : google_service_account.vm_sa.email
     scopes = ["cloud-platform"]
   }
 
@@ -34,6 +49,7 @@ resource "google_compute_instance" "vm_instance" {
   metadata = merge(
     {
       enable-oslogin = "TRUE"
+      bucket_name    = var.bucket_name
     },
     var.startup_script != null ? { startup-script = var.startup_script } : {}
   )
@@ -41,6 +57,11 @@ resource "google_compute_instance" "vm_instance" {
   labels = {
     environment = var.environment
   }
+
+  depends_on = [
+    google_service_account.vm_sa,
+    google_storage_bucket_iam_member.vm_sa_storage_viewer
+  ]
 }
 
 # ==============================================================================
@@ -71,7 +92,7 @@ resource "google_compute_instance_template" "app_template" {
   }
 
   service_account {
-    email  = var.service_account_email
+    email  = var.service_account_email != null ? var.service_account_email : google_service_account.vm_sa.email
     scopes = ["cloud-platform"]
   }
 
@@ -80,6 +101,7 @@ resource "google_compute_instance_template" "app_template" {
   metadata = merge(
     {
       enable-oslogin = "TRUE"
+      bucket_name    = var.bucket_name
     },
     var.startup_script != null ? { startup-script = var.startup_script } : {}
   )
@@ -91,6 +113,11 @@ resource "google_compute_instance_template" "app_template" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [
+    google_service_account.vm_sa,
+    google_storage_bucket_iam_member.vm_sa_storage_viewer
+  ]
 }
 
 # ==============================================================================

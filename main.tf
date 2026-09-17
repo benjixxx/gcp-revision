@@ -49,12 +49,12 @@ module "compute_engine" {
   zone                  = var.zone
   network               = "default"
   subnet_id             = null # Set to module.network.subnet_id if you want to use your custom VPC later
-  enable_public_ip      = true
-  service_account_email = module.iam.terraform_service_account_email
-  environment           = var.environment
-  enable_load_balancer  = var.enable_load_balancer
-  mig_target_size       = var.mig_target_size
-  startup_script        = file("${path.module}/qualityAirApp/startup-script.sh")
+  enable_public_ip     = true
+  bucket_name          = var.bucket_name
+  environment          = var.environment
+  enable_load_balancer = var.enable_load_balancer
+  mig_target_size      = var.mig_target_size
+  startup_script       = file("${path.module}/qualityAirApp/startup-script.sh")
 }
 
 # ==============================================================================

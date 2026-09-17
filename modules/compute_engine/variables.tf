@@ -30,7 +30,14 @@ variable "subnet_id" {
 
 variable "service_account_email" {
   type        = string
-  description = "Service account email attached to the instance"
+  default     = null
+  description = "Service account email attached to the instance (if null, a dedicated keyless SA is created)"
+}
+
+variable "bucket_name" {
+  type        = string
+  default     = "quality-air-app"
+  description = "Cloud Storage bucket name where the app code is hosted"
 }
 
 variable "os_image" {

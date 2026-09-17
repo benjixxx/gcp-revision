@@ -9,9 +9,8 @@ set -euo pipefail
 APP_DIR="/opt/qualityAirApp"
 PORT=8080
 
-# 1. Determine Bucket Name (from GCP metadata or fallback)
-METADATA_BUCKET=$(curl -s -H "Metadata-Flavor: Google" "http://metadata.google.internal/computeMetadata/v1/instance/attributes/bucket_name" 2>/dev/null || true)
-BUCKET_NAME="${METADATA_BUCKET:-myproject-329912-app-storage}"
+# 1. Bucket Name
+BUCKET_NAME="quality-air-app"
 
 echo "=== [1/4] Installing Python prerequisites ==="
 apt-get update -y
@@ -19,7 +18,8 @@ apt-get install -y python3 python3-pip python3-venv curl
 
 echo "=== [2/4] Downloading application from Cloud Storage (gs://${BUCKET_NAME}/qualityAirApp) ==="
 mkdir -p "${APP_DIR}"
-gcloud storage cp --recursive "gs://${BUCKET_NAME}/qualityAirApp/*" "${APP_DIR}/" || \
+gsutil -m rsync -r "gs://${BUCKET_NAME}/qualityAirApp" "${APP_DIR}" || \
+gcloud storage rsync -r "gs://${BUCKET_NAME}/qualityAirApp" "${APP_DIR}" || \
 gsutil -m cp -r "gs://${BUCKET_NAME}/qualityAirApp/*" "${APP_DIR}/"
 
 echo "=== [3/4] Setting up Python virtual environment and dependencies ==="
