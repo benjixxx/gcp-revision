@@ -112,6 +112,18 @@ variable "compute_machine_type" {
   description = "Machine type for the Compute Engine instance"
 }
 
+variable "enable_load_balancer" {
+  type        = bool
+  default     = false
+  description = "Whether to create a Managed Instance Group with an HTTP Load Balancer instead of a single standalone VM"
+}
+
+variable "mig_target_size" {
+  type        = number
+  default     = 3
+  description = "Target number of instances in the Managed Instance Group"
+}
+
 # ==============================================================================
 # GKE Variables
 # ==============================================================================

@@ -36,6 +36,11 @@ output "compute_instance_internal_ip" {
   value       = module.compute_engine.internal_ip
 }
 
+output "load_balancer_ip" {
+  description = "Permanent Public Frontend IP address of the Cloud Load Balancer"
+  value       = module.compute_engine.load_balancer_ip
+}
+
 # GKE
 output "gke_cluster_endpoint" {
   description = "Kubernetes master API endpoint"
