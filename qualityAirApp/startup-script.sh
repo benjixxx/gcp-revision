@@ -8,13 +8,11 @@ set -euo pipefail
 
 APP_DIR="/opt/qualityAirApp"
 PORT=8080
-
-# 1. Bucket Name
 BUCKET_NAME="quality-air-app"
 
 echo "=== [1/4] Installing Python prerequisites ==="
 apt-get update -y
-apt-get install -y python3 python3-pip python3-venv curl
+apt-get install -y python3 python3-pip python3-venv python3.11-venv curl
 
 echo "=== [2/4] Downloading application from Cloud Storage (gs://${BUCKET_NAME}/qualityAirApp) ==="
 mkdir -p "${APP_DIR}"
@@ -24,7 +22,8 @@ gsutil -m cp -r "gs://${BUCKET_NAME}/qualityAirApp/*" "${APP_DIR}/"
 
 echo "=== [3/4] Setting up Python virtual environment and dependencies ==="
 cd "${APP_DIR}"
-if [ ! -d "${APP_DIR}/venv" ]; then
+if [ ! -f "${APP_DIR}/venv/bin/activate" ]; then
+    rm -rf "${APP_DIR}/venv"
     python3 -m venv "${APP_DIR}/venv"
 fi
 

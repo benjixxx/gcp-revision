@@ -36,7 +36,6 @@ variable "service_account_email" {
 
 variable "bucket_name" {
   type        = string
-  default     = "quality-air-app"
   description = "Cloud Storage bucket name where the app code is hosted"
 }
 

@@ -24,11 +24,11 @@ output "subnet_id" {
   value       = module.network.subnet_id
 }
 
-# Cloud Storage
-output "storage_bucket_url" {
-  description = "Cloud Storage Bucket URI"
-  value       = module.cloud_storage.bucket_url
-}
+# Cloud Storage (Disabled)
+# output "storage_bucket_url" {
+#   description = "Cloud Storage Bucket URI"
+#   value       = module.cloud_storage.bucket_url
+# }
 
 # Compute Engine
 output "compute_instance_internal_ip" {
@@ -41,26 +41,26 @@ output "load_balancer_ip" {
   value       = module.compute_engine.load_balancer_ip
 }
 
-# GKE
-output "gke_cluster_endpoint" {
-  description = "Kubernetes master API endpoint"
-  value       = module.gke.cluster_endpoint
-}
+# GKE (Disabled)
+# output "gke_cluster_endpoint" {
+#   description = "Kubernetes master API endpoint"
+#   value       = module.gke.cluster_endpoint
+# }
 
-# Serverless (Cloud Run)
-output "serverless_service_url" {
-  description = "Cloud Run service URL"
-  value       = module.serverless.service_url
-}
+# Serverless (Cloud Run) (Disabled)
+# output "serverless_service_url" {
+#   description = "Cloud Run service URL"
+#   value       = module.serverless.service_url
+# }
 
-# BigQuery
-output "bigquery_dataset_id" {
-  description = "BigQuery dataset ID"
-  value       = module.bigquery.dataset_id
-}
+# BigQuery (Disabled)
+# output "bigquery_dataset_id" {
+#   description = "BigQuery dataset ID"
+#   value       = module.bigquery.dataset_id
+# }
 
-output "bigquery_table_id" {
-  description = "BigQuery table ID"
-  value       = module.bigquery.table_id
-}
+# output "bigquery_table_id" {
+#   description = "BigQuery table ID"
+#   value       = module.bigquery.table_id
+# }
 
