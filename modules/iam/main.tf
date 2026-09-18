@@ -85,6 +85,7 @@ resource "google_service_account" "github_sa" {
 }
 
 # 1. Grant roles/artifactregistry.writer and roles/container.developer to this SA
+# 1. Grant roles/artifactregistry.writer and roles/container.admin to this SA
 resource "google_project_iam_member" "github_sa_artifact_writer" {
   project = var.project_id
   role    = "roles/artifactregistry.writer"
@@ -92,8 +93,10 @@ resource "google_project_iam_member" "github_sa_artifact_writer" {
 }
 
 resource "google_project_iam_member" "github_sa_gke_developer" {
+resource "google_project_iam_member" "github_sa_gke_admin" {
   project = var.project_id
   role    = "roles/container.developer"
+  role    = "roles/container.admin"
   member  = "serviceAccount:${google_service_account.github_sa.email}"
 }
 
