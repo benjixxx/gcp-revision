@@ -1,9 +1,13 @@
+# ==============================================================================
+# 1. Analytics Dataset & Table
+# ==============================================================================
 resource "google_bigquery_dataset" "dataset" {
   dataset_id                  = var.dataset_id
   friendly_name               = "Analytics Dataset"
   description                 = "Central dataset for analytics and reporting"
   location                    = var.location
   default_table_expiration_ms = null
+  delete_contents_on_destroy  = var.delete_contents_on_destroy
 
   labels = {
     env = var.environment
@@ -58,3 +62,18 @@ resource "google_bigquery_table" "table" {
 EOF
 }
 
+# ==============================================================================
+# 2. GKE Container Logs Dataset (Observability & SRE Sink Target)
+# ==============================================================================
+resource "google_bigquery_dataset" "k8s_logs" {
+  dataset_id                  = var.logging_dataset_id
+  friendly_name               = var.logging_dataset_name
+  description                 = "Streamed GKE container logs from Cloud Logging for SRE observability"
+  location                    = var.location
+  default_table_expiration_ms = var.logging_table_expiration_days != null ? var.logging_table_expiration_days * 86400000 : null
+  delete_contents_on_destroy  = var.delete_contents_on_destroy
+
+  labels = {
+    env = var.environment
+  }
+}

@@ -97,24 +97,37 @@ module "gke" {
 # }
 
 # ==============================================================================
-# 7. BigQuery Module (Disabled - Enable when studying BigQuery)
 # ==============================================================================
-# module "bigquery" {
-#   source = "./modules/BigQuery"
-#
-#   dataset_id        = var.bigquery_dataset_id
-#   location          = var.bigquery_location
-#   table_id          = var.bigquery_table_id
-#   partition_field   = var.bigquery_partition_field
-#   clustering_fields = var.bigquery_clustering_fields
-#   environment       = var.environment
-# }
+# 7. BigQuery Module (Data Warehouse & GKE Container Logs Dataset)
+# ==============================================================================
+module "bigquery" {
+  source = "./modules/BigQuery"
 
-# ==============================================================================
+  dataset_id         = var.bigquery_dataset_id
+  location           = var.bigquery_location
+  table_id           = var.bigquery_table_id
+  partition_field    = var.bigquery_partition_field
+  clustering_fields  = var.bigquery_clustering_fields
+  environment        = var.environment
+  logging_dataset_id = "k8s_logs"
+}
+
 # ==============================================================================
 # 8. Artifactory 
 # ==============================================================================
 module "artifactory" {
   source = "./modules/artifactory"
   region = var.region
+}
+
+# ==============================================================================
+# 9. Logging & Monitoring Module (Cloud Logging to BigQuery SRE Sink)
+# ==============================================================================
+module "logging_monitoring" {
+  source = "./modules/logging_monitoring"
+
+  project_id = var.project_id
+  dataset_id = module.bigquery.logging_dataset_id
+  sink_name  = "k8s-to-bigquery"
+  log_filter = "resource.type=\"k8s_container\" AND resource.labels.namespace_name=\"quality-air\""
 }

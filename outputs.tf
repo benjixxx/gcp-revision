@@ -63,14 +63,31 @@ output "load_balancer_ip" {
 #   value       = module.serverless.service_url
 # }
 
-# BigQuery (Disabled)
-# output "bigquery_dataset_id" {
-#   description = "BigQuery dataset ID"
-#   value       = module.bigquery.dataset_id
-# }
+# BigQuery
+output "bigquery_dataset_id" {
+  description = "BigQuery analytics dataset ID"
+  value       = module.bigquery.dataset_id
+}
 
-# output "bigquery_table_id" {
-#   description = "BigQuery table ID"
-#   value       = module.bigquery.table_id
-# }
+output "bigquery_table_id" {
+  description = "BigQuery analytics table ID"
+  value       = module.bigquery.table_id
+}
+
+# Logging & Monitoring (Cloud Logging to BigQuery)
+output "logging_bigquery_dataset_id" {
+  description = "BigQuery dataset ID for GKE container logs"
+  value       = module.bigquery.logging_dataset_id
+}
+
+output "logging_sink_name" {
+  description = "Cloud Logging sink name"
+  value       = module.logging_monitoring.sink_name
+}
+
+output "logging_sink_writer_identity" {
+  description = "Cloud Logging sink service account writer identity"
+  value       = module.logging_monitoring.sink_writer_identity
+}
+
 

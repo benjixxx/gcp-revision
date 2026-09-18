@@ -16,30 +16,29 @@ This module provisions and configures **Google BigQuery** data warehousing resou
 ---
 
 ## Provisioned Terraform Resources
-- **`google_bigquery_dataset`**: Fully managed analytical dataset.
-- **`google_bigquery_table`**: Columnar table configured with **time-unit partitioning** and **multi-column clustering**.
-- **`google_bigquery_dataset`**: Fully managed analytical dataset in the specified location.
-- **`google_bigquery_table`**: Columnar table configured with **time-unit partitioning** (Day) and **multi-column clustering**.
+- **`google_bigquery_dataset.dataset`**: Fully managed analytical dataset in the specified location.
+- **`google_bigquery_table.table`**: Columnar table configured with **time-unit partitioning** (Day) and **multi-column clustering**.
+- **`google_bigquery_dataset.k8s_logs`**: Dedicated partitioned dataset for GKE container logs routed by Cloud Logging.
 
 ### Inputs
 | Name | Description | Type | Default |
 | :--- | :--- | :--- | :--- |
-| `dataset_id` | Unique ID for the BigQuery dataset | `string` | `"analytics_dw"` |
-| `location` | Location for data storage (e.g., `EU`, `US`) | `string` | `"EU"` |
-| `dataset_id` | Unique identifier for the BigQuery dataset | `string` | `"analytics_dw"` |
+| `dataset_id` | Unique ID for the BigQuery analytics dataset | `string` | `"analytics_dw"` |
 | `location` | Geographic location for data storage (`EU`, `US`, etc.) | `string` | `"EU"` |
-| `table_id` | BigQuery table name | `string` | `"transactions"` |
+| `table_id` | BigQuery analytics table name | `string` | `"transactions"` |
 | `partition_field` | Timestamp/Date column used for table partitioning | `string` | `"transaction_timestamp"` |
-| `partition_field` | Timestamp or Date column used for table partitioning | `string` | `"transaction_timestamp"` |
 | `clustering_fields` | List of up to 4 columns used for clustering | `list(string)` | `["customer_id", "status"]` |
+| `logging_dataset_id` | Unique ID for the BigQuery dataset storing GKE logs | `string` | `"k8s_logs"` |
+| `logging_table_expiration_days` | Days before partitioned log tables expire | `number` | `30` |
 
 ### Outputs
 | Name | Description |
 | :--- | :--- |
-| `dataset_id` | The ID of the created dataset |
-| `dataset_id` | The ID of the created BigQuery dataset |
+| `dataset_id` | The ID of the analytics BigQuery dataset |
 | `table_id` | The ID of the partitioned and clustered table |
 | `table_self_link` | URI of the provisioned BigQuery table |
+| `logging_dataset_id` | The ID of the GKE container logs dataset |
+| `logging_dataset_location` | Geographic location of the logging dataset |
 
 ---
 
