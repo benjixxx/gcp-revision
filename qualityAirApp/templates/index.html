@@ -3,112 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Air Quality Dashboard | GCP Compute Engine & LB Monitor</title>
+    <title>AirQuality Live — Global Real-Time Air Quality Monitor</title>
+    <!-- Bootstrap 5 & Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --card-border: #334155;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-blue: #38bdf8;
-            --accent-green: #22c55e;
-            --accent-orange: #f97316;
-            --accent-red: #ef4444;
+            --bg-main: #090d16;
+            --bg-card: #151e30;
+            --bg-card-hover: #1a263d;
+            --card-border: #273852;
+            --text-heading: #ffffff;
+            --text-sub: #94a3b8;
+            --text-country: #38bdf8;
+            --metric-box-bg: #1c283f;
+            --metric-box-border: #334666;
+            --label-blue: #93c5fd;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--bg-main);
+            color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
-            padding-bottom: 3rem;
+            padding-bottom: 4rem;
         }
 
+        /* Navbar */
         .navbar-custom {
-            background-color: #0b1120;
+            background-color: #0d1424;
             border-bottom: 1px solid var(--card-border);
         }
 
-        .card-custom {
-            background-color: var(--card-bg);
+        /* Search Section */
+        .search-container {
+            background: linear-gradient(180deg, #0d1424 0%, #111a2f 100%);
             border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-input-group {
+            background-color: #1a253c;
+            border: 2px solid #334666;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            padding: 0.35rem 0.75rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .card-custom:hover {
-            border-color: var(--accent-blue);
-            transform: translateY(-2px);
+        .search-input-group:focus-within {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
         }
 
-        .badge-success { background-color: #15803d; color: #fff; }
-        .badge-info { background-color: #0284c7; color: #fff; }
-        .badge-warning { background-color: #d97706; color: #fff; }
-        .badge-orange { background-color: #ea580c; color: #fff; }
-        .badge-danger { background-color: #dc2626; color: #fff; }
-        .badge-dark { background-color: #7f1d1d; color: #fff; }
-        .badge-secondary { background-color: #475569; color: #fff; }
+        .search-input {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 500;
+            width: 100%;
+            outline: none;
+        }
 
-        .stat-value {
-            font-size: 2rem;
+        .search-input::placeholder {
+            color: #94a3b8;
+        }
+
+        /* Quick City Buttons */
+        .city-chip {
+            background-color: #1a263d;
+            border: 1px solid #334766;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            cursor: pointer;
+        }
+
+        .city-chip:hover, .city-chip.active {
+            background-color: #38bdf8;
+            border-color: #38bdf8;
+            color: #090d16;
+            transform: translateY(-1px);
+        }
+
+        /* City Card */
+        .city-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: 100%;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .city-card:hover {
+            background-color: var(--bg-card-hover);
+            border-color: #38bdf8;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15);
+        }
+
+        .city-title {
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        .country-label {
+            color: var(--text-country);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.2rem;
+        }
+
+        /* AQI Level Badges */
+        .aqi-pill {
             font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.85rem;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .badge-very-good { background-color: #15803d; color: #ffffff; border: 1px solid #22c55e; }
+        .badge-good      { background-color: #0369a1; color: #ffffff; border: 1px solid #38bdf8; }
+        .badge-moderate  { background-color: #a16207; color: #ffffff; border: 1px solid #facc15; }
+        .badge-poor      { background-color: #c2410c; color: #ffffff; border: 1px solid #fb923c; }
+        .badge-very-poor { background-color: #b91c1c; color: #ffffff; border: 1px solid #f87171; }
+        .badge-hazardous { background-color: #6b21a8; color: #ffffff; border: 1px solid #c084fc; }
+        .badge-unknown   { background-color: #334155; color: #cbd5e1; border: 1px solid #475569; }
+
+        /* Large AQI Display */
+        .aqi-number {
+            font-size: 3.2rem;
+            font-weight: 900;
+            line-height: 1;
             letter-spacing: -0.05em;
         }
 
-        .stat-label {
-            font-size: 0.825rem;
+        .aqi-legend {
+            color: #e2e8f0;
+            font-weight: 700;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-muted);
         }
 
-        .metric-pill {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 0.5rem 0.75rem;
+        .aqi-desc {
+            color: #cbd5e1;
+            font-size: 0.92rem;
+            margin: 0.75rem 0 1.25rem 0;
+            line-height: 1.4;
         }
 
-        .node-highlight {
-            background: linear-gradient(135deg, #1e3a8a, #0284c7);
+        /* Pollutant Indicators Grid */
+        .pollutant-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            border-top: 1px solid var(--card-border);
+            padding-top: 1rem;
+        }
+
+        .pollutant-card {
+            background-color: var(--metric-box-bg);
+            border: 1px solid var(--metric-box-border);
+            border-radius: 10px;
+            padding: 0.6rem 0.75rem;
+        }
+
+        .pollutant-name {
+            color: var(--label-blue);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .pollutant-val {
             color: #ffffff;
-            border-radius: 8px;
-            padding: 0.4rem 0.8rem;
-            font-weight: 600;
-            font-family: monospace;
-            display: inline-block;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-top: 0.15rem;
         }
 
-        .progress-thin {
-            height: 6px;
-            background-color: #334155;
+        .pollutant-unit {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Highlight animation for searched city */
+        @keyframes pulseBorder {
+            0% { border-color: #38bdf8; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+            70% { border-color: #38bdf8; box-shadow: 0 0 0 12px rgba(56, 189, 248, 0); }
+            100% { border-color: #38bdf8; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+
+        .card-highlight {
+            animation: pulseBorder 2s ease-in-out 2;
+            border-color: #38bdf8 !important;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Navbar -->
-    <nav class="navbar navbar-custom navbar-dark py-3 mb-4">
+    <!-- Header Navigation -->
+    <nav class="navbar navbar-custom py-3 mb-4">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
-                <i class="bi bi-clouds-fill text-info fs-3"></i>
-                <div>
-                    <span class="fw-bold">AirQuality<span class="text-info">App</span></span>
-                    <small class="d-block text-secondary" style="font-size: 0.75rem;">GCP Compute Engine &amp; Load Balancer Target</small>
-                </div>
+            <a class="navbar-brand d-flex align-items-center gap-2 text-white fw-bold fs-4 m-0" href="/">
+                <i class="bi bi-wind text-info fs-2"></i>
+                <span>AirQuality<span class="text-info">Live</span></span>
             </a>
-            <div class="d-flex align-items-center gap-2">
-                <a href="/health" class="btn btn-sm btn-outline-success" target="_blank">
-                    <i class="bi bi-heart-pulse-fill me-1"></i>/health
-                </a>
-                <a href="/api/air-quality" class="btn btn-sm btn-outline-info" target="_blank">
-                    <i class="bi bi-code-slash me-1"></i>/api/air-quality
-                </a>
-                <button class="btn btn-sm btn-primary" onclick="window.location.reload();">
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-light opacity-75 small d-none d-sm-inline">
+                    <i class="bi bi-clock me-1"></i>Updated: <span id="lastUpdated">{{ last_updated }}</span>
+                </span>
+                <button class="btn btn-sm btn-outline-info px-3 fw-semibold" onclick="window.location.reload();">
                     <i class="bi bi-arrow-clockwise me-1"></i>Refresh
                 </button>
             </div>
@@ -117,149 +251,117 @@
 
     <div class="container">
 
-        <!-- Top Row: Load Balancer & Compute Engine Diagnostic Bar -->
-        <div class="row g-3 mb-4">
-            <!-- Node Identification Card -->
-            <div class="col-lg-7">
-                <div class="card card-custom p-3 h-100">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="stat-label"><i class="bi bi-server me-1"></i>Serving Compute Instance (Load Balancer Node)</span>
-                        <span class="badge bg-primary">HTTP 200</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
-                        <span class="node-highlight fs-5">
-                            <i class="bi bi-cpu me-1"></i>{{ instance.instance_name }}
-                        </span>
-                        <span class="badge bg-secondary">Zone: {{ instance.zone }}</span>
-                        <span class="badge bg-secondary">IP: {{ instance.internal_ip }}</span>
-                        <span class="badge bg-dark border border-secondary">Node Requests: {{ request_count }}</span>
-                    </div>
-                    <div class="row g-2 text-secondary small pt-2 border-top border-secondary">
-                        <div class="col-sm-6">
-                            <strong>Client / Proxy IP:</strong> <code>{{ client_ip }}</code>
-                        </div>
-                        <div class="col-sm-6 text-sm-end">
-                            <strong>Node Uptime:</strong> {{ instance.uptime_seconds }}s
-                        </div>
+        <!-- Search & Quick Selection Section -->
+        <div class="search-container">
+            <h3 class="fw-bold mb-2 text-white">Find Air Quality in Any City</h3>
+            <p class="text-secondary mb-3">Instant real-time pollution metrics &amp; European Air Quality Index (AQI).</p>
+
+            <form id="searchForm" class="row g-2 mb-3" onsubmit="handleCitySearch(event)">
+                <div class="col-md-9 col-lg-10">
+                    <div class="search-input-group d-flex align-items-center gap-2">
+                        <i class="bi bi-search text-info fs-5"></i>
+                        <input type="text" id="cityInput" class="search-input" 
+                               placeholder="Type any city name (e.g. Nairobi, New York, Dakar, Tokyo, Paris...)" 
+                               autocomplete="off" required>
                     </div>
                 </div>
+                <div class="col-md-3 col-lg-2">
+                    <button type="submit" id="searchBtn" class="btn btn-info w-100 h-100 fw-bold d-flex align-items-center justify-content-center gap-2" style="border-radius: 12px; font-size: 1.05rem;">
+                        <span>Search City</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick City Selection Chips -->
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="text-light opacity-75 small fw-semibold me-1">Quick Select:</span>
+                <button type="button" class="city-chip" onclick="quickSelect('Nairobi')"><i class="bi bi-geo-alt-fill text-info"></i>Nairobi</button>
+                <button type="button" class="city-chip" onclick="quickSelect('New York')"><i class="bi bi-geo-alt-fill text-info"></i>New York</button>
+                <button type="button" class="city-chip" onclick="quickSelect('Paris')"><i class="bi bi-geo-alt-fill text-info"></i>Paris</button>
+                <button type="button" class="city-chip" onclick="quickSelect('London')"><i class="bi bi-geo-alt-fill text-info"></i>London</button>
+                <button type="button" class="city-chip" onclick="quickSelect('Tokyo')"><i class="bi bi-geo-alt-fill text-info"></i>Tokyo</button>
+                <button type="button" class="city-chip" onclick="quickSelect('Berlin')"><i class="bi bi-geo-alt-fill text-info"></i>Berlin</button>
+                <button type="button" class="city-chip" onclick="quickSelect('Rome')"><i class="bi bi-geo-alt-fill text-info"></i>Rome</button>
+                <button type="button" class="city-chip" onclick="quickSelect('Madrid')"><i class="bi bi-geo-alt-fill text-info"></i>Madrid</button>
+                <button type="button" class="city-chip" onclick="quickSelect('Dubai')"><i class="bi bi-geo-alt-fill text-info"></i>Dubai</button>
+                <button type="button" class="city-chip" onclick="quickSelect('Sydney')"><i class="bi bi-geo-alt-fill text-info"></i>Sydney</button>
+                <button type="button" class="city-chip" onclick="quickSelect('Dakar')"><i class="bi bi-geo-alt-fill text-info"></i>Dakar</button>
             </div>
 
-            <!-- Compute Engine Resource Metrics Card -->
-            <div class="col-lg-5">
-                <div class="card card-custom p-3 h-100">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="stat-label"><i class="bi bi-speedometer2 me-1"></i>Compute Engine Telemetry</span>
-                        <span class="text-secondary small">{{ instance.machine_type }}</span>
-                    </div>
-                    <div class="row g-2 mb-2">
-                        <div class="col-4">
-                            <div class="metric-pill text-center">
-                                <small class="text-secondary d-block">Load 1m</small>
-                                <span class="fw-bold fs-6">{{ metrics.load_avg_1m }}</span>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="metric-pill text-center">
-                                <small class="text-secondary d-block">Load 5m</small>
-                                <span class="fw-bold fs-6">{{ metrics.load_avg_5m }}</span>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="metric-pill text-center">
-                                <small class="text-secondary d-block">Load 15m</small>
-                                <span class="fw-bold fs-6">{{ metrics.load_avg_15m }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="d-flex justify-content-between text-secondary small mb-1">
-                            <span>RAM Usage</span>
-                            <span>{{ metrics.memory_used_pct }}%</span>
-                        </div>
-                        <div class="progress progress-thin">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ metrics.memory_used_pct }}%"></div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Live Search / Error Message -->
+            <div id="searchAlert" class="alert alert-warning mt-3 py-2 px-3 d-none border-0 rounded-3 text-white bg-danger bg-opacity-75">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i><span id="searchAlertText"></span>
             </div>
         </div>
 
-        <!-- Outbound Network Egress Diagnostics Banner -->
-        <div class="row mb-4">
-            <div class="col-12">
-                {% if aqi_data.egress_ok %}
-                <div class="alert alert-success d-flex align-items-center justify-content-between m-0 border-0 bg-opacity-25 bg-success text-white py-2 px-3 rounded-3" role="alert">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
-                        <div>
-                            <strong>Network Egress: CONNECTED</strong> — Outbound API calls to Open-Meteo succeeded (Latency: {{ aqi_data.api_latency_ms }} ms).
-                        </div>
-                    </div>
-                    <small class="text-light opacity-75">Updated: {{ aqi_data.fetched_at }}</small>
-                </div>
-                {% else %}
-                <div class="alert alert-warning border-0 bg-opacity-25 bg-warning text-white py-3 px-3 rounded-3" role="alert">
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                        <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
-                        <strong class="text-warning">Network Egress: BLOCKED OR TIMED OUT</strong>
-                    </div>
-                    <div class="small text-light">
-                        {{ aqi_data.error_message }}
-                        <br>
-                        <strong>Troubleshooting tip:</strong> If this Compute Engine VM only has a private IP, ensure a <strong>Cloud NAT gateway</strong> and default route (<code>0.0.0.0/0 &rarr; default-internet-gateway</code>) are configured on your VPC.
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Main Title & Instructions -->
+        <!-- Section Title -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="m-0 fw-bold"><i class="bi bi-globe-europe-africa text-info me-2"></i>Global Air Quality Overview</h4>
-            <div class="text-secondary small">
-                Source: <a href="https://open-meteo.com/" target="_blank" class="text-decoration-none text-info">Open-Meteo Air Quality API</a> (No API key required)
-            </div>
+            <h4 class="m-0 fw-bold text-white d-flex align-items-center gap-2">
+                <i class="bi bi-globe-americas text-info"></i>
+                <span id="resultsTitle">Featured Global Cities</span>
+            </h4>
+            <span class="badge bg-secondary px-3 py-2 text-white fw-bold" id="cardCount">{{ cities|length }} Cities</span>
         </div>
 
         <!-- City Cards Grid -->
-        <div class="row g-3 mb-4">
-            {% for city in aqi_data.cities %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card card-custom h-100 p-3">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div>
-                            <h5 class="fw-bold mb-0">{{ city.name }}</h5>
-                            <small class="text-secondary">{{ city.country }}</small>
+        <div class="row g-3" id="citiesGrid">
+            {% for city in cities %}
+            <div class="col-md-6 col-lg-4 city-col" data-city-name="{{ city.name|lower }}">
+                <div class="city-card">
+                    <!-- Top header: City & Quality Pill -->
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h3 class="city-title">{{ city.name }}</h3>
+                                <div class="country-label">
+                                    <i class="bi bi-geo-alt-fill"></i>{{ city.country }}
+                                </div>
+                            </div>
+                            <span class="aqi-pill {{ city.badge_class }}">{{ city.level }}</span>
                         </div>
-                        <span class="badge {{ city.badge_class }} py-2 px-2">{{ city.level }}</span>
+
+                        <!-- AQI Value -->
+                        <div class="d-flex align-items-baseline gap-2 mt-3">
+                            <div class="aqi-number" style="color: {{ city.color }};">{{ city.european_aqi }}</div>
+                            <div>
+                                <div class="aqi-legend">European AQI</div>
+                                <div class="text-light opacity-50 small">{{ city.time }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Health Summary Text -->
+                        <p class="aqi-desc">{{ city.description }}</p>
                     </div>
 
-                    <div class="d-flex align-items-baseline gap-2 my-2">
-                        <div class="stat-value text-white">{{ city.european_aqi }}</div>
-                        <div class="stat-label">European AQI</div>
-                        {% if city.status == 'FALLBACK' %}
-                        <span class="badge bg-danger ms-auto" style="font-size: 0.65rem;">NO EGRESS</span>
-                        {% else %}
-                        <span class="badge bg-success ms-auto" style="font-size: 0.65rem;">LIVE</span>
-                        {% endif %}
-                    </div>
-
-                    <p class="text-secondary small mb-3">{{ city.description }}</p>
-
-                    <!-- Pollutants Grid -->
-                    <div class="row g-2 pt-2 border-top border-secondary small">
-                        <div class="col-6">
-                            <span class="text-secondary">PM2.5:</span> <strong>{{ city.pm2_5 }}</strong> <span class="text-secondary">μg/m³</span>
+                    <!-- Pollutants Breakdown -->
+                    <div class="pollutant-grid">
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">
+                                <span>PM2.5</span>
+                                <span class="pollutant-unit">μg/m³</span>
+                            </div>
+                            <div class="pollutant-val">{{ city.pm2_5 }}</div>
                         </div>
-                        <div class="col-6">
-                            <span class="text-secondary">PM10:</span> <strong>{{ city.pm10 }}</strong> <span class="text-secondary">μg/m³</span>
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">
+                                <span>PM10</span>
+                                <span class="pollutant-unit">μg/m³</span>
+                            </div>
+                            <div class="pollutant-val">{{ city.pm10 }}</div>
                         </div>
-                        <div class="col-6">
-                            <span class="text-secondary">NO₂:</span> <strong>{{ city.no2 }}</strong> <span class="text-secondary">μg/m³</span>
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">
+                                <span>NO₂</span>
+                                <span class="pollutant-unit">μg/m³</span>
+                            </div>
+                            <div class="pollutant-val">{{ city.no2 }}</div>
                         </div>
-                        <div class="col-6">
-                            <span class="text-secondary">O₃:</span> <strong>{{ city.ozone }}</strong> <span class="text-secondary">μg/m³</span>
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">
+                                <span>O₃</span>
+                                <span class="pollutant-unit">μg/m³</span>
+                            </div>
+                            <div class="pollutant-val">{{ city.ozone }}</div>
                         </div>
                     </div>
                 </div>
@@ -267,40 +369,160 @@
             {% endfor %}
         </div>
 
-        <!-- Load Balancer Testing Help Card -->
-        <div class="card card-custom p-4 mt-4">
-            <h5 class="fw-bold text-info"><i class="bi bi-lightbulb me-2"></i>Infrastructure Testing Checklist</h5>
-            <div class="row g-3 mt-1">
-                <div class="col-md-4">
-                    <div class="p-3 rounded-2 bg-dark border border-secondary h-100">
-                        <strong class="text-white d-block mb-1">1. Outbound Egress / Cloud NAT</strong>
-                        <p class="text-secondary small m-0">
-                            When VMs run without public external IPs, they require <strong>Cloud NAT</strong> to reach the external Open-Meteo API. Watch the green/yellow banner above to verify egress connectivity.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="p-3 rounded-2 bg-dark border border-secondary h-100">
-                        <strong class="text-white d-block mb-1">2. Load Balancer Distribution</strong>
-                        <p class="text-secondary small m-0">
-                            Deploy this app across a Managed Instance Group (MIG). Refresh the page through the Load Balancer IP to observe the <strong>Serving Instance</strong> hostname switch between VM instances.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="p-3 rounded-2 bg-dark border border-secondary h-100">
-                        <strong class="text-white d-block mb-1">3. Health Checks & Monitoring</strong>
-                        <p class="text-secondary small m-0">
-                            Configure your Load Balancer Health Check on <strong>HTTP /health</strong> on port <strong>8080</strong> (or 80). Monitor uptime and system load telemetry.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Interactive Client Script -->
+    <script>
+        // Live client-side filter while typing
+        const cityInput = document.getElementById('cityInput');
+        cityInput.addEventListener('input', function(e) {
+            const query = e.target.value.trim().toLowerCase();
+            const cols = document.querySelectorAll('.city-col');
+            let visibleCount = 0;
+
+            cols.forEach(col => {
+                const name = col.getAttribute('data-city-name');
+                if (!query || name.includes(query)) {
+                    col.style.display = '';
+                    visibleCount++;
+                } else {
+                    col.style.display = 'none';
+                }
+            });
+
+            document.getElementById('cardCount').textContent = visibleCount + ' Cities';
+        });
+
+        // Quick selection button click
+        function quickSelect(cityName) {
+            cityInput.value = cityName;
+            searchCity(cityName);
+        }
+
+        // Form submission handler
+        function handleCitySearch(event) {
+            event.preventDefault();
+            const cityName = cityInput.value.trim();
+            if (cityName) {
+                searchCity(cityName);
+            }
+        }
+
+        // Search API execution
+        async function searchCity(cityName) {
+            const btn = document.getElementById('searchBtn');
+            const alertBox = document.getElementById('searchAlert');
+            const alertText = document.getElementById('searchAlertText');
+            
+            // Check if city already exists in DOM
+            const existingCol = document.querySelector(`.city-col[data-city-name="${cityName.toLowerCase()}"]`);
+            if (existingCol) {
+                // Unhide all
+                document.querySelectorAll('.city-col').forEach(c => c.style.display = '');
+                existingCol.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const card = existingCol.querySelector('.city-card');
+                card.classList.add('card-highlight');
+                setTimeout(() => card.classList.remove('card-highlight'), 3000);
+                alertBox.classList.add('d-none');
+                return;
+            }
+
+            // Fetch from backend API
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Searching...';
+            alertBox.classList.add('d-none');
+
+            try {
+                const response = await fetch(`/api/city?name=${encodeURIComponent(cityName)}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || `Could not find city '${cityName}'`);
+                }
+
+                // Append newly fetched city to the grid at the very top
+                addCityCardToGrid(data);
+
+            } catch (err) {
+                alertText.textContent = err.message;
+                alertBox.classList.remove('d-none');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Search City</span>';
+            }
+        }
+
+        // Dynamically create and prepend a city card
+        function addCityCardToGrid(city) {
+            const grid = document.getElementById('citiesGrid');
+            const col = document.createElement('div');
+            col.className = 'col-md-6 col-lg-4 city-col';
+            col.setAttribute('data-city-name', city.name.toLowerCase());
+
+            col.innerHTML = `
+                <div class="city-card card-highlight">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h3 class="city-title">${city.name}</h3>
+                                <div class="country-label">
+                                    <i class="bi bi-geo-alt-fill"></i>${city.country || ''}
+                                </div>
+                            </div>
+                            <span class="aqi-pill ${city.badge_class}">${city.level}</span>
+                        </div>
+
+                        <div class="d-flex align-items-baseline gap-2 mt-3">
+                            <div class="aqi-number" style="color: ${city.color};">${city.european_aqi}</div>
+                            <div>
+                                <div class="aqi-legend">European AQI</div>
+                                <div class="text-light opacity-50 small">${city.time}</div>
+                            </div>
+                        </div>
+
+                        <p class="aqi-desc">${city.description}</p>
+                    </div>
+
+                    <div class="pollutant-grid">
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">
+                                <span>PM2.5</span>
+                                <span class="pollutant-unit">μg/m³</span>
+                            </div>
+                            <div class="pollutant-val">${city.pm2_5}</div>
+                        </div>
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">
+                                <span>PM10</span>
+                                <span class="pollutant-unit">μg/m³</span>
+                            </div>
+                            <div class="pollutant-val">${city.pm10}</div>
+                        </div>
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">
+                                <span>NO₂</span>
+                                <span class="pollutant-unit">μg/m³</span>
+                            </div>
+                            <div class="pollutant-val">${city.no2}</div>
+                        </div>
+                        <div class="pollutant-card">
+                            <div class="pollutant-name">
+                                <span>O₃</span>
+                                <span class="pollutant-unit">μg/m³</span>
+                            </div>
+                            <div class="pollutant-val">${city.ozone}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            grid.prepend(col);
+            col.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            const countElem = document.getElementById('cardCount');
+            const currentTotal = document.querySelectorAll('.city-col').length;
+            countElem.textContent = currentTotal + ' Cities';
+        }
+    </script>
 </body>
 </html>
-
