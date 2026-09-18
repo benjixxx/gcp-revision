@@ -86,3 +86,66 @@ docker build -t quality-air-app .
 docker run -p 8080:8080 quality-air-app
 ```
 
+---
+
+## ⚡ Load Generator & Stress Testing (`load_generator.py`)
+
+A built-in, zero-dependency Python script to inject concurrent HTTP traffic into `qualityAirApp`, test Load Balancer distribution, and trigger Managed Instance Group (MIG) autoscaling.
+
+> 📖 For an in-depth guide on firing requests (curl, python scripts, bash loops, autoscaler metrics), see [**`LOAD_TESTING.md`**](LOAD_TESTING.md).
+
+### Target URL Configuration
+
+Set your target URL as an environment variable or retrieve it dynamically from Terraform:
+
+```bash
+# Option A: Dynamically fetch Load Balancer IP from Terraform (from project root)
+export TARGET_URL="http://$(terraform -chdir=.. output -raw lb_ip_address)"
+
+# Option B: Set manually using your Load Balancer IP or domain
+export TARGET_URL="http://<LOAD_BALANCER_IP>"
+
+# Option C: Target a local development server
+export TARGET_URL="http://localhost:8080"
+```
+
+### Quick Usage
+
+From your local machine in the `qualityAirApp` directory:
+
+```bash
+# 1. Quick 30-second mixed traffic test against your Load Balancer (10 workers)
+python3 load_generator.py -u "$TARGET_URL" -c 10 -d 30
+
+# 2. Fast CPU stress test on /health to drive high RPS and trigger MIG autoscaling
+python3 load_generator.py -u "$TARGET_URL" -c 30 -d 120 --mode stress-fast
+
+# 3. Test dynamic city search endpoint
+python3 load_generator.py -u "$TARGET_URL" -c 10 -d 45 --mode cities
+
+# 4. Test a local dev instance
+python3 load_generator.py -u http://localhost:8080 -c 5 -d 20
+```
+
+### Options & Flags
+
+| Flag | Description | Default |
+| :--- | :--- | :--- |
+| `-u`, `--url` | Base URL of the QualityAirApp | `$TARGET_URL` or `http://localhost:8080` |
+| `-c`, `--concurrency` | Number of concurrent worker threads | `10` |
+| `-d`, `--duration` | Test duration in seconds (`0` for indefinite until Ctrl+C) | `30` |
+| `-n`, `--requests` | Max requests to send (`0` for unlimited) | `0` |
+| `-m`, `--mode` | Traffic mode: `mixed`, `stress-fast`, `cities`, `ui`, `api` | `mixed` |
+| `-e`, `--endpoint` | Custom endpoint path (e.g., `/health`) | `None` |
+| `--delay` | Delay in seconds between requests per worker | `0.0` |
+| `--timeout` | HTTP request timeout in seconds | `5.0` |
+
+### Live Terminal Metrics
+While running, the script displays:
+- Real-time RPS (Requests Per Second) and Average RPS
+- HTTP response code distribution (`200 OK`, `4xx`, `5xx`)
+- Network errors or timeouts
+- Live latency percentiles (`Min`, `Avg`, `p50`, `p90`, `p95`, `Max`)
+- A comprehensive summary report upon completion or `Ctrl+C` interruption.
+
+
