@@ -163,3 +163,4 @@ When generating load against your GCP deployment, observe the real-time reaction
 3. **VM CPU Utilization**:
    - Navigate to **Monitoring > Dashboards** or **Compute Engine > VM instances**.
    - Look at the CPU utilization curve climbing past the autoscaler target (e.g., 60%), causing new instances to spawn automatically.
+

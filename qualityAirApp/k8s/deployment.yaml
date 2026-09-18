@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quality-air-app
+  namespace: quality-air
+  labels:
+    app: quality-air-app
+    tier: frontend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1        # Spin up 1 new pod before taking down an old one
+      maxUnavailable: 0  # Never drop capacity during upgrades (Zero-Downtime)
+  selector:
+    matchLabels:
+      app: quality-air-app
+  template:
+    metadata:
+      labels:
+        app: quality-air-app
+        tier: frontend
+    spec:
+      containers:
+      - name: quality-air-app
+        # Update this tag when releasing new versions (e.g., :v1.0.1, :v2, or Git short SHA)
+        image: europe-west1-docker.pkg.dev/myproject-329912/quality-air-repo/quality-air-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: PORT
+          value: "8080"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+        # Readiness Probe: Traffic won't be sent to this pod until /health returns HTTP 200
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        # Liveness Probe: Kills and restarts the pod if it hangs or becomes unresponsive
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 3
+          failureThreshold: 3
+

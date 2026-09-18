@@ -15,8 +15,9 @@ locals {
     "roles/iam.serviceAccountAdmin",
     "roles/iam.serviceAccountUser",
 
-    # GKE (Google Kubernetes Engine)
+    # GKE (Google Kubernetes Engine) & Artifact Registry
     "roles/container.admin",
+    "roles/artifactregistry.reader",
 
     # Pub/Sub
     "roles/pubsub.admin",
@@ -83,10 +84,16 @@ resource "google_service_account" "github_sa" {
   project      = var.project_id
 }
 
-# 1. Grant ONLY roles/artifactregistry.writer to this SA
+# 1. Grant roles/artifactregistry.writer and roles/container.developer to this SA
 resource "google_project_iam_member" "github_sa_artifact_writer" {
   project = var.project_id
   role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.github_sa.email}"
+}
+
+resource "google_project_iam_member" "github_sa_gke_developer" {
+  project = var.project_id
+  role    = "roles/container.developer"
   member  = "serviceAccount:${google_service_account.github_sa.email}"
 }
 
