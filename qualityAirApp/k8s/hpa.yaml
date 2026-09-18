@@ -19,4 +19,15 @@ spec:
       target:
         type: Utilization
         averageUtilization: 50
-
+  behavior:
+    scaleDown:
+      # Default is 300s (5 minutes). We lower to 30s so pods downscale rapidly when traffic stops!
+      stabilizationWindowSeconds: 30
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 2
+        periodSeconds: 15
+      selectPolicy: Max
