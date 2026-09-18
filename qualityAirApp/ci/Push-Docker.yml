@@ -19,10 +19,11 @@ env:
   REGION: europe-west1
   GAR_REPO: quality-air-repo
   IMAGE_NAME: quality-air-app
+  GCS_BUCKET: quality-air-app
 
 jobs:
   build-and-push:
-    name: Build & Push Container Image
+    name: Build, Push Container & Sync GCS Bucket
     runs-on: ubuntu-latest
 
     permissions:
@@ -71,3 +72,14 @@ jobs:
           echo "=== Successfully pushed container image ==="
           echo "Image URI: ${IMAGE_URI}:${SHORT_SHA}"
 
+      # Sync Application Files to Cloud Storage Bucket (for Compute Engine VMs & backups)
+      - name: Sync Application Files to Cloud Storage
+        run: |
+          echo "=== Syncing app files to gs://${{ env.GCS_BUCKET }}/qualityAirApp ==="
+          gcloud storage cp qualityAirApp/app.py gs://${{ env.GCS_BUCKET }}/qualityAirApp/app.py
+          gcloud storage cp qualityAirApp/requirements.txt gs://${{ env.GCS_BUCKET }}/qualityAirApp/requirements.txt
+          gcloud storage cp -r qualityAirApp/templates gs://${{ env.GCS_BUCKET }}/qualityAirApp/
+          if [ -d "qualityAirApp/static" ]; then
+            gcloud storage cp -r qualityAirApp/static gs://${{ env.GCS_BUCKET }}/qualityAirApp/
+          fi
+          echo "=== Successfully updated application files in gs://${{ env.GCS_BUCKET }}/qualityAirApp ==="
