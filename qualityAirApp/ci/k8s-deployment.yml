@@ -71,7 +71,8 @@ jobs:
       # 7. Set Deployment to pull image from Artifact Registry & trigger rolling restart
       - name: Deploy Image from Artifact Registry
         run: |
-          TAG="${{ github.event.inputs.image_tag || 'latest' }}"
+          TAG="${{ inputs.image_tag }}"
+          TAG="${TAG:-latest}"
           IMAGE_URI="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_REPO }}/${{ env.IMAGE_NAME }}:${TAG}"
 
           echo "Configuring deployment to use Artifact Registry image: ${IMAGE_URI}"

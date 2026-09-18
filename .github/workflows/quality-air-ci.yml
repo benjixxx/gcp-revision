@@ -6,7 +6,11 @@ on:
       - main
       - master
     paths:
-      - 'qualityAirApp/**'
+      - 'qualityAirApp/app.py'
+      - 'qualityAirApp/templates/**'
+      - 'qualityAirApp/static/**'
+      - 'qualityAirApp/requirements.txt'
+      - 'qualityAirApp/Dockerfile'
       - '.github/workflows/quality-air-ci.yml'
   workflow_dispatch:
 
