@@ -12,7 +12,9 @@ VAR_FILE := ./gcp.tfvars
         plan-compute apply-compute destroy-compute \
         plan-gke apply-gke destroy-gke \
         plan-serverless apply-serverless destroy-serverless \
-        plan-bigquery apply-bigquery destroy-bigquery
+        plan-bigquery apply-bigquery destroy-bigquery \
+        plan-artifactory apply-artifactory destroy-artifactory \
+        plan-ops apply-ops destroy-ops
 
 # ------------------------------------------------------------------------------
 # Help Menu
@@ -37,6 +39,8 @@ help:
 	@echo "  make plan-gke             | make apply-gke             | make destroy-gke"
 	@echo "  make plan-serverless      | make apply-serverless      | make destroy-serverless"
 	@echo "  make plan-bigquery        | make apply-bigquery        | make destroy-bigquery"
+	@echo "  make plan-artifactory     | make apply-artifactory     | make destroy-artifactory"
+	@echo "  make plan-ops             | make apply-ops             | make destroy-ops"
 	@echo "=================================================================="
 
 # ------------------------------------------------------------------------------
@@ -155,3 +159,15 @@ apply-artifactory:
 
 destroy-artifactory:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.artifactory
+
+# ------------------------------------------------------------------------------
+# Logging & Monitoring (Ops)
+# ------------------------------------------------------------------------------
+plan-ops:
+	terraform plan -var-file=$(VAR_FILE) -target=module.bigquery -target=module.logging_monitoring
+
+apply-ops:
+	terraform apply -var-file=$(VAR_FILE) -target=module.bigquery -target=module.logging_monitoring
+
+destroy-ops:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.logging_monitoring -target=module.bigquery

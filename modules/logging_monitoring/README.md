@@ -20,8 +20,9 @@ This module automates the streaming of GKE container logs into **Google BigQuery
                ▼  Real-Time Streaming (Partitioned by Day)
     [ BigQuery Dataset: `k8s_logs` ]
    ┌────────────────────────────────────────────────────────┐
-   │ • Partitioned Table: `k8s_container`                   │
+   │ • Partitioned Tables: `stdout` (JSON) & `stderr` (text)│
    │ • Native JSON Columns: status_code, latency_ms, etc.   │
+   │ • Partitioned by `timestamp` column                    │
    │ • Fast Standard SQL Queries                            │
    │ • 1-Click Looker Studio Visual Dashboards              │
    └────────────────────────────────────────────────────────┘
@@ -36,8 +37,8 @@ This module automates the streaming of GKE container logs into **Google BigQuery
 | **Log Router & Sinks** | Sinks filter logs at ingestion and stream them to external destinations (BigQuery, Cloud Storage, Pub/Sub). |
 | **Unique Writer Identity** | Every sink generates a unique Google service account (`serviceAccount:service-...@gcp-sa-logging.iam.gserviceaccount.com`). |
 | **The IAM Sink SA Trap** | **You must grant `roles/bigquery.dataEditor`** to the sink's writer identity on the destination dataset, otherwise export silently fails! |
-| **Table Partitioning** | Setting `use_partitioned_tables = true` creates a single daily partitioned table (`k8s_container`) instead of sharded daily tables (`k8s_container_YYYYMMDD`). |
-| **Cost Optimization** | Querying with `WHERE DATE(_PARTITIONTIME) = CURRENT_DATE()` limits data scanned, keeping query costs at near \$0. |
+| **Table Partitioning** | Setting `use_partitioned_tables = true` creates daily partitioned tables (`stdout`, `stderr`) partitioned on the log's **`timestamp`** column, avoiding legacy date-sharded tables (`stdout_YYYYMMDD`). |
+| **Cost Optimization** | Querying with `WHERE DATE(timestamp) = CURRENT_DATE()` prunes partitions and limits data scanned, keeping query costs at near \$0. |
 
 ---
 
@@ -105,21 +106,29 @@ python3 qualityAirApp/load_generator.py -u "http://${GKE_IP}" -c 15 -d 30
 
 ## 📊 SRE SQL Queries (Run in BigQuery Studio)
 
-Open [**BigQuery Studio**](https://console.cloud.google.com/bigquery?project=myproject-329912) and run these ready-to-use SRE queries:
+Cloud Logging automatically splits container streams into two partitioned tables:
+- **`stdout`**: Contains structured JSON request logs (`jsonPayload`) from our application.
+- **`stderr`**: Contains system messages, uncaught exceptions, and stack traces (`textPayload`).
 
-### 1. Traffic Breakdown & Status Codes
+> [!NOTE]
+> All tables use the native **`timestamp`** column for partitioning (instead of `_PARTITIONTIME`).
+> You can replace `DATE(timestamp) = CURRENT_DATE()` with `timestamp >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 2 HOUR)` to query the last 2 hours.
+
+---
+
+### 1. Traffic Breakdown & Status Codes (`stdout`)
 See request counts, HTTP response statuses, and average latencies:
 ```sql
 SELECT
-  jsonPayload.method AS method,
-  jsonPayload.path AS endpoint,
-  jsonPayload.status_code AS status_code,
+  STRING(jsonPayload.method) AS method,
+  STRING(jsonPayload.path) AS endpoint,
+  CAST(jsonPayload.status_code AS INT64) AS status_code,
   COUNT(*) AS total_requests,
-  ROUND(AVG(jsonPayload.latency_ms), 2) AS avg_latency_ms
+  ROUND(AVG(CAST(jsonPayload.latency_ms AS FLOAT64)), 2) AS avg_latency_ms
 FROM
-  `myproject-329912.k8s_logs.k8s_container`
+  `myproject-329912.k8s_logs.stdout`
 WHERE
-  DATE(_PARTITIONTIME) = CURRENT_DATE()
+  DATE(timestamp) = CURRENT_DATE()
 GROUP BY
   1, 2, 3
 ORDER BY
@@ -128,18 +137,18 @@ ORDER BY
 
 ---
 
-### 2. Pod Load Balancing Distribution
+### 2. Pod Load Balancing Distribution (`stdout`)
 Verify that traffic is evenly distributed across your pods:
 ```sql
 SELECT
-  jsonPayload.pod_name AS pod_name,
+  STRING(jsonPayload.pod_name) AS pod_name,
   COUNT(*) AS requests_handled,
   ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 1) AS traffic_percentage,
-  ROUND(AVG(jsonPayload.latency_ms), 2) AS avg_pod_latency_ms
+  ROUND(AVG(CAST(jsonPayload.latency_ms AS FLOAT64)), 2) AS avg_pod_latency_ms
 FROM
-  `myproject-329912.k8s_logs.k8s_container`
+  `myproject-329912.k8s_logs.stdout`
 WHERE
-  DATE(_PARTITIONTIME) = CURRENT_DATE()
+  DATE(timestamp) = CURRENT_DATE()
 GROUP BY
   1
 ORDER BY
@@ -148,21 +157,21 @@ ORDER BY
 
 ---
 
-### 3. Latency Percentiles (p50, p90, p99, Max)
-Detect slow queries and latency degradation:
+### 3. Latency Percentiles (p50, p90, p99, Max) (`stdout`)
+Detect slow queries and tail-latency degradation:
 ```sql
 SELECT
-  jsonPayload.path AS endpoint,
+  STRING(jsonPayload.path) AS endpoint,
   COUNT(*) AS request_count,
-  ROUND(AVG(jsonPayload.latency_ms), 2) AS avg_ms,
-  ROUND(APPROX_QUANTILES(jsonPayload.latency_ms, 100)[OFFSET(50)], 2) AS p50_median_ms,
-  ROUND(APPROX_QUANTILES(jsonPayload.latency_ms, 100)[OFFSET(90)], 2) AS p90_ms,
-  ROUND(APPROX_QUANTILES(jsonPayload.latency_ms, 100)[OFFSET(99)], 2) AS p99_ms,
-  ROUND(MAX(jsonPayload.latency_ms), 2) AS max_ms
+  ROUND(AVG(CAST(jsonPayload.latency_ms AS FLOAT64)), 2) AS avg_ms,
+  ROUND(APPROX_QUANTILES(CAST(jsonPayload.latency_ms AS FLOAT64), 100)[OFFSET(50)], 2) AS p50_median_ms,
+  ROUND(APPROX_QUANTILES(CAST(jsonPayload.latency_ms AS FLOAT64), 100)[OFFSET(90)], 2) AS p90_ms,
+  ROUND(APPROX_QUANTILES(CAST(jsonPayload.latency_ms AS FLOAT64), 100)[OFFSET(99)], 2) AS p99_ms,
+  ROUND(MAX(CAST(jsonPayload.latency_ms AS FLOAT64)), 2) AS max_ms
 FROM
-  `myproject-329912.k8s_logs.k8s_container`
+  `myproject-329912.k8s_logs.stdout`
 WHERE
-  DATE(_PARTITIONTIME) = CURRENT_DATE()
+  DATE(timestamp) = CURRENT_DATE()
 GROUP BY
   1
 ORDER BY
@@ -171,22 +180,42 @@ ORDER BY
 
 ---
 
-### 4. Most Searched Cities
+### 4. Most Searched Cities (`stdout`)
 Application business intelligence extracted directly from container JSON logs:
 ```sql
 SELECT
-  REGEXP_EXTRACT(jsonPayload.query_string, r'name=([^&]+)') AS city_searched,
+  REGEXP_EXTRACT(STRING(jsonPayload.query_string), r'name=([^&]+)') AS city_searched,
   COUNT(*) AS search_count,
-  ROUND(AVG(jsonPayload.latency_ms), 2) AS avg_latency_ms
+  ROUND(AVG(CAST(jsonPayload.latency_ms AS FLOAT64)), 2) AS avg_latency_ms
 FROM
-  `myproject-329912.k8s_logs.k8s_container`
+  `myproject-329912.k8s_logs.stdout`
 WHERE
-  jsonPayload.path = '/api/city'
-  AND DATE(_PARTITIONTIME) = CURRENT_DATE()
+  STRING(jsonPayload.path) = '/api/city'
+  AND DATE(timestamp) = CURRENT_DATE()
 GROUP BY
   1
+HAVING
+  city_searched IS NOT NULL
 ORDER BY
   search_count DESC;
+```
+
+---
+
+### 5. Application Errors & Stack Traces (`stderr`)
+Inspect recent container errors or unhandled exceptions:
+```sql
+SELECT
+  timestamp,
+  resource.labels.pod_name AS pod_name,
+  textPayload AS error_message
+FROM
+  `myproject-329912.k8s_logs.stderr`
+WHERE
+  DATE(timestamp) = CURRENT_DATE()
+ORDER BY
+  timestamp DESC
+LIMIT 50;
 ```
 
 ---
