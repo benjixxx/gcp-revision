@@ -1,4 +1,7 @@
 import os
+import sys
+import json
+import socket
 import time
 import logging
 from datetime import datetime, timezone
@@ -7,6 +10,75 @@ from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
+POD_NAME = socket.gethostname()
+
+@app.before_request
+def record_start_time():
+    request._start_time = time.perf_counter()
+
+@app.after_request
+def log_json_request(response):
+    """Output structured JSON log entries formatted for GCP Cloud Logging and kubectl."""
+    start_time = getattr(request, "_start_time", None)
+    if start_time is not None:
+        duration_sec = time.perf_counter() - start_time
+        duration_ms = round(duration_sec * 1000.0, 2)
+    else:
+        duration_sec = 0.0
+        duration_ms = 0.0
+
+    # Extract client IP (respecting GCP Load Balancer X-Forwarded-For header)
+    forwarded_for = request.headers.get("X-Forwarded-For")
+    if forwarded_for:
+        client_ip = forwarded_for.split(",")[0].strip()
+    else:
+        client_ip = request.remote_addr or "127.0.0.1"
+
+    status_code = response.status_code
+    severity = "INFO"
+    if status_code >= 500:
+        severity = "ERROR"
+    elif status_code >= 400:
+        severity = "WARNING"
+
+    try:
+        response_size = response.calculate_content_length() or len(response.get_data())
+    except Exception:
+        response_size = 0
+
+    log_entry = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "severity": severity,
+        "message": f"{request.method} {request.full_path.rstrip('?')} - {status_code} ({duration_ms}ms)",
+        "httpRequest": {
+            "requestMethod": request.method,
+            "requestUrl": request.url,
+            "requestSize": request.content_length or 0,
+            "status": status_code,
+            "responseSize": response_size,
+            "userAgent": request.headers.get("User-Agent", ""),
+            "remoteIp": client_ip,
+            "latency": f"{duration_sec:.6f}s",
+            "protocol": request.environ.get("SERVER_PROTOCOL", "HTTP/1.1")
+        },
+        "jsonPayload": {
+            "method": request.method,
+            "path": request.path,
+            "query_string": request.query_string.decode("utf-8", errors="replace"),
+            "status_code": status_code,
+            "latency_ms": duration_ms,
+            "client_ip": client_ip,
+            "pod_name": POD_NAME,
+            "service": "qualityAirApp"
+        }
+    }
+
+    # Write single-line JSON directly to stdout
+    sys.stdout.write(json.dumps(log_entry) + "\n")
+    sys.stdout.flush()
+
+    return response
 
 # Preset featured cities (Nairobi and New York prominently included)
 DEFAULT_CITIES = [
