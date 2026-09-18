@@ -1,4 +1,4 @@
-name: Build, Push & Deploy QualityAirApp to GKE
+name: Deploy QualityAirApp to GKE
 
 on:
   push:
@@ -6,9 +6,15 @@ on:
       - main
       - master
     paths:
-      - 'qualityAirApp/**'
+      - 'qualityAirApp/k8s/**'
       - '.github/workflows/k8s-deployment.yml'
+      - 'qualityAirApp/ci/k8s-deployment.yml'
   workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag to pull from Artifact Registry'
+        required: false
+        default: 'latest'
 
 env:
   PROJECT_ID: myproject-329912
@@ -20,8 +26,8 @@ env:
   NAMESPACE: quality-air
 
 jobs:
-  build-and-deploy:
-    name: Build Image & Deploy to GKE
+  deploy-to-gke:
+    name: Deploy Image from Artifact Registry to GKE
     runs-on: ubuntu-latest
 
     permissions:
@@ -29,11 +35,11 @@ jobs:
       id-token: write # Required for Workload Identity Federation
 
     steps:
-      # 1. Checkout repository code
+      # 1. Checkout repository manifests
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Authenticate to GCP (100% Keyless Workload Identity Federation)
+      # 2. Authenticate to Google Cloud (100% Keyless Workload Identity Federation)
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
@@ -45,66 +51,48 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      # 4. Authenticate kubectl to GKE (installs gke-gcloud-auth-plugin automatically)
+      # 4. Authenticate kubectl to GKE (automatically installs gke-gcloud-auth-plugin)
       - name: Get GKE Cluster Credentials
         uses: google-github-actions/get-gke-credentials@v2
         with:
           cluster_name: ${{ env.CLUSTER_NAME }}
           location: ${{ env.ZONE }}
 
-      # 5. Configure Docker authentication for Artifact Registry
-      - name: Configure Docker for Artifact Registry
-        run: |
-          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
-
-      # 6. Build and Push Docker image (tagged with short Git SHA and :latest)
-      - name: Build and Push Docker Image
-        working-directory: ./qualityAirApp
-        run: |
-          IMAGE_BASE="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_REPO }}/${{ env.IMAGE_NAME }}"
-          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-
-          echo "Building image: ${IMAGE_BASE}:${SHORT_SHA}"
-          docker build \
-            -t "${IMAGE_BASE}:${SHORT_SHA}" \
-            -t "${IMAGE_BASE}:latest" \
-            .
-
-          echo "Pushing image tags to Artifact Registry..."
-          docker push "${IMAGE_BASE}:${SHORT_SHA}"
-          docker push "${IMAGE_BASE}:latest"
-
-          echo "IMAGE_TAGGED=${IMAGE_BASE}:${SHORT_SHA}" >> $GITHUB_ENV
-
-      # 7. Ensure Namespace exists
+      # 5. Ensure target namespace exists
       - name: Ensure Target Namespace
         run: |
           kubectl create namespace ${{ env.NAMESPACE }} --dry-run=client -o yaml | kubectl apply -f -
 
-      # 8. Deploy / Update Kubernetes Manifests (Deployment, Service, HPA)
-      - name: Deploy Manifests to GKE
+      # 6. Apply Kubernetes Manifests (Deployment, Service, HPA)
+      - name: Apply Kubernetes Manifests
         run: |
           kubectl apply -k ./qualityAirApp/k8s/
 
-      # 9. Update Deployment Image to the newly pushed immutable commit SHA
-      - name: Update Deployment Image
+      # 7. Set Deployment to pull image from Artifact Registry & trigger rolling restart
+      - name: Deploy Image from Artifact Registry
         run: |
-          kubectl set image deployment/quality-air-app quality-air-app="${{ env.IMAGE_TAGGED }}" -n ${{ env.NAMESPACE }}
+          TAG="${{ github.event.inputs.image_tag || 'latest' }}"
+          IMAGE_URI="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_REPO }}/${{ env.IMAGE_NAME }}:${TAG}"
 
-      # 10. Wait for Zero-Downtime Rollout to Complete
+          echo "Configuring deployment to use Artifact Registry image: ${IMAGE_URI}"
+          kubectl set image deployment/quality-air-app quality-air-app="${IMAGE_URI}" -n ${{ env.NAMESPACE }}
+
+          # Trigger zero-downtime rolling restart to fetch the latest image digest
+          kubectl rollout restart deployment/quality-air-app -n ${{ env.NAMESPACE }}
+
+      # 8. Verify Zero-Downtime Rollout Completion
       - name: Verify Rollout Status
         run: |
           kubectl rollout status deployment/quality-air-app -n ${{ env.NAMESPACE }} --timeout=180s
 
-      # 11. Display Cluster Status & External IP
-      - name: Display Deployment Status
+      # 9. Display Live Cluster Status & Service External IP
+      - name: Display Cluster Status
         run: |
-          echo "=== Pods in namespace '${{ env.NAMESPACE }}' ==="
+          echo "=== Running Pods in '${{ env.NAMESPACE }}' ==="
           kubectl get pods -n ${{ env.NAMESPACE }} -o wide
 
-          echo "=== Services in namespace '${{ env.NAMESPACE }}' ==="
+          echo "=== Services & Load Balancer External IP ==="
           kubectl get svc -n ${{ env.NAMESPACE }}
 
-          echo "=== Horizontal Pod Autoscaler ==="
+          echo "=== Horizontal Pod Autoscaler (HPA) ==="
           kubectl get hpa -n ${{ env.NAMESPACE }}
-
