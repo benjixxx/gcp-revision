@@ -13,6 +13,16 @@ output "bound_personal_user" {
   value       = module.iam.bound_personal_user
 }
 
+output "github_service_account_email" {
+  description = "Email of the GitHub Actions Service Account"
+  value       = module.iam.github_service_account_email
+}
+
+output "workload_identity_provider" {
+  description = "Workload Identity Provider resource name for keyless GitHub Actions auth"
+  value       = module.iam.workload_identity_provider
+}
+
 # Network
 output "network_id" {
   description = "VPC Network ID"

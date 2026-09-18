@@ -73,3 +73,66 @@ resource "google_service_account_iam_member" "personal_user_sa_user" {
   member             = "user:${var.personal_user_email}"
 }
 
+# ==============================================================================
+#  GitHub Actions Service Account & Permissions
+# ==============================================================================
+resource "google_service_account" "github_sa" {
+  account_id   = "github-actions-sa"
+  display_name = "GitHub Actions CI Service Account"
+  description  = "Service account for GitHub Actions CI to push images to Artifact Registry"
+  project      = var.project_id
+}
+
+# 1. Grant ONLY roles/artifactregistry.writer to this SA
+resource "google_project_iam_member" "github_sa_artifact_writer" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.github_sa.email}"
+}
+
+# 2. Allow your personal user to impersonate this GitHub SA
+resource "google_service_account_iam_member" "personal_user_impersonate_github_sa" {
+  count              = var.personal_user_email != "" ? 1 : 0
+  service_account_id = google_service_account.github_sa.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "user:${var.personal_user_email}"
+}
+
+# ==============================================================================
+# 5. Workload Identity Federation for GitHub Actions (100% Keyless CI/CD)
+# ==============================================================================
+# Dedicated pool for GitHub Actions
+resource "google_iam_workload_identity_pool" "github_pool" {
+  workload_identity_pool_id = "github-actions-pool"
+  display_name              = "GitHub Actions Pool"
+  description               = "Identity pool for GitHub Actions automated CI/CD"
+  project                   = var.project_id
+}
+
+# Provider linking GitHub OIDC tokens to the pool
+resource "google_iam_workload_identity_pool_provider" "github_provider" {
+  workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool.workload_identity_pool_id
+  workload_identity_pool_provider_id = "github-provider"
+  display_name                       = "GitHub Provider"
+  project                            = var.project_id
+
+  attribute_mapping = {
+    "google.subject"       = "assertion.sub"
+    "attribute.actor"      = "assertion.actor"
+    "attribute.repository" = "assertion.repository"
+  }
+
+  attribute_condition = "assertion.repository == 'benjixxx/gcp-revision'"
+
+  oidc {
+    issuer_uri = "https://token.actions.githubusercontent.com"
+  }
+}
+
+# Authorize repository benjixxx/gcp-revision to impersonate github-actions-sa
+resource "google_service_account_iam_member" "github_sa_workload_identity_user" {
+  service_account_id = google_service_account.github_sa.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/benjixxx/gcp-revision"
+}
+

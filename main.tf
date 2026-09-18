@@ -105,3 +105,12 @@ module "compute_engine" {
 #   clustering_fields = var.bigquery_clustering_fields
 #   environment       = var.environment
 # }
+
+# ==============================================================================
+# ==============================================================================
+# 8. Artifactory 
+# ==============================================================================
+module "artifactory" {
+  source = "./modules/artifactory"
+  region = var.region
+}

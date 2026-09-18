@@ -143,3 +143,15 @@ apply-bigquery:
 
 destroy-bigquery:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.bigquery
+
+# ------------------------------------------------------------------------------
+# Artifactory Moudle
+# ------------------------------------------------------------------------------
+plan-artifactory:
+	terraform plan -var-file=$(VAR_FILE) -target=module.artifactory
+
+apply-artifactory:
+	terraform apply -var-file=$(VAR_FILE) -target=module.artifactory
+
+destroy-artifactory:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.artifactory

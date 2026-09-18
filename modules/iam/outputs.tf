@@ -18,3 +18,13 @@ output "bound_personal_user" {
   value       = var.personal_user_email
 }
 
+output "github_service_account_email" {
+  description = "Email of the GitHub Actions Service Account"
+  value       = google_service_account.github_sa.email
+}
+
+output "workload_identity_provider" {
+  description = "Workload Identity Provider resource name for keyless GitHub Actions auth"
+  value       = google_iam_workload_identity_pool_provider.github_provider.name
+}
+
