@@ -129,10 +129,14 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
   }
 }
 
+data "google_project" "current" {
+  project_id = var.project_id
+}
+
 # Authorize repository benjixxx/gcp-revision to impersonate github-actions-sa
 resource "google_service_account_iam_member" "github_sa_workload_identity_user" {
   service_account_id = google_service_account.github_sa.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/benjixxx/gcp-revision"
+  member             = "principalSet://iam.googleapis.com/projects/${data.google_project.current.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.github_pool.workload_identity_pool_id}/attribute.repository/benjixxx/gcp-revision"
 }
 

@@ -7,7 +7,25 @@ variable "cluster_name" {
 variable "region" {
   type        = string
   default     = "europe-west1"
-  description = "GCP region for regional GKE cluster"
+  description = "GCP region"
+}
+
+variable "zone" {
+  type        = string
+  default     = "europe-west1-b"
+  description = "GCP zone for single-zone low-cost GKE cluster"
+}
+
+variable "disk_size_gb" {
+  type        = number
+  default     = 30
+  description = "Boot disk size in GB for worker nodes"
+}
+
+variable "spot" {
+  type        = bool
+  default     = true
+  description = "Use Spot (preemptible) VMs for 60-80% cost savings"
 }
 
 variable "network_id" {

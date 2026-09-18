@@ -1,6 +1,6 @@
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
-  location = var.region
+  location = var.zone
 
   # Remove default pool and create a dedicated managed node pool
   remove_default_node_pool = true
@@ -29,13 +29,17 @@ resource "google_container_cluster" "primary" {
 
 resource "google_container_node_pool" "primary_nodes" {
   name       = "${var.cluster_name}-node-pool"
-  location   = var.region
+  location   = var.zone
   cluster    = google_container_cluster.primary.name
   node_count = var.node_count
 
   node_config {
     machine_type    = var.machine_type
     service_account = var.service_account_email
+    spot            = var.spot
+    disk_size_gb    = var.disk_size_gb
+    disk_type       = "pd-standard"
+
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]

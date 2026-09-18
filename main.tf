@@ -24,6 +24,7 @@ module "network" {
   services_cidr       = var.services_cidr
   pods_range_name     = var.pods_range_name
   services_range_name = var.services_range_name
+  enable_gke_ranges   = true
 }
 
 # ==============================================================================
@@ -61,20 +62,23 @@ module "compute_engine" {
 # ==============================================================================
 # 5. GKE Module (Disabled - Enable when studying Kubernetes)
 # ==============================================================================
-# module "gke" {
-#   source = "./modules/gke"
-#
-#   cluster_name          = var.cluster_name
-#   region                = var.region
-#   network_id            = module.network.network_id
-#   subnet_name           = module.network.subnet_name
-#   pods_range_name       = module.network.pods_range_name
-#   services_range_name   = module.network.services_range_name
-#   service_account_email = module.iam.terraform_service_account_email
-#   node_count            = var.gke_node_count
-#   machine_type          = var.gke_machine_type
-#   environment           = var.environment
-# }
+module "gke" {
+  source = "./modules/gke"
+
+  cluster_name          = var.cluster_name
+  region                = var.region
+  zone                  = var.zone
+  network_id            = module.network.network_id
+  subnet_name           = module.network.subnet_name
+  pods_range_name       = module.network.pods_range_name
+  services_range_name   = module.network.services_range_name
+  service_account_email = module.iam.terraform_service_account_email
+  node_count            = var.gke_node_count
+  machine_type          = var.gke_machine_type
+  spot                  = true
+  disk_size_gb          = 30
+  environment           = var.environment
+}
 
 # ==============================================================================
 # 6. Serverless Module (Disabled - Enable when studying Cloud Run)

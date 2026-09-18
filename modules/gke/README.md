@@ -11,20 +11,40 @@ This module deploys a VPC-native Google Kubernetes Engine (GKE) cluster. It remo
 - **`google_container_node_pool`**: Managed node pool utilizing VPC secondary IP ranges.
 
 ## Inputs
-| Name | Description | Type |
-| :--- | :--- | :--- |
-| `cluster_name` | Name of the GKE cluster | `string` |
-| `region` | Target GCP region (Regional Cluster) | `string` |
-| `network_id` | Host VPC network ID | `string` |
-| `subnet_name` | Name of the VPC-native subnetwork | `string` |
-| `service_account_email` | Service Account used by cluster nodes | `string` |
-| `node_count` | Number of nodes per zone | `number` |
-| `machine_type` | Machine type for worker nodes | `string` |
+| Name | Description | Type | Default |
+| :--- | :--- | :--- | :--- |
+| `cluster_name` | Name of the GKE cluster | `string` | `"main-gke-cluster"` |
+| `zone` | Target zone for single-zone low-cost cluster | `string` | `"europe-west1-b"` |
+| `network_id` | Host VPC network ID | `string` | - |
+| `subnet_name` | Name of the VPC-native subnetwork | `string` | - |
+| `service_account_email` | Service Account used by cluster nodes | `string` | - |
+| `node_count` | Number of worker nodes | `number` | `1` |
+| `machine_type` | Machine type for worker nodes | `string` | `"e2-medium"` |
+| `spot` | Use Spot (preemptible) VMs for 60-80% discount | `bool` | `true` |
+| `disk_size_gb` | Boot disk size per node (GB) | `number` | `30` |
 
 ## Outputs
 | Name | Description |
 | :--- | :--- |
 | `cluster_endpoint` | IP endpoint of the Kubernetes API Master |
+
+---
+
+## 💰 Cost Optimization Architecture (From $328/mo down to ~$10/mo)
+
+By default, GCP estimates GKE at **$328/month** because of multi-zone replication and large default disks. We optimized it for study and lab work:
+
+1. **Single-Zone Cluster (`location = var.zone`)**:
+   - Instead of replicating nodes across 3 zones, it runs strictly in `europe-west1-b`.
+   - `node_count = 1` creates **exactly 1 VM** instead of 3.
+2. **Spot / Preemptible VMs (`spot = true`)**:
+   - Saves **60% to 80%** on compute costs.
+3. **Small Boot Disks (`disk_size_gb = 30`)**:
+   - Replaced GCP's 100 GB default with 30 GB standard persistent disk.
+4. **On-Demand Study Workflow**:
+   - Spin up when studying: `make apply-gke`
+   - Connect kubectl: `gcloud container clusters get-credentials main-gke-cluster --zone=europe-west1-b`
+   - Tear down when finished: `make destroy-gke` *(Cost for a 2-hour session: < $0.10)*.
 
 ---
 
