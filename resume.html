@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GCP Associate Cloud Engineer (ACE) - Résumé de Révision Essentiel</title>
+  <title>GCP Associate Cloud Engineer (ACE) - Essential Revision Summary</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -101,18 +101,17 @@
       align-items: center;
       gap: 10px;
       padding: 8px 12px;
-      border-radius: 6px;
-      color: var(--text-main);
+      color: var(--text-muted);
       text-decoration: none;
       font-size: 13.5px;
       font-weight: 500;
+      border-radius: 6px;
       transition: all 0.15s ease;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
-    .nav-link:hover, .nav-link.active {
+    .nav-link:hover {
       background: var(--gcp-blue-light);
-      color: var(--gcp-blue-dark);
-      font-weight: 600;
+      color: var(--gcp-blue);
     }
     .nav-link .icon {
       font-size: 16px;
@@ -205,388 +204,424 @@
       gap: 16px;
     }
     .video-thumb {
-      width: 72px;
-      height: 48px;
-      background: #e02424;
-      border-radius: 6px;
+      width: 52px;
+      height: 52px;
+      background: #e8f0fe;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
       font-size: 24px;
+      color: var(--gcp-blue);
       flex-shrink: 0;
     }
     .video-hero-text h3 {
       font-family: 'Google Sans', sans-serif;
       font-size: 16px;
       font-weight: 700;
-      color: var(--text-main);
+      color: #202124;
+      margin-bottom: 4px;
     }
     .video-hero-text p {
       font-size: 13px;
       color: var(--text-muted);
-      margin-top: 3px;
     }
 
-    /* Search Bar */
+    /* Search Box */
     .search-box {
       margin-bottom: 28px;
       position: relative;
     }
     .search-input {
       width: 100%;
-      padding: 12px 18px 12px 44px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      background: #ffffff;
+      padding: 12px 16px 12px 44px;
       font-size: 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: #ffffff;
       outline: none;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     .search-input:focus {
       border-color: var(--gcp-blue);
-      box-shadow: 0 0 0 3px var(--gcp-blue-light);
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.15);
     }
     .search-icon {
       position: absolute;
       left: 16px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 16px;
       color: var(--text-muted);
+      font-size: 16px;
     }
 
-    /* Module Cards */
+    /* Module Card */
     .module-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
-      margin-bottom: 32px;
+      margin-bottom: 24px;
       box-shadow: var(--shadow);
       overflow: hidden;
-      transition: box-shadow 0.2s;
+      transition: box-shadow 0.2s ease;
     }
     .module-card:hover {
       box-shadow: var(--shadow-hover);
     }
     .module-header {
-      padding: 20px 24px;
+      padding: 18px 24px;
       background: #ffffff;
-      border-bottom: 1px solid #f1f3f4;
+      border-bottom: 1px solid var(--border-color);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      user-select: none;
+      align-items: center;
+      gap: 16px;
     }
     .module-header-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
     .module-number {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+      width: 28px;
+      height: 28px;
       background: var(--gcp-blue-light);
       color: var(--gcp-blue);
-      font-weight: 700;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Roboto Mono', monospace;
     }
     .module-title {
       font-family: 'Google Sans', sans-serif;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: #202124;
     }
     .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
       font-size: 11px;
       font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 4px;
       text-transform: uppercase;
       letter-spacing: 0.4px;
     }
-    .badge-blue { background: var(--gcp-blue-light); color: var(--gcp-blue-dark); }
-    .badge-green { background: var(--gcp-green-light); color: #137333; }
+    .badge-blue { background: var(--gcp-blue-light); color: var(--gcp-blue); }
+    .badge-green { background: var(--gcp-green-light); color: var(--gcp-green); }
     .badge-yellow { background: var(--gcp-yellow-light); color: #b06000; }
-    .badge-red { background: var(--gcp-red-light); color: #c5221f; }
-    .badge-purple { background: #f3e8ff; color: #7e22ce; }
+    .badge-red { background: var(--gcp-red-light); color: var(--gcp-red); }
+    .badge-purple { background: #f3e8fd; color: #9333ea; }
 
-    .module-body { padding: 24px; }
-    .sub-section { margin-bottom: 28px; }
-    .sub-section:last-child { margin-bottom: 0; }
+    .module-body {
+      padding: 24px;
+    }
+
+    /* Sub Sections */
+    .sub-section {
+      margin-bottom: 24px;
+    }
+    .sub-section:last-child {
+      margin-bottom: 0;
+    }
     .sub-title {
       font-family: 'Google Sans', sans-serif;
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 700;
       color: #3c4043;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
-      border-bottom: 1px solid #f1f3f4;
-      padding-bottom: 6px;
     }
 
-    /* Alerts */
-    .alert-box {
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin: 16px 0;
-      font-size: 13.5px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      border-left: 4px solid;
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
     }
-    .alert-tip { background: #e6f4ea; border-left-color: #34a853; color: #137333; }
-    .alert-important { background: #e8f0fe; border-left-color: #1a73e8; color: #174ea6; }
-    .alert-warning { background: #fef7e0; border-left-color: #fbbc04; color: #b06000; }
-    .alert-danger { background: #fce8e6; border-left-color: #ea4335; color: #c5221f; }
-    .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .grid-card {
+      background: #fafafa;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .grid-card h4 {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #202124;
+      margin-bottom: 8px;
+    }
+    .grid-card p, .grid-card ul {
+      font-size: 13px;
+      color: #3c4043;
+    }
+    .grid-card ul {
+      padding-left: 18px;
+    }
+    .grid-card li {
+      margin-bottom: 6px;
+    }
 
     /* Tables */
     .table-container {
       overflow-x: auto;
-      margin: 16px 0;
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      background: #ffffff;
+      margin-top: 12px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 13.5px;
+      font-size: 13px;
     }
     th {
       background: #f1f3f4;
-      color: #3c4043;
-      font-weight: 600;
       padding: 10px 14px;
+      font-weight: 600;
+      color: #202124;
       border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
     }
     td {
       padding: 10px 14px;
-      border-bottom: 1px solid #f1f3f4;
-      color: var(--text-main);
+      border-bottom: 1px solid var(--border-color);
+      color: #3c4043;
+      vertical-align: top;
     }
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
+    tr:hover td { background: #f8f9fa; }
 
-    /* Code */
+    /* Alert / Exam Tip Boxes */
+    .alert-box {
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-top: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .alert-important {
+      background: #fef7e0;
+      border-left: 4px solid var(--gcp-yellow);
+      color: #7a4100;
+    }
+    .alert-tip {
+      background: #e6f4ea;
+      border-left: 4px solid var(--gcp-green);
+      color: #137333;
+    }
+    .alert-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
     code {
       font-family: 'Roboto Mono', monospace;
       font-size: 12px;
-      background: #f1f3f4;
+      background: #eef1f5;
       padding: 2px 6px;
       border-radius: 4px;
-      color: #d93025;
+      color: #b31412;
     }
 
-    /* Grids */
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 16px 0; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 16px 0; }
-    .grid-card { background: #f8f9fa; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; }
-    .grid-card h4 { font-family: 'Google Sans', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-    .grid-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-    .grid-card ul { margin-top: 8px; padding-left: 18px; font-size: 12.5px; color: #444746; }
-    .grid-card li { margin-bottom: 4px; }
-
-    /* ==========================================================================
-       NOUVEAUX SCHÉMAS GRAPHIQUES MODERNES (CSS + SVG)
-       ========================================================================== */
-
+    /* =========================================================
+       RICH VISUAL DIAGRAMS (100% CSS/SVG)
+    ========================================================= */
     .diagram-container {
       background: #ffffff;
-      border: 1px solid var(--border-color);
+      border: 1px solid #d2d6dc;
       border-radius: 12px;
-      padding: 24px;
-      margin: 20px 0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      padding: 20px;
+      margin: 16px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
     }
     .diagram-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       padding-bottom: 10px;
-      border-bottom: 1px solid #f1f3f4;
+      border-bottom: 1px solid #edf2f7;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .diagram-title {
       font-family: 'Google Sans', sans-serif;
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 700;
-      color: #1a73e8;
+      color: #1a202c;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .diagram-legend {
-      font-size: 12px;
-      color: var(--text-muted);
       display: flex;
       gap: 12px;
+      font-size: 11.5px;
+      font-weight: 600;
     }
 
-    /* Schéma 1 : Arbre Hiérarchie */
+    /* Diagram 1 : Hierarchy Tree */
     .tree-box {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
-      position: relative;
+      gap: 0;
+      max-width: 680px;
+      margin: 0 auto;
     }
     .tree-node {
-      border: 2px solid;
-      border-radius: 10px;
-      padding: 12px 20px;
+      width: 100%;
+      border-radius: 8px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-      z-index: 2;
-      transition: transform 0.2s, box-shadow 0.2s;
-      width: 100%;
-      max-width: 520px;
-    }
-    .tree-node:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      gap: 14px;
+      border: 1.5px solid;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      position: relative;
     }
     .node-org { border-color: #1a73e8; background: #f8fbff; }
     .node-folder { border-color: #9333ea; background: #faf5ff; }
-    .node-project { border-color: #34a853; background: #f6fcf8; }
-    .node-resources { border-color: #ea4335; background: #fff8f7; }
+    .node-project { border-color: #34a853; background: #f0fdf4; }
+    .node-resources { border-color: #ea4335; background: #fef2f2; }
 
     .node-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
+      font-size: 22px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
       flex-shrink: 0;
     }
-    .node-org .node-icon { background: #e8f0fe; color: #1a73e8; }
-    .node-folder .node-icon { background: #f3e8ff; color: #9333ea; }
-    .node-project .node-icon { background: #e6f4ea; color: #34a853; }
-    .node-resources .node-icon { background: #fce8e6; color: #ea4335; }
-
     .node-content { flex: 1; }
-    .node-title { font-family: 'Google Sans', sans-serif; font-size: 14px; font-weight: 700; color: #202124; }
-    .node-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
+    .node-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #111827;
+    }
+    .node-desc {
+      font-size: 12px;
+      color: #4b5563;
+      margin-top: 2px;
+    }
     .tree-arrow {
-      color: #9aa0a6;
+      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .tree-arrow svg {
+      width: 16px;
       height: 16px;
-      position: relative;
+      stroke: #9ca3af;
     }
-    .tree-arrow svg { width: 20px; height: 20px; }
 
-    /* Schéma 2 : Spectre d'Abstraction Compute */
+    /* Diagram 2 : Compute Spectrum */
     .spectrum-track {
-      position: relative;
-      margin: 30px 0 20px 0;
-    }
-    .spectrum-gradient-bar {
-      height: 10px;
-      border-radius: 5px;
-      background: linear-gradient(90deg, #1a73e8 0%, #34a853 50%, #fbbc04 80%, #ea4335 100%);
-      margin-bottom: 24px;
-      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
     .spectrum-labels-top {
       display: flex;
       justify-content: space-between;
       font-size: 12px;
       font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: #475569;
+      padding: 0 4px;
+    }
+    .spectrum-gradient-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #1a73e8 0%, #34a853 50%, #ea4335 100%);
     }
     .spectrum-cards {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
+      gap: 10px;
+      margin-top: 6px;
     }
     .spectrum-card {
-      background: #f8f9fa;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 10px;
+      background: #fafafa;
       text-align: center;
-      transition: all 0.2s;
-      position: relative;
+      transition: all 0.2s ease;
     }
     .spectrum-card:hover {
-      background: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transform: translateY(-3px);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      border-color: #cbd5e1;
+      background: #ffffff;
     }
-    .spec-icon {
-      font-size: 24px;
-      margin-bottom: 6px;
-    }
+    .spec-icon { font-size: 22px; margin-bottom: 4px; }
     .spec-name {
       font-family: 'Google Sans', sans-serif;
-      font-size: 13.5px;
+      font-size: 12.5px;
       font-weight: 700;
-      color: #202124;
-      margin-bottom: 4px;
+      color: #1e293b;
+      margin-bottom: 2px;
     }
     .spec-type {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
+      display: inline-block;
       padding: 2px 6px;
       border-radius: 4px;
-      display: inline-block;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .spec-details {
-      font-size: 11.5px;
-      color: var(--text-muted);
+      font-size: 11px;
+      color: #64748b;
       line-height: 1.4;
       text-align: left;
     }
 
-    /* Schéma 3 : Arbre Décisionnel Bases de Données */
+    /* Diagram 3 : Database Flowchart */
     .flow-tree {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
     .flow-step-box {
-      border: 1px solid #dadce0;
-      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 18px;
       background: #ffffff;
-      padding: 16px;
-      position: relative;
     }
     .flow-badge {
       display: inline-block;
-      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
       font-weight: 700;
-      text-transform: uppercase;
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .flow-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin-top: 12px;
+      gap: 12px;
     }
     .db-node {
       border: 1px solid #dadce0;
@@ -634,34 +669,24 @@
       line-height: 1.45;
     }
 
-    /* Schéma 4 : GKE Autoscaling */
+    /* Diagram 4 : GKE Autoscaling */
     .gke-map {
       background: #f8fafc;
       border: 1px solid #cbd5e1;
       border-radius: 10px;
       padding: 18px;
     }
-    .gke-cluster-box {
-      border: 2px dashed #94a3b8;
-      border-radius: 8px;
-      padding: 16px;
-      background: white;
-      margin-top: 10px;
-    }
     .gke-levels {
       display: grid;
-      grid-template-columns: 1fr 1.5fr;
+      grid-template-columns: 240px 1fr;
       gap: 16px;
-      align-items: stretch;
+      margin-bottom: 16px;
     }
     .gke-master {
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      border: 2px solid #3b82f6;
       border-radius: 8px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      padding: 16px;
       text-align: center;
     }
     .gke-nodes {
@@ -670,10 +695,10 @@
       gap: 10px;
     }
     .gke-node-box {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: 6px;
-      padding: 12px;
+      background: #ffffff;
+      border: 1.5px dashed #64748b;
+      border-radius: 8px;
+      padding: 12px 14px;
     }
     .gke-pods-row {
       display: flex;
@@ -682,51 +707,54 @@
       flex-wrap: wrap;
     }
     .gke-pod-pill {
-      background: white;
-      border: 1px solid #93c5fd;
-      border-radius: 4px;
-      padding: 4px 8px;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      border-radius: 6px;
+      padding: 4px 10px;
       font-size: 11px;
       font-weight: 600;
-      color: #1e40af;
+      color: #0369a1;
       display: flex;
       align-items: center;
       gap: 4px;
     }
     .auto-badge-row {
-      display: flex;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
       margin-top: 14px;
-      flex-wrap: wrap;
+      padding-top: 14px;
+      border-top: 1px solid #e2e8f0;
     }
     .auto-pill {
-      padding: 6px 12px;
+      padding: 8px 12px;
       border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11.5px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
     .pill-hpa { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
     .pill-vpa { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
     .pill-ca { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
 
-    /* Schéma 5 : Pipeline Cloud Logging */
+    /* Diagram 5 : Cloud Logging Pipe */
     .pipe-container {
       display: grid;
-      grid-template-columns: 1fr 1fr 1.2fr;
-      gap: 16px;
+      grid-template-columns: 1fr 140px 1fr;
       align-items: center;
-      position: relative;
+      gap: 12px;
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 8px;
     }
     .pipe-col {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
     .pipe-card {
-      background: #ffffff;
+      background: #f8fafc;
       border: 1px solid var(--border-color);
       border-radius: 6px;
       padding: 10px 14px;
@@ -761,19 +789,19 @@
     </div>
 
     <div class="nav-group">
-      <div class="nav-label">Modules de Révision</div>
-      <a href="#mod-iam" class="nav-link"><span class="icon">🔐</span> 1. Hiérarchie & IAM</a>
-      <a href="#mod-compute" class="nav-link"><span class="icon">⚡</span> 2. Compute Spectrum & VMs</a>
-      <a href="#mod-containers" class="nav-link"><span class="icon">📦</span> 3. GKE, Cloud Run & App Engine</a>
-      <a href="#mod-storage" class="nav-link"><span class="icon">💾</span> 4. Cloud Storage & Analytics</a>
-      <a href="#mod-db" class="nav-link"><span class="icon">🗄️</span> 5. Bases de Données (SQL/NoSQL)</a>
-      <a href="#mod-network" class="nav-link"><span class="icon">🌐</span> 6. Réseau, VPC & Sécurité</a>
-      <a href="#mod-devops" class="nav-link"><span class="icon">🚀</span> 7. DevOps & Observabilité</a>
-      <a href="#mod-exam" class="nav-link"><span class="icon">🎯</span> 8. Fiche Anti-Pièges Examen</a>
+      <div class="nav-label">Revision Modules</div>
+      <a href="#mod-iam" class="nav-link"><span class="icon">🔐</span> 1. Hierarchy &amp; IAM</a>
+      <a href="#mod-compute" class="nav-link"><span class="icon">⚡</span> 2. Compute Spectrum &amp; VMs</a>
+      <a href="#mod-containers" class="nav-link"><span class="icon">📦</span> 3. GKE, Cloud Run &amp; App Engine</a>
+      <a href="#mod-storage" class="nav-link"><span class="icon">💾</span> 4. Cloud Storage &amp; Analytics</a>
+      <a href="#mod-db" class="nav-link"><span class="icon">🗄️</span> 5. Databases (SQL/NoSQL)</a>
+      <a href="#mod-network" class="nav-link"><span class="icon">🌐</span> 6. Networking, VPC &amp; Security</a>
+      <a href="#mod-devops" class="nav-link"><span class="icon">🚀</span> 7. DevOps &amp; Observability</a>
+      <a href="#mod-exam" class="nav-link"><span class="icon">🎯</span> 8. Exam Anti-Traps Cheat Sheet</a>
     </div>
 
     <div style="background: #f1f3f4; border-radius: 8px; padding: 12px; margin-top: 24px;">
-      <div style="font-size: 11px; font-weight: 700; color: #5f6368; text-transform: uppercase;">Source du Cours</div>
+      <div style="font-size: 11px; font-weight: 700; color: #5f6368; text-transform: uppercase;">Course Source</div>
       <div style="font-size: 12.5px; color: #202124; margin-top: 4px; font-weight: 600;">GCP Study Hub (2026)</div>
       <div style="font-size: 11.5px; color: #5f6368; margin-top: 2px;">ACE Cram Session (1h43m)</div>
     </div>
@@ -785,12 +813,12 @@
     <!-- Header -->
     <header class="header-bar">
       <div class="header-title">
-        <h1>Google Cloud Platform (GCP) — Synthèse Essentielle</h1>
-        <p>Guide complet et interactif de révision condensée pour l'examen <strong>Associate Cloud Engineer (ACE)</strong></p>
+        <h1>Google Cloud Platform (GCP) — Essential Summary</h1>
+        <p>Comprehensive &amp; interactive revision guide for the <strong>Associate Cloud Engineer (ACE)</strong> certification exam</p>
       </div>
       <div class="header-actions no-print">
         <button onclick="window.print()" class="btn btn-primary">
-          <span>🖨️</span> Imprimer en PDF
+          <span>🖨️</span> Print to PDF
         </button>
       </div>
     </header>
@@ -801,18 +829,18 @@
         <div class="video-thumb">☁️</div>
         <div class="video-hero-text">
           <h3>GCP ACE Exam — Cram Session (2026 Edition)</h3>
-          <p>Condensé visuel des 42 concepts clés, architectures systèmes, commandes CLI et pièges d'examen officiels.</p>
+          <p>Visual summary of the 42 key concepts, system architectures, CLI commands, and official exam traps.</p>
         </div>
       </div>
       <div class="no-print">
-        <span class="badge badge-green">Schémas Visuels Enrichis</span>
+        <span class="badge badge-green">Enriched Visual Diagrams</span>
       </div>
     </section>
 
     <!-- Search Input -->
     <div class="search-box no-print">
       <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" class="search-input" placeholder="Filtrer par service, concept ou mot-clé (ex: Spanner, GKE, HPA, IAP, Shared VPC, Liens...)..." onkeyup="filterContent()">
+      <input type="text" id="searchInput" class="search-input" placeholder="Filter by service, concept, or keyword (e.g., Spanner, GKE, HPA, IAP, Shared VPC, Liens...)..." onkeyup="filterContent()">
     </div>
 
     <!-- MODULE 1: HIERARCHY & IAM -->
@@ -820,85 +848,85 @@
       <div class="module-header">
         <div class="module-header-left">
           <div class="module-number">1</div>
-          <h2 class="module-title">Hiérarchie des Ressources, Organisation & Cloud IAM</h2>
+          <h2 class="module-title">Resource Hierarchy, Organization &amp; Cloud IAM</h2>
         </div>
-        <span class="badge badge-blue">Sécurité & Gouvernance</span>
+        <span class="badge badge-blue">Security &amp; Governance</span>
       </div>
       <div class="module-body">
         
         <div class="sub-section">
-          <h3 class="sub-title">1.1 Schéma Graphique : L'Arbre Hiérarchique & l'Héritage IAM</h3>
+          <h3 class="sub-title">1.1 Visual Diagram: Resource Hierarchy Tree &amp; IAM Inheritance</h3>
           <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 14px;">
-            Les permissions IAM s'héritent de manière <strong>strictement descendante (héritage permissif)</strong> : une autorisation accordée en haut s'applique à tout le bas et ne peut jamais être restreinte à un niveau inférieur.
+            IAM permissions inherit <strong>strictly downward (permissive inheritance)</strong>: an authorization granted at an upper level applies to everything below and can never be restricted at a lower level.
           </p>
 
-          <!-- NOUVEAU SCHÉMA VISUEL 1 : HIÉRARCHIE -->
+          <!-- VISUAL DIAGRAM 1 : HIERARCHY -->
           <div class="diagram-container">
             <div class="diagram-header">
               <div class="diagram-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                Arbre Hiérarchique des Ressources GCP
+                GCP Resource Hierarchy Tree
               </div>
               <div class="diagram-legend">
-                <span style="color:#1a73e8;">● Organisation</span>
-                <span style="color:#9333ea;">● Dossiers</span>
-                <span style="color:#34a853;">● Projets</span>
-                <span style="color:#ea4335;">● Ressources</span>
+                <span style="color:#1a73e8;">● Organization</span>
+                <span style="color:#9333ea;">● Folders</span>
+                <span style="color:#34a853;">● Projects</span>
+                <span style="color:#ea4335;">● Resources</span>
               </div>
             </div>
 
             <div class="tree-box">
               
-              <!-- Organisation -->
+              <!-- Organization -->
               <div class="tree-node node-org">
                 <div class="node-icon">🏢</div>
                 <div class="node-content">
-                  <div class="node-title">ORGANISATION (ex: monentreprise.com)</div>
-                  <div class="node-desc">Liée au compte Cloud Identity / Google Workspace. Rôles globaux &amp; Politiques d'organisation (Org Policies).</div>
+                  <div class="node-title">ORGANIZATION (e.g., mycompany.com)</div>
+                  <div class="node-desc">Linked to Cloud Identity / Google Workspace account. Root for Global IAM roles &amp; Organization Policies (Org Policies).</div>
                 </div>
-                <span class="badge badge-blue">Racine</span>
+                <span class="badge badge-blue">Root</span>
               </div>
 
               <div class="tree-arrow">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
               </div>
 
-              <!-- Dossiers -->
+              <!-- Folders -->
               <div class="tree-node node-folder">
                 <div class="node-icon">📁</div>
                 <div class="node-content">
-                  <div class="node-title">DOSSIERS / FOLDERS (ex: Production, Staging, Finance)</div>
-                  <div class="node-desc">Permet de regrouper des projets par environnement ou filiale. Peuvent être imbriqués jusqu'à 300 niveaux.</div>
+                  <div class="node-title">FOLDERS (e.g., Production, Staging, Finance)</div>
+                  <div class="node-desc">Used to group projects by environment, department, or business unit. Can be nested up to 300 levels deep.</div>
                 </div>
-                <span class="badge badge-purple">Regroupement</span>
+                <span class="badge badge-purple">Grouping</span>
               </div>
 
               <div class="tree-arrow">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
               </div>
 
-              <!-- Projets -->
+              <!-- Projects -->
               <div class="tree-node node-project">
                 <div class="node-icon">📦</div>
                 <div class="node-content">
-                  <div class="node-title">PROJETS (ex: prod-ecommerce-4821)</div>
-                  <div class="node-desc"><strong>L'unité de base d'isolation</strong>. Porte la facturation (Billing Account), l'activation des APIs et les quotas.</div>
+                  <div class="node-title">PROJECTS (e.g., prod-ecommerce-4821)</div>
+                  <div class="node-desc"><strong>The fundamental isolation unit</strong>. Holds billing (Billing Account), API enablement, and quotas.</div>
                 </div>
-                <span class="badge badge-green">Unité Clé</span>
+                <span class="badge badge-green">Core Unit</span>
               </div>
 
               <div class="tree-arrow">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
               </div>
 
-              <!-- Ressources -->
+              <!-- Resources -->
               <div class="tree-node node-resources">
                 <div class="node-icon">⚡</div>
                 <div class="node-content">
-                  <div class="node-title">RESSOURCES INDIVIDUELLES</div>
-                  <div class="node-desc">Instances Compute Engine, Clusters GKE, Buckets Cloud Storage, Datasets BigQuery.</div>
+                  <div class="node-title">INDIVIDUAL RESOURCES</div>
+                  <div class="node-desc">Compute Engine instances, GKE clusters, Cloud Storage buckets, BigQuery datasets.</div>
                 </div>
-                <span class="badge badge-red">Feuilles</span>
+                <span class="badge badge-red">Leaves</span>
               </div>
 
             </div>
@@ -907,46 +935,46 @@
           <div class="grid-3">
             <div class="grid-card">
               <h4>Project ID</h4>
-              <p>Chaîne textuelle unique <strong>à l'échelle mondiale</strong>. Choisie lors de la création, <strong>définitive et immuable</strong>. Utilisée dans les commandes <code>gcloud</code> et le code Terraform.</p>
+              <p>Globally unique text string <strong>across all of Google Cloud</strong>. Chosen at creation, <strong>permanent and immutable</strong>. Used in <code>gcloud</code> commands and Terraform code.</p>
             </div>
             <div class="grid-card">
               <h4>Project Number</h4>
-              <p>Identifiant numérique unique généré <strong>automatiquement</strong> par Google (ex: <code>104829104812</code>). Utilisé par les comptes de service internes de Google.</p>
+              <p>Unique numerical identifier generated <strong>automatically</strong> by Google (e.g., <code>104829104812</code>). Used by internal Google service accounts.</p>
             </div>
             <div class="grid-card">
               <h4>Project Name</h4>
-              <p>Nom d'affichage convivial pour les humains. N'a pas besoin d'être unique et peut être <strong>modifié à tout moment</strong> dans la console.</p>
+              <p>User-friendly display name. Does not need to be unique and can be <strong>modified at any time</strong> in the Google Cloud Console.</p>
             </div>
           </div>
         </div>
 
         <div class="sub-section">
-          <h3 class="sub-title">1.2 Cloud IAM (Rôles, Groupes & Comptes de Service)</h3>
+          <h3 class="sub-title">1.2 Cloud IAM (Roles, Groups &amp; Service Accounts)</h3>
           
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Type de Rôle</th>
+                  <th>Role Type</th>
                   <th>Description</th>
-                  <th>Recommandation Examen ACE</th>
+                  <th>ACE Exam Recommendation</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Basic / Primitif</strong></td>
-                  <td><code>Viewer</code>, <code>Editor</code>, <code>Owner</code>. Rôles historiques très larges s'appliquant à l'ensemble du projet.</td>
-                  <td><span class="badge badge-red">À proscrire en prod</span>. Violent le principe du moindre privilège.</td>
+                  <td><strong>Basic / Primitive</strong></td>
+                  <td><code>Viewer</code>, <code>Editor</code>, <code>Owner</code>. Broad legacy roles applying to the entire project.</td>
+                  <td><span class="badge badge-red">Avoid in production</span>. Violates the principle of least privilege.</td>
                 </tr>
                 <tr>
-                  <td><strong>Predefined (Prédéfini)</strong></td>
-                  <td>Créés et maintenus par Google pour chaque service (ex: <code>roles/storage.objectViewer</code>, <code>roles/compute.instanceAdmin.v1</code>).</td>
-                  <td><span class="badge badge-green">Meilleure pratique</span>. Granulaires et mis à jour automatiquement par Google.</td>
+                  <td><strong>Predefined</strong></td>
+                  <td>Created and maintained by Google for each service (e.g., <code>roles/storage.objectViewer</code>, <code>roles/compute.instanceAdmin.v1</code>).</td>
+                  <td><span class="badge badge-green">Best practice</span>. Highly granular and automatically kept up to date by Google.</td>
                 </tr>
                 <tr>
-                  <td><strong>Custom (Personnalisé)</strong></td>
-                  <td>Créés par vos soins avec une liste précise de permissions élémentaires (ex: <code>compute.instances.start</code>).</td>
-                  <td>À utiliser <strong>uniquement</strong> si aucun rôle prédéfini ne répond au besoin. Ne peuvent pas être appliqués sur des dossiers (Folders).</td>
+                  <td><strong>Custom</strong></td>
+                  <td>User-created roles with an exact list of elementary permissions (e.g., <code>compute.instances.start</code>).</td>
+                  <td>Use <strong>only</strong> if no predefined role meets the need. Cannot be applied at the Folder level.</td>
                 </tr>
               </tbody>
             </table>
@@ -955,8 +983,8 @@
           <div class="alert-box alert-important">
             <div class="alert-icon">💡</div>
             <div class="alert-text">
-              <strong>Règle d'or de l'examen — Google Groups for IAM :</strong>
-              N'attribuez <em>jamais</em> de rôles directement à des adresses individuelles. Créez un <strong>Groupe Google</strong> (ex: <code>devs-backend@societe.com</code>), assignez le rôle au groupe, puis ajoutez/retirez les personnes dans ce groupe.
+              <strong>Golden Exam Rule — Google Groups for IAM:</strong>
+              <em>Never</em> assign IAM roles directly to individual user email addresses. Create a <strong>Google Group</strong> (e.g., <code>backend-devs@company.com</code>), grant the role to the group, then manage membership inside that group.
             </div>
           </div>
         </div>
@@ -969,38 +997,38 @@
       <div class="module-header">
         <div class="module-header-left">
           <div class="module-number">2</div>
-          <h2 class="module-title">Le Spectre Compute & Compute Engine (VMs)</h2>
+          <h2 class="module-title">The Compute Spectrum &amp; Compute Engine (VMs)</h2>
         </div>
-        <span class="badge badge-green">Calcul & IaaS</span>
+        <span class="badge badge-green">Compute &amp; IaaS</span>
       </div>
       <div class="module-body">
         
         <div class="sub-section">
-          <h3 class="sub-title">2.1 Schéma Graphique : Le Spectre d'Abstraction du Calcul</h3>
+          <h3 class="sub-title">2.1 Visual Diagram: The Compute Abstraction Spectrum</h3>
           <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 14px;">
-            L'arbitrage fondamental en architecture cloud : <strong>Contrôle total de l'OS</strong> (IaaS) versus <strong>Agilité & Automatisation Serverless</strong> (FaaS).
+            The fundamental cloud architecture tradeoff: <strong>Full OS control</strong> (IaaS) versus <strong>Serverless Agility &amp; Automation</strong> (FaaS).
           </p>
 
-          <!-- NOUVEAU SCHÉMA VISUEL 2 : SPECTRE COMPUTE -->
+          <!-- VISUAL DIAGRAM 2 : COMPUTE SPECTRUM -->
           <div class="diagram-container">
             <div class="diagram-header">
               <div class="diagram-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                Du Contrôle d'Infrastructure au Serverless
+                From Infrastructure Control to Serverless
               </div>
               <div class="diagram-legend">
-                <span>◀ Contrôle &amp; Personnalisation</span>
-                <span>Automatisation &amp; Simplicité ▶</span>
+                <span>◀ Control &amp; Customization</span>
+                <span>Automation &amp; Simplicity ▶</span>
               </div>
             </div>
 
             <div class="spectrum-track">
               <div class="spectrum-labels-top">
-                <span>IaaS (Contrôle OS)</span>
+                <span>IaaS (OS Control)</span>
                 <span>CaaS (Orchestration)</span>
-                <span>CaaS Serverless</span>
+                <span>Serverless CaaS</span>
                 <span>PaaS (Web App)</span>
-                <span>FaaS (Événements)</span>
+                <span>FaaS (Event-driven)</span>
               </div>
               <div class="spectrum-gradient-bar"></div>
 
@@ -1011,10 +1039,10 @@
                   <div class="spec-name">Compute Engine</div>
                   <span class="spec-type badge-blue">IaaS</span>
                   <div class="spec-details">
-                    • Accès root complet<br>
-                    • Sizing CPU / RAM custom<br>
-                    • Disques persistants Zonal/Régional<br>
-                    • Vous gérez les patchs d'OS
+                    • Full root access<br>
+                    • Custom CPU / RAM sizing<br>
+                    • Zonal / Regional persistent disks<br>
+                    • You manage OS patches
                   </div>
                 </div>
 
@@ -1023,10 +1051,10 @@
                   <div class="spec-name">GKE Standard</div>
                   <span class="spec-type badge-purple">CaaS</span>
                   <div class="spec-details">
-                    • Control Plane managé<br>
-                    • Node Pools configurables<br>
-                    • Vous gérez la taille des VMs<br>
-                    • Contrôle avancé du cluster
+                    • Managed Control Plane<br>
+                    • Configurable Node Pools<br>
+                    • You manage VM sizing<br>
+                    • Advanced cluster control
                   </div>
                 </div>
 
@@ -1035,10 +1063,10 @@
                   <div class="spec-name">Cloud Run</div>
                   <span class="spec-type badge-green">Serverless CaaS</span>
                   <div class="spec-details">
-                    • Image Docker standard<br>
-                    • <strong>Scale to zero</strong> natif<br>
-                    • Jusqu'à 1000 req/instance<br>
-                    • Zéro gestion de serveur
+                    • Standard Docker image<br>
+                    • Native <strong>scale to zero</strong><br>
+                    • Up to 1000 req/instance<br>
+                    • Zero server management
                   </div>
                 </div>
 
@@ -1047,10 +1075,10 @@
                   <div class="spec-name">App Engine</div>
                   <span class="spec-type badge-yellow">PaaS</span>
                   <div class="spec-details">
-                    • Déploiement de code pur<br>
+                    • Direct code deployment<br>
                     • Standard (scale to zero)<br>
-                    • Flexible (VMs Docker)<br>
-                    • Hébergement web classique
+                    • Flexible (Docker VMs)<br>
+                    • Classic web app hosting
                   </div>
                 </div>
 
@@ -1059,10 +1087,10 @@
                   <div class="spec-name">Cloud Functions</div>
                   <span class="spec-type badge-red">FaaS</span>
                   <div class="spec-details">
-                    • Fonctions unitaires simples<br>
-                    • Déclenché par événements<br>
+                    • Single-purpose functions<br>
+                    • Event-driven triggers<br>
                     • Pub/Sub, Storage, HTTP<br>
-                    • Facturation à la ms
+                    • Millisecond billing
                   </div>
                 </div>
 
@@ -1072,19 +1100,19 @@
 
           <div class="grid-2">
             <div class="grid-card">
-              <h4>Compute Engine : Bonnes Pratiques</h4>
+              <h4>Compute Engine: Best Practices</h4>
               <ul>
-                <li><strong>Machine Families :</strong> E2 (économique, équilibré), N2 (polyvalent de base), C2 (optimisé pour le calcul lourd), M2 (mémoire géante jusqu'à 12 To pour SAP HANA).</li>
-                <li><strong>Snapshots incrémentiels :</strong> Stockés de façon multi-régionale dans Cloud Storage par défaut, assurant une tolérance aux pannes maximale.</li>
+                <li><strong>Machine Families:</strong> E2 (cost-effective, balanced), N2 (general-purpose baseline), C2 (compute-optimized for high CPU workloads), M2 (ultra-high memory up to 12 TB for SAP HANA).</li>
+                <li><strong>Incremental Snapshots:</strong> Stored multi-regionally in Cloud Storage by default, ensuring maximum disaster recovery tolerance.</li>
               </ul>
             </div>
 
             <div class="grid-card">
               <h4>Managed Instance Groups (MIGs)</h4>
               <ul>
-                <li><strong>Instance Template :</strong> Le plan de fabrication immuable utilisé pour cloner les VMs.</li>
-                <li><strong>Autohealing :</strong> Redémarre ou recrée automatiquement une VM si le Health Check HTTP échoue.</li>
-                <li><strong>Autoscaling :</strong> Ajoute des VMs lors de pics de charge CPU ou de trafic réseau.</li>
+                <li><strong>Instance Template:</strong> Immutable blueprint used to instantiate and scale identical VMs.</li>
+                <li><strong>Autohealing:</strong> Automatically reboots or recreates a VM instance if the application HTTP Health Check fails.</li>
+                <li><strong>Autoscaling:</strong> Automatically adds or removes VM instances based on CPU utilization or load balancer metrics.</li>
               </ul>
             </div>
           </div>
@@ -1092,8 +1120,8 @@
           <div class="alert-box alert-tip">
             <div class="alert-icon">💰</div>
             <div class="alert-text">
-              <strong>Spot VMs (anciennement Preemptible) :</strong>
-              Instances offrant une réduction de <strong>60% à 91%</strong>. Google peut les arrêter à tout moment avec un <strong>préavis de 30 secondes</strong>. Parfaites pour du calcul batch, du rendu vidéo ou des workers GKE secondaires. Jamais pour des bases de données de prod !
+              <strong>Spot VMs (formerly Preemptible):</strong>
+              Instances offering discounts of <strong>60% to 91%</strong>. Google can terminate them at any time with a <strong>30-second warning</strong>. Perfect for batch processing, video rendering, or secondary GKE node pools. Never use for stateful production databases!
             </div>
           </div>
         </div>
@@ -1106,24 +1134,24 @@
       <div class="module-header">
         <div class="module-header-left">
           <div class="module-number">3</div>
-          <h2 class="module-title">GKE (Kubernetes), Cloud Run & App Engine</h2>
+          <h2 class="module-title">GKE (Kubernetes), Cloud Run &amp; App Engine</h2>
         </div>
-        <span class="badge badge-purple">Conteneurs & Orchestration</span>
+        <span class="badge badge-purple">Containers &amp; Orchestration</span>
       </div>
       <div class="module-body">
         
         <div class="sub-section">
-          <h3 class="sub-title">3.1 Schéma Graphique : Architecture GKE & les 3 Niveaux d'Autoscaling</h3>
+          <h3 class="sub-title">3.1 Visual Diagram: GKE Architecture &amp; the 3 Levels of Autoscaling</h3>
           <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 14px;">
-            Pour l'examen ACE, maîtrisez la distinction entre le scaling horizontal des Pods (HPA), le dimensionnement vertical (VPA) et l'ajout de serveurs physiques (Cluster Autoscaler).
+            For the ACE exam, master the difference between horizontal Pod scaling (HPA), vertical Pod sizing (VPA), and provisioning underlying VM nodes (Cluster Autoscaler).
           </p>
 
-          <!-- NOUVEAU SCHÉMA VISUEL 3 : GKE ARCHITECTURE & AUTOSCALING -->
+          <!-- VISUAL DIAGRAM 3 : GKE ARCHITECTURE & AUTOSCALING -->
           <div class="diagram-container">
             <div class="diagram-header">
               <div class="diagram-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="12 8 8 12 12 16 16 12 12 8"></polygon></svg>
-                Cluster GKE : Control Plane, Worker Nodes &amp; Pods
+                GKE Cluster: Control Plane, Worker Nodes &amp; Pods
               </div>
               <div class="diagram-legend">
                 <span style="color:#1e40af;">● HPA (Pods)</span>
@@ -1139,20 +1167,20 @@
                 <div class="gke-master">
                   <div style="font-size: 26px; margin-bottom: 6px;">☸️</div>
                   <strong style="font-family:'Google Sans'; color:#1e293b;">Control Plane (Master)</strong>
-                  <div style="font-size: 11.5px; color:#64748b; margin-top: 4px;">Entièrement géré par Google</div>
+                  <div style="font-size: 11.5px; color:#64748b; margin-top: 4px;">Fully managed by Google</div>
                   <div style="margin-top: 10px; font-size: 11px; background:#e2e8f0; padding: 4px 8px; border-radius: 4px; color:#334155;">
                     API Server • etcd • Scheduler • Controllers
                   </div>
-                  <div style="font-size: 11px; color:#15803d; font-weight:700; margin-top: 8px;">SLA 99.95% Régional</div>
+                  <div style="font-size: 11px; color:#15803d; font-weight:700; margin-top: 8px;">Regional 99.95% SLA</div>
                 </div>
 
                 <!-- Worker Nodes -->
                 <div class="gke-nodes">
-                  <strong style="font-family:'Google Sans'; font-size: 13px; color:#1e293b;">Node Pool (Machines Virtuelles Compute Engine)</strong>
+                  <strong style="font-family:'Google Sans'; font-size: 13px; color:#1e293b;">Node Pool (Compute Engine Virtual Machines)</strong>
                   
                   <div class="gke-node-box">
                     <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#1e40af;">
-                      <span>Worker Node 1 (VM Compute Engine)</span>
+                      <span>Worker Node 1 (Compute Engine VM)</span>
                       <span>kubelet + containerd</span>
                     </div>
                     <div class="gke-pods-row">
@@ -1164,7 +1192,7 @@
 
                   <div class="gke-node-box">
                     <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#1e40af;">
-                      <span>Worker Node 2 (VM Compute Engine)</span>
+                      <span>Worker Node 2 (Compute Engine VM)</span>
                       <span>kubelet + containerd</span>
                     </div>
                     <div class="gke-pods-row">
@@ -1176,19 +1204,19 @@
 
               </div>
 
-              <!-- Les 3 autoscalers -->
+              <!-- 3 Autoscalers -->
               <div class="auto-badge-row">
                 <div class="auto-pill pill-hpa">
                   <span>↔️</span>
-                  <span><strong>HPA (Horizontal Pod Autoscaler) :</strong> Ajoute ou retire des répliques de Pods selon l'utilisation CPU/RAM.</span>
+                  <span><strong>HPA (Horizontal Pod Autoscaler):</strong> Scales Pod replicas up or down based on CPU/RAM utilization.</span>
                 </div>
                 <div class="auto-pill pill-vpa">
                   <span>↕️</span>
-                  <span><strong>VPA (Vertical Pod Autoscaler) :</strong> Réajuste dynamiquement les demandes CPU/mémoire d'un Pod existant.</span>
+                  <span><strong>VPA (Vertical Pod Autoscaler):</strong> Automatically adjusts CPU and memory requests for existing Pods.</span>
                 </div>
                 <div class="auto-pill pill-ca">
                   <span>🖥️</span>
-                  <span><strong>Cluster Autoscaler (CA) :</strong> Commande l'ajout ou la suppression de VMs Compute Engine quand des Pods sont bloqués en <em>Pending</em>.</span>
+                  <span><strong>Cluster Autoscaler (CA):</strong> Provisions or deletes Compute Engine VMs when Pods are stuck in <em>Pending</em>.</span>
                 </div>
               </div>
 
@@ -1199,16 +1227,16 @@
             <div class="grid-card">
               <h4>GKE Standard vs GKE Autopilot</h4>
               <ul>
-                <li><strong>GKE Standard :</strong> Vous choisissez le type de VM, la taille des disques et les OS des nœuds. Vous payez pour les VMs, qu'elles soient pleines ou vides.</li>
-                <li><strong>GKE Autopilot (Recommandé) :</strong> Google gère entièrement l'infrastructure des nœuds, le durcissement de sécurité et l'OS. Vous ne payez <strong>que pour les ressources CPU et mémoire réellement demandées par vos Pods</strong>.</li>
+                <li><strong>GKE Standard:</strong> You select the VM types, disk sizes, and node OS images. You pay for underlying VMs whether fully loaded or idle.</li>
+                <li><strong>GKE Autopilot (Recommended):</strong> Google fully manages node infrastructure, security hardening, and OS patches. You only pay for <strong>the CPU and memory resources requested by your Pods</strong>.</li>
               </ul>
             </div>
 
             <div class="grid-card">
-              <h4>App Engine : Standard vs Flexible</h4>
+              <h4>App Engine: Standard vs Flexible</h4>
               <ul>
-                <li><strong>Standard :</strong> Déploiement de code pur dans un bac à sable (sandbox). Démarrage en millisecondes, <strong>scale to zero</strong> complet en période creuse.</li>
-                <li><strong>Flexible :</strong> Exécute des conteneurs Docker personnalisés sur des <strong>VMs Compute Engine</strong>. Permet l'accès SSH et les bibliothèques système natives, mais <strong>ne scale pas à zéro</strong> (1 VM minimum facturée en continu).</li>
+                <li><strong>Standard:</strong> Pure code deployment within a sandboxed runtime. Millisecond boot time, full <strong>scale to zero</strong> during idle periods.</li>
+                <li><strong>Flexible:</strong> Runs custom Docker containers on <strong>Compute Engine VMs</strong>. Allows SSH access and native OS background libraries, but <strong>does not scale to zero</strong> (minimum 1 VM billed continuously).</li>
               </ul>
             </div>
           </div>
@@ -1222,49 +1250,49 @@
       <div class="module-header">
         <div class="module-header-left">
           <div class="module-number">4</div>
-          <h2 class="module-title">Stockage Objet (Cloud Storage) & Analytics</h2>
+          <h2 class="module-title">Object Storage (Cloud Storage) &amp; Analytics</h2>
         </div>
-        <span class="badge badge-yellow">Stockage & Big Data</span>
+        <span class="badge badge-yellow">Storage &amp; Big Data</span>
       </div>
       <div class="module-body">
         
         <div class="sub-section">
-          <h3 class="sub-title">4.1 Cloud Storage (GCS) : Classes & Cycle de Vie</h3>
+          <h3 class="sub-title">4.1 Cloud Storage (GCS): Classes &amp; Lifecycle Management</h3>
           
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Classe de Stockage</th>
-                  <th>Engagement Minimum</th>
-                  <th>Fréquence d'Accès</th>
-                  <th>Cas d'Usage Examen</th>
+                  <th>Storage Class</th>
+                  <th>Minimum Duration</th>
+                  <th>Access Frequency</th>
+                  <th>Exam Use Case</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><strong>Standard</strong></td>
-                  <td>Aucun</td>
-                  <td>Fréquente (quotidienne)</td>
-                  <td>Données actives, sites web, assets média consultés régulièrement.</td>
+                  <td>None</td>
+                  <td>Frequent (daily)</td>
+                  <td>Active data, websites, regularly accessed media assets.</td>
                 </tr>
                 <tr>
                   <td><strong>Nearline</strong></td>
-                  <td><strong>30 jours</strong></td>
-                  <td>&lt; 1 fois par mois</td>
-                  <td>Sauvegardes mensuelles de données, rapports périodiques.</td>
+                  <td><strong>30 days</strong></td>
+                  <td>&lt; 1 time per month</td>
+                  <td>Monthly data backups, periodic analytical reports.</td>
                 </tr>
                 <tr>
                   <td><strong>Coldline</strong></td>
-                  <td><strong>90 jours</strong></td>
-                  <td>&lt; 1 fois par an</td>
-                  <td>Plans de reprise d'activité (DR), archives annuelles rarement lues.</td>
+                  <td><strong>90 days</strong></td>
+                  <td>&lt; 1 time per year</td>
+                  <td>Disaster recovery (DR) plans, annual archives rarely read.</td>
                 </tr>
                 <tr>
                   <td><strong>Archive</strong></td>
-                  <td><strong>365 jours</strong></td>
-                  <td>Quasiment jamais</td>
-                  <td>Conformité légale et financière (5 à 10 ans) au coût le plus bas.</td>
+                  <td><strong>365 days</strong></td>
+                  <td>Almost never</td>
+                  <td>Long-term legal and regulatory compliance (5 to 10 years) at minimum cost.</td>
                 </tr>
               </tbody>
             </table>
@@ -1273,26 +1301,26 @@
           <div class="alert-box alert-important">
             <div class="alert-icon">⏳</div>
             <div class="alert-text">
-              <strong>Règles de Cycle de Vie (Lifecycle Management) :</strong>
-              Définissez des règles automatisées : par exemple, basculer les fichiers vers <em>Nearline</em> après 30 jours, puis <em>Archive</em> après 90 jours, et supprimer définitivement après 365 jours.
+              <strong>Lifecycle Management Rules:</strong>
+              Define automated rules: for example, transition objects to <em>Nearline</em> after 30 days, to <em>Archive</em> after 90 days, and permanently delete after 365 days.
             </div>
           </div>
         </div>
 
         <div class="sub-section">
-          <h3 class="sub-title">4.2 BigQuery, Dataflow & Pub/Sub</h3>
+          <h3 class="sub-title">4.2 BigQuery, Dataflow &amp; Pub/Sub</h3>
           <div class="grid-3">
             <div class="grid-card">
               <h4>Pub/Sub</h4>
-              <p>Bus de messagerie asynchrone mondial entièrement managé. Découple les producteurs et consommateurs avec abonnements en mode <strong>Pull</strong> ou <strong>Push</strong>.</p>
+              <p>Fully managed global asynchronous messaging bus. Decouples message producers and consumers with <strong>Pull</strong> or <strong>Push</strong> subscriptions.</p>
             </div>
             <div class="grid-card">
               <h4>Dataflow</h4>
-              <p>Moteur de traitement unifié pour le streaming (temps réel) et le batch, basé sur <strong>Apache Beam</strong>. Autoscaling automatique des workers.</p>
+              <p>Unified streaming (real-time) and batch processing engine powered by <strong>Apache Beam</strong>. Provides automatic worker autoscaling.</p>
             </div>
             <div class="grid-card">
               <h4>BigQuery</h4>
-              <p>Data Warehouse serverless petabyte-scale avec requêtes SQL standard. Optimisation des coûts via le <strong>Partitionnement</strong> (par date) et le <strong>Clustering</strong>.</p>
+              <p>Serverless petabyte-scale data warehouse executing standard SQL queries. Optimize costs using <strong>Partitioning</strong> (by date) and <strong>Clustering</strong>.</p>
             </div>
           </div>
         </div>
@@ -1305,24 +1333,24 @@
       <div class="module-header">
         <div class="module-header-left">
           <div class="module-number">5</div>
-          <h2 class="module-title">Bases de Données : L'Arbre de Décision SQL vs NoSQL</h2>
+          <h2 class="module-title">Databases: The SQL vs NoSQL Decision Tree</h2>
         </div>
-        <span class="badge badge-green">Données & Persistance</span>
+        <span class="badge badge-green">Data &amp; Persistence</span>
       </div>
       <div class="module-body">
         
         <div class="sub-section">
-          <h3 class="sub-title">5.1 Schéma Graphique : L'Arbre de Choix des Bases de Données GCP</h3>
+          <h3 class="sub-title">5.1 Visual Diagram: GCP Database Selection Flowchart</h3>
           <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 14px;">
-            C'est l'un des sujets les plus testés à l'examen. Suivez l'arbre de décision selon la nature des données (SQL vs NoSQL) et la portée géographique (Régionale vs Mondiale).
+            One of the most heavily tested areas on the ACE exam. Follow the decision path based on data structure (SQL vs NoSQL) and geographic scope (Regional vs Global).
           </p>
 
-          <!-- NOUVEAU SCHÉMA VISUEL 4 : ARBRE BASES DE DONNÉES -->
+          <!-- VISUAL DIAGRAM 4 : DATABASE DECISION TREE -->
           <div class="diagram-container">
             <div class="diagram-header">
               <div class="diagram-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
-                Arbre de Décision : Quelle Base de Données Choisir ?
+                Decision Tree: Which Database to Choose?
               </div>
               <div class="diagram-legend">
                 <span style="color:#1a73e8;">● SQL</span>
@@ -1333,21 +1361,21 @@
 
             <div class="flow-tree">
               
-              <!-- Étape 1 : Relationnel -->
+              <!-- Branch 1 : Relational -->
               <div class="flow-step-box">
-                <span class="flow-badge badge-blue">Branche 1 : Données Relationnelles / SQL (Transactions ACID, Jointures complexes)</span>
+                <span class="flow-badge badge-blue">Branch 1: Relational / SQL Data (ACID Transactions, Complex Joins)</span>
                 
                 <div class="flow-grid">
                   
                   <div class="db-node db-sql">
                     <div class="db-header">
                       <span class="db-title">Cloud SQL</span>
-                      <span class="badge badge-green">Régional</span>
+                      <span class="badge badge-green">Regional</span>
                     </div>
                     <div class="db-desc">
-                      • Moteurs : PostgreSQL, MySQL, SQL Server.<br>
-                      • <strong>Haute Disponibilité (HA) :</strong> Instance Standby dans une zone différente avec basculement automatique.<br>
-                      • <strong>Disaster Recovery :</strong> Read Replica cross-region pouvant être promue.
+                      • Engines: PostgreSQL, MySQL, SQL Server.<br>
+                      • <strong>High Availability (HA):</strong> Standby instance in a separate zone with automatic failover.<br>
+                      • <strong>Disaster Recovery:</strong> Cross-region Read Replicas that can be promoted.
                     </div>
                   </div>
 
@@ -1357,18 +1385,18 @@
                       <span class="db-sla">99.999% SLA</span>
                     </div>
                     <div class="db-desc">
-                      • Base SQL relationnelle <strong>distribuée mondialement</strong>.<br>
-                      • Scalabilité horizontale infinie sans partitionnement manuel (sharding).<br>
-                      • Cohérence forte (Strong Consistency) avec synchronisation d'horloge TrueTime.
+                      • <strong>Globally distributed</strong> relational SQL database.<br>
+                      • Infinite horizontal scalability without manual sharding.<br>
+                      • Strong consistency across regions powered by TrueTime atomic clocks.
                     </div>
                   </div>
 
                 </div>
               </div>
 
-              <!-- Étape 2 : NoSQL & Cache -->
+              <!-- Branch 2 : NoSQL & Cache -->
               <div class="flow-step-box">
-                <span class="flow-badge badge-yellow">Branche 2 : NoSQL, Cache en Mémoire & Données Massives</span>
+                <span class="flow-badge badge-yellow">Branch 2: NoSQL, In-Memory Caching &amp; Massive Scale Data</span>
                 
                 <div class="flow-grid">
                   
@@ -1378,9 +1406,9 @@
                       <span class="badge badge-yellow">Documents</span>
                     </div>
                     <div class="db-desc">
-                      • Base NoSQL orientée documents (JSON).<br>
-                      • Support des transactions ACID et requêtes complexes.<br>
-                      • Synchronisation temps réel et mode hors-ligne pour apps web et mobiles.
+                      • NoSQL document-oriented database (JSON structures).<br>
+                      • Full ACID multi-document transactions and rich querying.<br>
+                      • Real-time synchronization and offline support for web and mobile apps.
                     </div>
                   </div>
 
@@ -1390,9 +1418,9 @@
                       <span class="badge badge-red">&lt; 10 ms</span>
                     </div>
                     <div class="db-desc">
-                      • Moteur NoSQL colonnes éparses (Wide-Column) à l'échelle du pétaoctet.<br>
-                      • Débit massif en écriture (IoT, clics, séries temporelles).<br>
-                      • Indexation uniquement sur la <strong>Row Key</strong>.
+                      • Low-latency wide-column NoSQL engine scaled to petabytes.<br>
+                      • Massive write and read throughput (IoT, ad tech, time series).<br>
+                      • Indexed strictly by <strong>Row Key</strong>.
                     </div>
                   </div>
 
@@ -1402,8 +1430,8 @@
                       <span class="badge badge-purple">&lt; 1 ms</span>
                     </div>
                     <div class="db-desc">
-                      • Cache en mémoire entièrement managé 100% compatible <strong>Redis</strong> et <strong>Memcached</strong>.<br>
-                      • Soulage les bases SQL en stockant les sessions utilisateur et résultats fréquents.
+                      • Fully managed in-memory cache 100% compatible with <strong>Redis</strong> and <strong>Memcached</strong>.<br>
+                      • Relieves SQL databases by caching user sessions and high-frequency queries.
                     </div>
                   </div>
 
@@ -1422,75 +1450,75 @@
       <div class="module-header">
         <div class="module-header-left">
           <div class="module-number">6</div>
-          <h2 class="module-title">Réseau, VPC, Load Balancing & Sécurité</h2>
+          <h2 class="module-title">Networking, VPC, Load Balancing &amp; Security</h2>
         </div>
-        <span class="badge badge-blue">Réseau & Périmètre</span>
+        <span class="badge badge-blue">Network &amp; Perimeter</span>
       </div>
       <div class="module-body">
         
         <div class="sub-section">
-          <h3 class="sub-title">6.1 Architecture VPC Mondial & Shared VPC</h3>
+          <h3 class="sub-title">6.1 Global VPC Architecture &amp; Shared VPC</h3>
           
           <div class="alert-box alert-important">
             <div class="alert-icon">🌐</div>
             <div class="alert-text">
-              <strong>Le VPC Google Cloud est MONDIAL (Global) :</strong>
-              Contrairement à d'autres fournisseurs où le VPC est enfermé dans une région, un VPC Google Cloud englobe la planète entière. Ce sont les <strong>sous-réseaux (Subnets) qui sont régionaux</strong>. Deux VMs situées dans des régions différentes sur le même VPC communiquent directement par leur IP privée via la dorsale de fibre optique privée de Google sans jamais traverser l'Internet public !
+              <strong>Google Cloud VPC is GLOBAL:</strong>
+              Unlike other cloud providers where a VPC is confined to a single region, a GCP VPC spans the entire globe. Only <strong>Subnets are regional</strong>. Two VMs located in completely different continents on the same VPC communicate privately via internal IP addresses across Google's private fiber backbone without ever traversing the public Internet!
             </div>
           </div>
 
           <div class="grid-2">
             <div class="grid-card">
-              <h4>Shared VPC (VPC Partagé)</h4>
-              <p>Permet à une organisation de connecter plusieurs projets au même réseau d'entreprise. Géré par un <strong>Host Project</strong> (administré par l'équipe réseau) et consommé par des <strong>Service Projects</strong> (utilisés par les équipes de développement).</p>
+              <h4>Shared VPC</h4>
+              <p>Enables an enterprise organization to connect multiple projects to a centralized shared network. Managed centrally from a <strong>Host Project</strong> (administered by the network team) and consumed by <strong>Service Projects</strong> (used by development application teams).</p>
             </div>
             <div class="grid-card">
               <h4>VPC Network Peering</h4>
-              <p>Connecte deux VPCs distincts de façon privée sans passerelle VPN. Important pour l'examen : le Peering n'est <strong>pas transitif</strong> (si le VPC A est lié au VPC B et le VPC B au VPC C, A ne peut pas communiquer directement avec C).</p>
+              <p>Privately connects two independent VPC networks without VPN gateways or external IP routing. Critical exam note: VPC Peering is <strong>non-transitive</strong> (if VPC A peers with VPC B and VPC B peers with VPC C, VPC A cannot communicate directly with VPC C).</p>
             </div>
           </div>
         </div>
 
         <div class="sub-section">
-          <h3 class="sub-title">6.2 Cloud Firewall & Cloud IAP</h3>
+          <h3 class="sub-title">6.2 Cloud Firewall &amp; Cloud IAP</h3>
           <ul>
-            <li><strong>Pare-feu avec état (Stateful) :</strong> Si une connexion entrante est acceptée, la réponse sortante est automatiquement autorisée sans règle supplémentaire.</li>
-            <li><strong>Priorités des règles :</strong> De <code>0</code> (priorité la plus haute) à <code>65535</code> (règle par défaut la plus basse).</li>
-            <li><strong>Ciblage recommandé :</strong> Appliquez vos règles via des <strong>Network Tags</strong> ou mieux, via des <strong>Service Accounts</strong> rattachés aux instances.</li>
-            <li><strong>Cloud IAP (Identity-Aware Proxy) :</strong> Permet d'administrer vos VMs en SSH/RDP <strong>sans adresse IP publique et sans passerelle VPN</strong> via un tunnel chiffré sécurisé par IAM.</li>
+            <li><strong>Stateful Firewall:</strong> If an inbound connection is allowed, the corresponding outbound response traffic is automatically permitted without additional rules.</li>
+            <li><strong>Rule Priorities:</strong> Ranges from <code>0</code> (highest priority) to <code>65535</code> (default lowest catch-all priority).</li>
+            <li><strong>Recommended Targeting:</strong> Apply firewall rules via <strong>Network Tags</strong> or, for superior security, via attached <strong>Service Accounts</strong>.</li>
+            <li><strong>Cloud IAP (Identity-Aware Proxy):</strong> Establish secure SSH and RDP administrative sessions to VMs <strong>without public IP addresses and without VPN gateways</strong> through IAM-authenticated encrypted tunnels.</li>
           </ul>
         </div>
 
         <div class="sub-section">
-          <h3 class="sub-title">6.3 Cloud Load Balancing (Équilibrage de Charge)</h3>
+          <h3 class="sub-title">6.3 Cloud Load Balancing</h3>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Type de Load Balancer</th>
-                  <th>Portée</th>
-                  <th>Couche OSI</th>
-                  <th>Fonctionnalités Clés</th>
+                  <th>Load Balancer Type</th>
+                  <th>Scope</th>
+                  <th>OSI Layer</th>
+                  <th>Key Capabilities</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><strong>External Application LB (HTTP/S)</strong></td>
-                  <td>Mondiale (Global)</td>
+                  <td>Global</td>
                   <td>Layer 7 (HTTP/HTTPS)</td>
-                  <td>Une seule IP Anycast mondiale. Terminaison SSL, routage par URL/path, intégration Cloud CDN et Cloud Armor (WAF/DDoS).</td>
+                  <td>Single global Anycast IP address. Client SSL termination, URL path-based routing, Cloud CDN and Cloud Armor (WAF/DDoS defense) integration.</td>
                 </tr>
                 <tr>
                   <td><strong>External Network LB</strong></td>
-                  <td>Régionale</td>
+                  <td>Regional</td>
                   <td>Layer 4 (TCP/UDP)</td>
-                  <td>Pass-through transparent ultra-rapide sans proxy. L'adresse IP source du client est intégralement préservée.</td>
+                  <td>Ultra-fast transparent pass-through without proxying. Original client source IP address is fully preserved.</td>
                 </tr>
                 <tr>
                   <td><strong>Internal Application / Network LB</strong></td>
-                  <td>Régionale</td>
-                  <td>Layer 7 ou Layer 4</td>
-                  <td>Équilibrage privé interne pour les architectures microservices et les communications inter-VMs.</td>
+                  <td>Regional</td>
+                  <td>Layer 7 or Layer 4</td>
+                  <td>Private internal load balancing designed for backend microservices and inter-tier VM communication.</td>
                 </tr>
               </tbody>
             </table>
@@ -1505,45 +1533,45 @@
       <div class="module-header">
         <div class="module-header-left">
           <div class="module-number">7</div>
-          <h2 class="module-title">DevOps, Déploiement & Observabilité</h2>
+          <h2 class="module-title">DevOps, Deployment &amp; Observability</h2>
         </div>
-        <span class="badge badge-yellow">CI/CD & Monitoring</span>
+        <span class="badge badge-yellow">CI/CD &amp; Monitoring</span>
       </div>
       <div class="module-body">
         
         <div class="sub-section">
-          <h3 class="sub-title">7.1 CI/CD & Déploiement</h3>
+          <h3 class="sub-title">7.1 CI/CD &amp; Deployment Services</h3>
           <div class="grid-3">
             <div class="grid-card">
               <h4>Cloud Build</h4>
-              <p>Moteur CI/CD serverless. Exécute des builds déclarés dans un fichier <code>cloudbuild.yaml</code> ou un Dockerfile. Déclencheurs automatiques sur commits GitHub/GitLab.</p>
+              <p>Serverless CI/CD automation platform. Executes builds defined in a <code>cloudbuild.yaml</code> configuration file or Dockerfile. Triggered automatically on GitHub/GitLab repository commits.</p>
             </div>
             <div class="grid-card">
               <h4>Artifact Registry</h4>
-              <p>Successeur moderne de Container Registry. Stocke vos conteneurs Docker OCI et packages (npm, Maven, Python) avec scan automatique des vulnérabilités.</p>
+              <p>Modern successor to Container Registry. Centrally stores and manages Docker OCI container images and package dependencies (npm, Maven, Python) with automated vulnerability scanning.</p>
             </div>
             <div class="grid-card">
               <h4>Terraform / Deployment Mgr</h4>
-              <p>Infrastructure as Code (IaC) pour provisionner et maintenir de manière déclarative l'ensemble de vos ressources cloud.</p>
+              <p>Infrastructure as Code (IaC) to declaratively provision, manage, and version-control your entire Google Cloud resource estate.</p>
             </div>
           </div>
         </div>
 
         <div class="sub-section">
-          <h3 class="sub-title">7.2 Schéma Graphique : Le Pipeline Cloud Logging (Sources ➔ Routeur ➔ Sinks)</h3>
+          <h3 class="sub-title">7.2 Visual Diagram: The Cloud Logging Pipeline (Sources ➔ Log Router ➔ Sinks)</h3>
           <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 14px;">
-            Comprenez comment les journaux transitent depuis les conteneurs et VMs jusqu'au Routeur de Logs pour être archivés au coût le plus bas.
+            Understand how log entries flow from containers and VMs through the Log Router to low-cost archival storage destinations.
           </p>
 
-          <!-- NOUVEAU SCHÉMA VISUEL 5 : CLOUD LOGGING PIPELINE -->
+          <!-- VISUAL DIAGRAM 5 : CLOUD LOGGING PIPELINE -->
           <div class="diagram-container">
             <div class="diagram-header">
               <div class="diagram-title">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                Pipeline &amp; Routage des Journaux (Cloud Logging)
+                Log Routing &amp; Pipeline (Cloud Logging)
               </div>
               <div class="diagram-legend">
-                <span>Sources ➔ Routeur ➔ Destinations</span>
+                <span>Sources ➔ Log Router ➔ Destinations</span>
               </div>
             </div>
 
@@ -1551,22 +1579,22 @@
               
               <!-- Sources -->
               <div class="pipe-col">
-                <strong style="font-size:12px; color:#5f6368; text-transform:uppercase;">1. Sources de Logs</strong>
-                <div class="pipe-card">📦 Pods GKE (stdout / stderr)</div>
-                <div class="pipe-card">🖥️ Compute Engine (syslog / agent)</div>
+                <strong style="font-size:12px; color:#5f6368; text-transform:uppercase;">1. Log Sources</strong>
+                <div class="pipe-card">📦 GKE Pods (stdout / stderr)</div>
+                <div class="pipe-card">🖥️ Compute Engine (syslog / Ops Agent)</div>
                 <div class="pipe-card">🚀 Cloud Run &amp; Cloud Functions</div>
-                <div class="pipe-card">🔒 Audit Logs (Admin &amp; Data Access)</div>
+                <div class="pipe-card">🔒 Cloud Audit Logs (Admin &amp; Data Access)</div>
               </div>
 
-              <!-- Routeur -->
+              <!-- Log Router -->
               <div class="pipe-col">
-                <strong style="font-size:12px; color:#5f6368; text-transform:uppercase;">2. Log Router Central</strong>
+                <strong style="font-size:12px; color:#5f6368; text-transform:uppercase;">2. Central Log Router</strong>
                 <div class="pipe-router">
                   <div style="font-size:22px; margin-bottom:4px;">⚙️</div>
                   <strong style="font-size:13px; color:#1e40af;">Log Router</strong>
                   <div style="font-size:11.5px; color:#475569; margin-top:6px;">
-                    • Filtres d'Inclusion<br>
-                    • Filtres d'Exclusion (anti-coût)
+                    • Inclusion Filters<br>
+                    • Exclusion Filters (cost reduction)
                   </div>
                 </div>
               </div>
@@ -1575,19 +1603,19 @@
               <div class="pipe-col">
                 <strong style="font-size:12px; color:#5f6368; text-transform:uppercase;">3. Destinations &amp; Sinks</strong>
                 <div class="pipe-card" style="border-left: 3px solid #ea4335;">
-                  <strong>Bucket <code>_Required</code></strong> (400j, inaltérable, gratuit)
+                  <strong><code>_Required</code> Bucket</strong> (400 days, non-configurable, free)
                 </div>
                 <div class="pipe-card" style="border-left: 3px solid #fbbc04;">
-                  <strong>Bucket <code>_Default</code></strong> (30j par défaut)
+                  <strong><code>_Default</code> Bucket</strong> (30 days default retention)
                 </div>
                 <div class="pipe-card" style="border-left: 3px solid #1a73e8;">
-                  <strong>Sink Cloud Storage</strong> (Archivage légal Cold/Archive)
+                  <strong>Cloud Storage Sink</strong> (Long-term regulatory archival: Coldline/Archive)
                 </div>
                 <div class="pipe-card" style="border-left: 3px solid #34a853;">
-                  <strong>Sink BigQuery</strong> (Requêtes SQL d'audit &amp; BI)
+                  <strong>BigQuery Sink</strong> (Security audit SQL analysis &amp; BI)
                 </div>
                 <div class="pipe-card" style="border-left: 3px solid #9333ea;">
-                  <strong>Sink Pub/Sub</strong> (Export vers Splunk / Datadog)
+                  <strong>Pub/Sub Sink</strong> (Streaming export to Splunk / Datadog)
                 </div>
               </div>
 
@@ -1603,9 +1631,9 @@
       <div class="module-header">
         <div class="module-header-left">
           <div class="module-number">8</div>
-          <h2 class="module-title">Fiche Réflexe Anti-Pièges Examen ACE</h2>
+          <h2 class="module-title">ACE Exam Reflex Anti-Traps Cheat Sheet</h2>
         </div>
-        <span class="badge badge-red">Spécial Examen</span>
+        <span class="badge badge-red">Exam Special</span>
       </div>
       <div class="module-body">
         
@@ -1613,51 +1641,51 @@
           <table>
             <thead>
               <tr>
-                <th style="width: 35%;">Si la question mentionne...</th>
-                <th style="width: 35%;">La bonne réponse doit contenir...</th>
-                <th style="width: 30%;">Le piège à éviter</th>
+                <th style="width: 35%;">If the question mentions...</th>
+                <th style="width: 35%;">The correct answer must contain...</th>
+                <th style="width: 30%;">The trap to avoid</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><em>"Empêcher la suppression accidentelle d'un projet de production même par un Owner"</em></td>
+                <td><em>"Preventing accidental deletion of a production project even by an Owner"</em></td>
                 <td><strong>Project Lien</strong> (<code>resourcemanager.projects.delete</code>)</td>
-                <td>Ne pas proposer de retirer le rôle Owner (le Lien protège même contre les Owners).</td>
+                <td>Do not propose removing the Owner role (a Lien protects against deletion even by Owners).</td>
               </tr>
               <tr>
-                <td><em>"Attribuer des accès à une équipe de 15 développeurs"</em></td>
-                <td>Créer un <strong>Groupe Google</strong> et lui assigner un rôle <strong>Predefined</strong></td>
-                <td>Ne jamais assigner de rôles directement aux adresses individuelles.</td>
+                <td><em>"Assigning access to a team of 15 developers"</em></td>
+                <td>Create a <strong>Google Group</strong> and assign a <strong>Predefined</strong> role to the group</td>
+                <td>Never assign IAM roles directly to individual user accounts.</td>
               </tr>
               <tr>
-                <td><em>"Application conteneurisée sans état avec variation imprévisible de trafic de 0 à 10 000 req/s"</em></td>
-                <td><strong>Cloud Run</strong> (scale to zero et scale instantané)</td>
-                <td>Ne pas choisir Compute Engine ou GKE qui nécessitent de payer pour des machines allumées en continu.</td>
+                <td><em>"Stateless containerized application with unpredictable traffic swings from 0 to 10,000 req/s"</em></td>
+                <td><strong>Cloud Run</strong> (scale to zero and instantaneous scaling)</td>
+                <td>Do not choose Compute Engine or GKE which require paying for continuously running compute VMs.</td>
               </tr>
               <tr>
-                <td><em>"Base de données relationnelle SQL avec SLA de 99.999% et expansion mondiale"</em></td>
+                <td><em>"Relational SQL database requiring 99.999% SLA and worldwide multi-region scalability"</em></td>
                 <td><strong>Cloud Spanner</strong></td>
-                <td>Cloud SQL ne scale pas horizontalement et est limité à une région.</td>
+                <td>Cloud SQL does not scale horizontally and is confined to a single region.</td>
               </tr>
               <tr>
-                <td><em>"Accès SSH à une VM Compute Engine sans IP publique et sans VPN"</em></td>
+                <td><em>"SSH administrative access to a Compute Engine VM with no public IP address and no VPN"</em></td>
                 <td><strong>Cloud IAP (Identity-Aware Proxy)</strong></td>
-                <td>Ne pas créer de serveur Bastion exposé avec une IP publique.</td>
+                <td>Do not deploy an exposed Bastion host instance with an external public IP.</td>
               </tr>
               <tr>
-                <td><em>"Sauvegarder des logs pour conformité légale pendant 7 ans au coût le plus bas"</em></td>
-                <td><strong>Log Sink vers Cloud Storage</strong> (classe <em>Coldline</em> ou <em>Archive</em>)</td>
-                <td>Ne pas conserver les logs dans Cloud Logging ou BigQuery qui coûtent beaucoup plus cher.</td>
+                <td><em>"Retaining audit logs for 7-year legal compliance at the lowest possible cost"</em></td>
+                <td><strong>Log Sink to Cloud Storage</strong> (<em>Coldline</em> or <em>Archive</em> class)</td>
+                <td>Do not retain logs in Cloud Logging or BigQuery, which are significantly more expensive.</td>
               </tr>
               <tr>
-                <td><em>"Calcul batch ou rendu 3D tolérant aux pannes avec réduction maximale des coûts"</em></td>
+                <td><em>"Fault-tolerant batch processing or 3D rendering job requiring maximum cost reduction"</em></td>
                 <td><strong>Spot (Preemptible) VMs</strong></td>
-                <td>Ne pas utiliser des instances réservées ou standard à plein tarif.</td>
+                <td>Do not use reserved or on-demand standard VM instances at full price.</td>
               </tr>
               <tr>
-                <td><em>"Permettre à un client externe de télécharger un fichier GCS sans compte Google"</em></td>
-                <td><strong>Signed URL</strong> (URL signée avec durée d'expiration)</td>
-                <td>Ne jamais rendre le bucket public en lecture à tout le monde.</td>
+                <td><em>"Allowing an external third-party customer to download a private GCS file without a Google account"</em></td>
+                <td><strong>Signed URL</strong> (temporary pre-signed URL with an expiration period)</td>
+                <td>Never grant public read access to the entire storage bucket.</td>
               </tr>
             </tbody>
           </table>
