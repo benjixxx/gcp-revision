@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GCP Associate Cloud Engineer (ACE) - Practice Exam QCM</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --correct-bg: #064e3b;
+      --correct-border: #10b981;
+      --correct-text: #a7f3d0;
+      --wrong-bg: #7f1d1d;
+      --wrong-border: #ef4444;
+      --wrong-text: #fecaca;
+      --gcp-blue: #4285f4;
+      --gcp-green: #34a853;
+      --gcp-yellow: #fbbc05;
+      --gcp-red: #ea4335;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* Dashboard & Score */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-lbl {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+
+    /* Category filter */
+    .filter-container {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      background: #334155;
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Question Cards */
+    .question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-bottom: 1.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+      transition: border-color 0.2s;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .q-number {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .q-tag {
+      font-size: 0.75rem;
+      background: #334155;
+      color: #cbd5e1;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .q-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      color: #f1f5f9;
+    }
+
+    /* Options */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .option-item:hover {
+      border-color: #64748b;
+      background: #1e293b;
+    }
+
+    .option-item.selected {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .option-radio {
+      margin-top: 0.25rem;
+      accent-color: var(--accent);
+      width: 1.15rem;
+      height: 1.15rem;
+      cursor: pointer;
+    }
+
+    .option-label {
+      font-size: 0.95rem;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .option-prefix {
+      font-weight: 700;
+      color: var(--accent);
+      margin-right: 0.25rem;
+    }
+
+    /* Actions */
+    .card-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-validate {
+      background: var(--accent);
+      color: #0f172a;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-validate:hover {
+      background: #7dd3fc;
+      transform: translateY(-1px);
+    }
+
+    .btn-validate:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-toggle-exp {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: none; /* revealed after validation */
+    }
+
+    .btn-toggle-exp:hover {
+      color: var(--text);
+      border-color: #64748b;
+    }
+
+    /* Status badge after check */
+    .answer-status {
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-correct {
+      color: var(--correct-border);
+    }
+
+    .status-wrong {
+      color: var(--wrong-border);
+    }
+
+    /* Explanation foldable block */
+    .explanation-box {
+      margin-top: 1.25rem;
+      background: #0b1324;
+      border: 1px solid #1e3a5f;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.25rem;
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .exp-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .exp-body {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    .exp-traps {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed #223854;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    .exp-traps strong {
+      color: #f87171;
+    }
+
+    .exam-tip {
+      margin-top: 0.75rem;
+      background: rgba(251, 188, 5, 0.1);
+      border: 1px solid rgba(251, 188, 5, 0.3);
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: #fde047;
+    }
+
+    /* State styles after validation */
+    .option-item.correct {
+      background: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+      font-weight: 600;
+    }
+
+    .option-item.wrong {
+      background: var(--wrong-bg) !important;
+      border-color: var(--wrong-border) !important;
+      color: var(--wrong-text) !important;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1px solid #475569;
+      color: #cbd5e1;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: #334155;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="logo-badge">☁️ Google Cloud Certification Prep</div>
+    <h1>Associate Cloud Engineer (ACE) Practice Exam</h1>
+    <p class="subtitle">15 realistic exam scenario questions based on official exam patterns and your Terraform project.</p>
+  </header>
+
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <div class="stat-card">
+      <div class="stat-val" id="totalQuestions">15</div>
+      <div class="stat-lbl">Total Questions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="answeredCount">0</div>
+      <div class="stat-lbl">Answered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="scoreDisplay">0 / 15</div>
+      <div class="stat-lbl">Score</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-container">
+    <button class="filter-btn active" onclick="filterCategory('all')">All Questions (15)</button>
+    <button class="filter-btn" onclick="filterCategory('compute')">Compute Engine & MIG</button>
+    <button class="filter-btn" onclick="filterCategory('storage')">Storage & BigQuery</button>
+    <button class="filter-btn" onclick="filterCategory('network')">Networking & Load Balancing</button>
+    <button class="filter-btn" onclick="filterCategory('gke')">Kubernetes (GKE)</button>
+    <button class="filter-btn" onclick="filterCategory('iam')">IAM, Security & Terraform</button>
+  </div>
+
+  <!-- Questions Container -->
+  <div id="quizContainer"></div>
+
+  <footer>
+    <p>Google Cloud Associate Cloud Engineer Exam Simulator &bull; Interactive Revision</p>
+    <button class="reset-btn" onclick="resetQuiz()">🔄 Reset All Answers</button>
+  </footer>
+</div>
+
+<script>
+const questionsData = [
+  {
+    id: 1,
+    category: "network",
+    categoryLabel: "Networking & Load Balancing",
+    question: "You are designing an external HTTP(S) Load Balancer to distribute incoming internet traffic across backend virtual machine instances. You need to terminate client SSL/TLS connections at the load balancer and route requests to different backend services based on the HTTP request URL path (e.g., '/api' vs '/static'). Which component must you configure on the load balancer to achieve this?",
+    options: [
+      { id: "A", text: "An SSL Proxy Load Balancer with an SSL policy." },
+      { id: "B", text: "An External HTTPS Load Balancer with a Target HTTPS Proxy and a URL map." },
+      { id: "C", text: "A TCP Proxy Load Balancer with a Target TCP Proxy." },
+      { id: "D", text: "An External Passthrough Network Load Balancer with an SSL certificate." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "External HTTPS Load Balancers operate at Layer 7 (Application Layer). They terminate SSL/TLS sessions using a Target HTTPS Proxy (bound to an SSL certificate) and inspect HTTP path headers using a URL Map to direct client requests to distinct backend services.",
+      traps: [
+        { opt: "A", reason: "SSL Proxy operates at Layer 4 (Transport Layer) for non-HTTP traffic. It terminates SSL but cannot inspect HTTP URL paths." },
+        { opt: "C", reason: "TCP Proxy is Layer 4 and does not understand HTTP paths or perform URL-based routing." },
+        { opt: "D", reason: "Network Load Balancers are Layer 4 passthrough load balancers; they do not terminate SSL or inspect Layer 7 paths." }
+      ],
+      examTip: "Exam Keyword: URL path routing ('/video', '/static', '/api') + SSL termination = External HTTPS Load Balancer (Target HTTPS Proxy + URL Map)."
+    }
+  },
+  {
+    id: 2,
+    category: "storage",
+    categoryLabel: "Storage & BigQuery",
+    question: "You need to upload a single 32 GB database backup file from an on-premises server to a Cloud Storage bucket over a dedicated 1 Gbps WAN link. Which method will maximize network throughput and complete the upload in the shortest amount of time?",
+    options: [
+      { id: "A", text: "Upload the file using the Google Cloud Console web interface." },
+      { id: "B", text: "Use `gcloud storage` or `gsutil` with parallel composite uploads enabled." },
+      { id: "C", text: "Decrease the TCP window size on the source on-premises server." },
+      { id: "D", text: "Change the target bucket storage class to Multi-Regional prior to upload." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "For a SINGLE very large file (> several GBs), standard sequential single-stream transfer cannot saturate high-bandwidth WAN connections due to single TCP stream latency limits. 'Parallel composite uploads' splits the file locally into chunks, uploads them concurrently across parallel streams to saturate the 1 Gbps link, and recombines them server-side into a single composite object.",
+      traps: [
+        { opt: "A", reason: "Web console uploads are single-threaded, browser-limited, and unreliable for 32 GB files." },
+        { opt: "C", reason: "Decreasing the TCP window size restricts throughput and slows down transfers." },
+        { opt: "D", reason: "All Cloud Storage classes (Standard, Nearline, Coldline, Archive) provide the exact same upload throughput and latency." }
+      ],
+      examTip: "Exam Rule: Multiple files = `gsutil -m cp` (multi-threading) | SINGLE very large file = Parallel composite uploads."
+    }
+  },
+  {
+    id: 3,
+    category: "storage",
+    categoryLabel: "Storage & BigQuery",
+    question: "Your company needs to migrate 60 TB of archival data stored in Amazon S3 buckets to Google Cloud Storage on a recurring schedule without consuming any local on-premises network bandwidth. Which service should you use?",
+    options: [
+      { id: "A", text: "Run `gsutil -m cp` from an administrator laptop connected via VPN." },
+      { id: "B", text: "Order a physical Google Cloud Transfer Appliance." },
+      { id: "C", text: "Use Storage Transfer Service (STS)." },
+      { id: "D", text: "Build a Cloud Data Fusion batch pipeline." }
+    ],
+    correct: "C",
+    explanation: {
+      why: "Storage Transfer Service (STS) is a fully managed, serverless Google Cloud service specifically designed for large-scale cloud-to-cloud data transfers (Amazon S3, Azure Blob Storage, or Cloud Storage bucket-to-bucket). It transfers data directly over high-speed cloud backbones without routing through your local workstations or consuming on-premises bandwidth.",
+      traps: [
+        { opt: "A", reason: "Running gsutil locally routes all 60 TB through the administrator's local machine and VPN connection." },
+        { opt: "B", reason: "Transfer Appliance is a physical high-capacity storage device shipped by courier for on-premises datacenters with limited internet bandwidth." },
+        { opt: "D", reason: "Cloud Data Fusion is an ETL data transformation tool, excessively complex and expensive for simple bucket migration." }
+      ],
+      examTip: "Exam Keyword: Amazon S3 to GCS / Cloud-to-Cloud large-scale migration = Storage Transfer Service (STS)."
+    }
+  },
+  {
+    id: 4,
+    category: "compute",
+    categoryLabel: "Compute Engine & MIG",
+    question: "You manage a Managed Instance Group (MIG) configured with an autoscaler based on target CPU utilization (80%). The web application takes 3 minutes (180 seconds) to boot, warm up caches, and begin serving traffic. The health check initial delay is currently set to 30 seconds. During sudden traffic spikes, the autoscaler creates too many instances, and newly launched instances are repeatedly marked unhealthy and killed before they finish starting. How should you resolve this issue?",
+    options: [
+      { id: "A", text: "Limit the maximum number of instances in the MIG to 3." },
+      { id: "B", text: "Increase the Health Check initial delay (cool-down period) to at least 200 seconds." },
+      { id: "C", text: "Replace the HTTP health check with a TCP health check." },
+      { id: "D", text: "Change the autoscaling metric from CPU utilization to HTTP request latency." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "The Health Check 'Initial delay' (cool-down period) specifies how long the auto-healer and autoscaler must wait after VM launch before evaluating health and CPU metrics. If the app takes 180s to boot but the initial delay is 30s, the health check fails while the VM is still initializing, causing the MIG to terminate the instance prematurely and spawn excessive replacements. Setting it to 200s allows VMs to start up cleanly.",
+      traps: [
+        { opt: "A", reason: "Artificially capping instance count prevents necessary scaling and degrades service availability under peak load." },
+        { opt: "C", reason: "A TCP health check only verifies that the port is open; it doesn't give the application runtime time to warm up." },
+        { opt: "D", reason: "Changing metric does not fix the root cause: premature health check failures during instance initialization." }
+      ],
+      examTip: "Exam Keyword: Application takes X minutes to initialize = Set Health Check Initial Delay (cool-down) > X minutes."
+    }
+  },
+  {
+    id: 5,
+    category: "compute",
+    categoryLabel: "Compute Engine & MIG",
+    question: "You run a nightly batch data processing job that takes approximately 2 hours to execute. The workload is fault-tolerant and saves state to checkpoints every 10 minutes. Which Compute Engine option offers the lowest cost for this workload?",
+    options: [
+      { id: "A", text: "Standard on-demand Compute Engine VMs." },
+      { id: "B", text: "Spot VMs (Preemptible VMs)." },
+      { id: "C", text: "Sole-tenant nodes." },
+      { id: "D", text: "Compute Engine instances with a 3-year Committed Use Discount (CUD)." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "Spot VMs (and Preemptible VMs) provide 60% to 91% discounts compared to standard VM pricing. Because the job runs for only 2 hours and is fault-tolerant with checkpoints, potential preemption by Google Cloud poses no risk, maximizing cost savings.",
+      traps: [
+        { opt: "A", reason: "Standard on-demand instances run at full price without the deep Spot discounts." },
+        { opt: "C", reason: "Sole-tenant nodes are dedicated physical servers, which are the most expensive compute offering." },
+        { opt: "D", reason: "Committed Use Discounts require paying continuously 24/7 for 1 or 3 years, making them uneconomical for a 2-hour daily batch." }
+      ],
+      examTip: "Exam Keyword: Fault-tolerant / Batch job + Maximum cost savings = Spot VMs (Preemptible)."
+    }
+  },
+  {
+    id: 6,
+    category: "network",
+    categoryLabel: "Networking & Load Balancing",
+    question: "You want to host public DNS records for your domain `shop.example.com` using Google Cloud DNS. Before you can create public record sets (such as A and CNAME records) that resolve on the internet, which initial step must you complete?",
+    options: [
+      { id: "A", text: "Create a public Cloud DNS managed zone for `example.com` and update the registrar's name servers to point to Google Cloud's authoritative name servers." },
+      { id: "B", text: "Create a private Cloud DNS managed zone and link it to your default VPC network." },
+      { id: "C", text: "Deploy an internal DNS proxy on a Compute Engine instance." },
+      { id: "D", text: "Request an SSL certificate from Google Certificate Manager for `shop.example.com`." }
+    ],
+    correct: "A",
+    explanation: {
+      why: "To resolve public DNS queries through Cloud DNS, you must first create a public managed zone in GCP and delegate domain authority by updating the registrar's NS (Name Server) records to point to Google's assigned Cloud DNS name servers.",
+      traps: [
+        { opt: "B", reason: "Private zones are only resolvable internally by authorized VPC networks, not on the public internet." },
+        { opt: "C", reason: "No custom DNS proxy is required; Cloud DNS is a globally distributed, fully managed service." },
+        { opt: "D", reason: "SSL certificates handle HTTPS encryption, not public DNS domain resolution." }
+      ],
+      examTip: "Exam Workflow: Public DNS resolution = Create Public Managed Zone -> Copy NS records -> Paste into Domain Registrar."
+    }
+  },
+  {
+    id: 7,
+    category: "compute",
+    categoryLabel: "Compute Engine & MIG",
+    question: "You deployed version `v2` of a web application to App Engine standard environment. Immediately after deployment, users encounter 500 errors. You need to roll back all traffic to the previous working version `v1` immediately with zero downtime. What should you do?",
+    options: [
+      { id: "A", text: "Execute `gcloud app restore --version=v1`." },
+      { id: "B", text: "In the Google Cloud Console, navigate to App Engine > Versions, select `v1`, and route 100% of the traffic to it." },
+      { id: "C", text: "Delete the App Engine application and re-create it from source control." },
+      { id: "D", text: "Run `gcloud app deploy` again from your local terminal to re-upload `v1`." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "App Engine keeps previous versions deployed and running in the background unless explicitly stopped or deleted. Rolling back takes seconds: navigate to the Versions page and route 100% of traffic back to `v1` (or run `gcloud app services set-traffic default --splits v1=1`).",
+      traps: [
+        { opt: "A", reason: "The command `gcloud app restore` does not exist." },
+        { opt: "C", reason: "Deleting an App Engine application causes major downtime and wipes out all settings." },
+        { opt: "D", reason: "Redeploying from scratch takes several minutes for building and container packaging, whereas traffic splitting is instantaneous." }
+      ],
+      examTip: "Exam Keyword: App Engine instant rollback = Route 100% traffic to previous version in App Engine Versions tab."
+    }
+  },
+  {
+    id: 8,
+    category: "compute",
+    categoryLabel: "Compute Engine & MIG",
+    question: "You are hosting a critical enterprise application on Compute Engine. You must ensure that scheduled physical host hardware and hypervisor maintenance performed by Google in the datacenter does not cause any downtime for your virtual machines. Which VM configuration should you verify?",
+    options: [
+      { id: "A", text: "Set 'On-host maintenance' to 'Terminate VM instance'." },
+      { id: "B", text: "Set 'On-host maintenance' to 'Migrate VM instance' (Live Migration)." },
+      { id: "C", text: "Set 'Automatic restart' to 'Off'." },
+      { id: "D", text: "Assign a reserved static external IP address to the instance." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "Compute Engine provides Live Migration ('Migrate VM instance'). When Google conducts infrastructure maintenance on physical servers, the running VM is seamlessly migrated to a different physical host without rebooting, interrupting network connections, or causing downtime.",
+      traps: [
+        { opt: "A", reason: "'Terminate' stops the VM during host maintenance, causing an outage." },
+        { opt: "C", reason: "'Automatic restart: Off' prevents the instance from booting back up after a physical node failure." },
+        { opt: "D", reason: "Static IP retains IP addressing but does not prevent hardware maintenance reboots." }
+      ],
+      examTip: "Exam Keyword: Zero-downtime physical host maintenance = On-host maintenance: Migrate (Live Migration)."
+    }
+  },
+  {
+    id: 9,
+    category: "storage",
+    categoryLabel: "Storage & BigQuery",
+    question: "Users report that when clicking on PDF documents hosted in a public Cloud Storage bucket, web browsers automatically download the file instead of rendering and previewing it in the browser. What is the root cause and how should you fix it?",
+    options: [
+      { id: "A", text: "The bucket storage class is Coldline instead of Standard." },
+      { id: "B", text: "The objects were uploaded with the `Content-Type` metadata set to `application/octet-stream` instead of `application/pdf`." },
+      { id: "C", text: "Cloud CDN is serving a cached HTTP 403 Forbidden response." },
+      { id: "D", text: "The Cloud Storage bucket lacks an attached custom SSL certificate." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "Web browsers determine how to display web assets based on the HTTP `Content-Type` header sent by Cloud Storage. When files are uploaded without specifying a MIME type, tools often default to `application/octet-stream` (binary stream), forcing the browser to trigger a download. Updating metadata to `Content-Type: application/pdf` allows the browser's built-in PDF reader to display it inline.",
+      traps: [
+        { opt: "A", reason: "Storage classes impact pricing and retrieval frequency, never HTTP MIME headers." },
+        { opt: "C", reason: "The file is downloading successfully, which proves there is no 403 access denial." },
+        { opt: "D", reason: "Cloud Storage native URLs (*.storage.googleapis.com) automatically use Google wildcard SSL certificates." }
+      ],
+      examTip: "Exam Keyword: File downloads instead of opening in browser = Incorrect `Content-Type` metadata."
+    }
+  },
+  {
+    id: 10,
+    category: "gke",
+    categoryLabel: "Kubernetes (GKE)",
+    question: "You deploy microservices to Google Kubernetes Engine (GKE) packaged as minimal 'distroless' container images (containing only the binary, with no OS shell or package manager). You need to inject an OpenTelemetry tracing agent binary into running pods without modifying or rebuilding application images. Which Kubernetes architecture pattern should you implement?",
+    options: [
+      { id: "A", text: "SSH into the GKE worker node and run `docker cp` to copy the agent binary directly into the container filesystem." },
+      { id: "B", text: "Use a Mutating Admission Webhook to inject an `initContainer` that copies the agent binary into a shared `emptyDir` volume mounted by the application container." },
+      { id: "C", text: "Grant the pod root privileges and install the tracing agent with `apt-get` during container startup." },
+      { id: "D", text: "Deploy a DaemonSet on every node in the GKE cluster." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "Distroless images have no package managers or shells. The standard Kubernetes pattern to augment distroless containers without modifying images is using an `initContainer` (which holds the binary) that copies files into a shared ephemeral volume (`emptyDir`) mounted by the main container. A Mutating Admission Webhook automates this injection dynamically at pod admission time.",
+      traps: [
+        { opt: "A", reason: "SSHing into worker nodes is an anti-pattern in managed GKE, ephemeral, and impossible on GKE Autopilot." },
+        { opt: "C", reason: "Distroless images do not contain `apt-get` or bash, and running as root violates security standards." },
+        { opt: "D", reason: "A DaemonSet runs at the node level and cannot inject binaries into an isolated pod's private filesystem without volume mounts." }
+      ],
+      examTip: "Exam Keyword: Injecting tools into distroless containers = InitContainer + Shared `emptyDir` volume (via Mutating Admission Webhook)."
+    }
+  },
+  {
+    id: 11,
+    category: "storage",
+    categoryLabel: "Storage & BigQuery",
+    question: "Your analytics team queries a 10 TB BigQuery table containing historical order transactions. Most analytical queries filter data by transaction date (`order_date`) and filter or group by `customer_id`. The team complains about high query costs and slow execution times. How should you optimize the table?",
+    options: [
+      { id: "A", text: "Export the table to a Cloud Bigtable cluster." },
+      { id: "B", text: "Partition the table by `order_date` and cluster it by `customer_id`." },
+      { id: "C", text: "Create a secondary relational B-tree index on `customer_id`." },
+      { id: "D", text: "Convert the table into a Google Sheets federated external data source." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "BigQuery on-demand pricing is based on the total bytes scanned. Partitioning by `order_date` divides the table into daily/monthly partitions, enabling partition pruning (skipping unqueried date ranges). Clustering by `customer_id` co-locates rows with the same customer ID within each partition, allowing BigQuery to skip scanning irrelevant data blocks. This drastically decreases query latency and cost.",
+      traps: [
+        { opt: "A", reason: "Bigtable is a low-latency NoSQL database for real-time key-value lookups, not an analytical SQL warehouse." },
+        { opt: "C", reason: "Traditional secondary database indexes do not exist in BigQuery." },
+        { opt: "D", reason: "Federated queries on Google Sheets are slow and limited to small datasets, not 10 TB." }
+      ],
+      examTip: "Exam Keyword: BigQuery cost reduction on Date queries + Column filters = Partition by Date + Cluster by Column."
+    }
+  },
+  {
+    id: 12,
+    category: "iam",
+    categoryLabel: "IAM, Security & Terraform",
+    question: "An application running on a Compute Engine VM needs to read and write objects in a specific Cloud Storage bucket named `gs://company-reports`. In accordance with Google Cloud security best practices and the principle of least privilege, how should you configure access?",
+    options: [
+      { id: "A", text: "Generate a service account JSON key file and hardcode it in the application configuration on the VM." },
+      { id: "B", text: "Grant the default Compute Engine service account the Project Editor role." },
+      { id: "C", text: "Create a dedicated custom Service Account, grant it the `roles/storage.objectAdmin` role on the specific bucket, and attach this Service Account to the VM." },
+      { id: "D", text: "Configure the Cloud Storage bucket with `allUsers` read and write permissions." }
+    ],
+    correct: "C",
+    explanation: {
+      why: "Google Cloud security best practices require: 1) Using a dedicated, user-managed Service Account rather than default accounts; 2) Attaching the Service Account to the VM so applications retrieve short-lived tokens via the instance metadata server (never downloading long-lived JSON keys); 3) Granting granular predefined roles scoped to the specific bucket resource.",
+      traps: [
+        { opt: "A", reason: "Generating and storing JSON service account keys poses severe security leak risks." },
+        { opt: "B", reason: "Default service accounts have broad permissions, and Project Editor grants excessive privileges across the entire project." },
+        { opt: "D", reason: "Making the bucket public exposes confidential corporate records to the entire internet." }
+      ],
+      examTip: "Exam Keyword: VM accessing GCP services = Dedicated Service Account + Attach to VM + Granular role on resource (No JSON keys)."
+    }
+  },
+  {
+    id: 13,
+    category: "network",
+    categoryLabel: "Networking & Load Balancing",
+    question: "You have multiple Compute Engine instances deployed in a private subnet with only RFC 1918 internal IP addresses (no external public IPs). These instances need to download operating system security patches from external public internet repositories, but must not accept any inbound connections initiated from the internet. What should you configure?",
+    options: [
+      { id: "A", text: "Enable Private Google Access on the subnet." },
+      { id: "B", text: "Configure Cloud NAT (Network Address Translation) associated with a Cloud Router in the region." },
+      { id: "C", text: "Create an ingress firewall rule with target 0.0.0.0/0." },
+      { id: "D", text: "Establish a VPC Network Peering connection to another VPC." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "Cloud NAT provides managed outbound-only internet connectivity for private Compute Engine instances without external IP addresses. It allows private VMs to initiate outbound connections (e.g., downloading OS packages) while preventing unauthorized inbound connections from the internet.",
+      traps: [
+        { opt: "A", reason: "Private Google Access only allows private instances to reach Google APIs and services (*.googleapis.com), NOT public internet software repositories." },
+        { opt: "C", reason: "Firewall rules control traffic filtering, but cannot provide NAT IP routing for instances that lack public IPs." },
+        { opt: "D", reason: "VPC Peering connects two private VPCs; it does not provide an internet egress gateway." }
+      ],
+      examTip: "Exam Rule: Private VMs -> Google APIs = Private Google Access | Private VMs -> General Public Internet = Cloud NAT."
+    }
+  },
+  {
+    id: 14,
+    category: "compute",
+    categoryLabel: "Compute Engine & MIG",
+    question: "You need to deploy a containerized microservice that handles incoming HTTP requests. The workload has unpredictable traffic, experiencing massive spikes during business hours and dropping to zero requests at night. You want the service to scale down to zero instances when idle to eliminate compute costs, and you do not want to manage underlying VMs or Kubernetes clusters. Which service should you choose?",
+    options: [
+      { id: "A", text: "Google Kubernetes Engine (GKE) Standard cluster." },
+      { id: "B", text: "Cloud Run." },
+      { id: "C", text: "Compute Engine Managed Instance Group (MIG)." },
+      { id: "D", text: "Cloud Functions (1st gen) with a custom Dockerfile." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "Cloud Run is a fully managed serverless platform that runs containerized applications responding to HTTP requests. It scales automatically based on incoming traffic from zero up to hundreds of instances, and scales down to zero when idle so you only pay for resources consumed during active request processing.",
+      traps: [
+        { opt: "A", reason: "GKE Standard requires running worker node VMs 24/7, incurring ongoing cluster infrastructure costs." },
+        { opt: "C", reason: "Compute Engine MIGs do not natively scale HTTP containers to zero instantaneously without complex automation." },
+        { opt: "D", reason: "Cloud Functions (1st gen) does not support custom container images or Dockerfiles." }
+      ],
+      examTip: "Exam Keyword: Containerized HTTP + Scale to zero + Fully managed serverless = Cloud Run."
+    }
+  },
+  {
+    id: 15,
+    category: "iam",
+    categoryLabel: "IAM, Security & Terraform",
+    question: "Your DevOps team collaborates on Google Cloud infrastructure deployments using Terraform. Multiple engineers frequently run `terraform apply` concurrently, causing state file collisions and potential corruption. How should you configure Terraform backend according to GCP best practices?",
+    options: [
+      { id: "A", text: "Store the `terraform.tfstate` file in a Git repository with branch protections." },
+      { id: "B", text: "Configure the Terraform backend to use Google Cloud Storage (`gcs`), which provides automatic native state locking." },
+      { id: "C", text: "Store the state file on a shared Compute Engine persistent disk mounted over NFS." },
+      { id: "D", text: "Restrict Terraform executions to a single shared bastion host VM." }
+    ],
+    correct: "B",
+    explanation: {
+      why: "The Terraform `gcs` backend stores state objects in a Cloud Storage bucket and leverages Google Cloud Storage object preconditions and generations to provide automatic native state locking. Whenever an engineer executes `terraform apply`, Terraform locks the state to prevent concurrent modifications from corrupting the file.",
+      traps: [
+        { opt: "A", reason: "Committing state to Git risks exposing sensitive credentials and does not provide real-time distributed locking." },
+        { opt: "C", reason: "NFS shared disks lack atomic locking integrated with Terraform and risk severe corruption." },
+        { opt: "D", reason: "Relying on a single bastion VM does not enforce programmatic state locking and introduces a single point of failure." }
+      ],
+      examTip: "Exam Keyword: Terraform team collaboration on GCP + State locking = `backend \"gcs\"` in Google Cloud Storage."
+    }
+  }
+];
+
+let userAnswers = {};
+let validatedQuestions = {};
+let currentFilter = 'all';
+
+function initQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+
+  questionsData.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `qCard_${q.id}`;
+    card.setAttribute('data-category', q.category);
+
+    const optionsHtml = q.options.map(opt => `
+      <div class="option-item" id="optItem_${q.id}_${opt.id}" onclick="selectOption(${q.id}, '${opt.id}')">
+        <input type="radio" class="option-radio" name="q_${q.id}" id="radio_${q.id}_${opt.id}" value="${opt.id}" onclick="event.stopPropagation(); selectOption(${q.id}, '${opt.id}')">
+        <label class="option-label" for="radio_${q.id}_${opt.id}">
+          <span class="option-prefix">${opt.id}.</span> ${escapeHtml(opt.text)}
+        </label>
+      </div>
+    `).join('');
+
+    const trapsHtml = q.explanation.traps.map(trap => `
+      <p style="margin-top: 0.35rem;"><strong>Option ${trap.opt}:</strong> ${escapeHtml(trap.reason)}</p>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="card-top">
+        <span class="q-number">Question ${q.id} / 15</span>
+        <span class="q-tag">${escapeHtml(q.categoryLabel)}</span>
+      </div>
+      <div class="q-title">${escapeHtml(q.question)}</div>
+      
+      <div class="options-list">
+        ${optionsHtml}
+      </div>
+
+      <div class="card-actions">
+        <button class="btn-validate" id="btnVal_${q.id}" onclick="validateAnswer(${q.id})" disabled>Check Answer</button>
+        <button class="btn-toggle-exp" id="btnToggle_${q.id}" onclick="toggleExplanation(${q.id})">💡 Reveal Explanation</button>
+        <span class="answer-status" id="status_${q.id}"></span>
+      </div>
+
+      <div class="explanation-box" id="expBox_${q.id}">
+        <div class="exp-title">📘 Detailed Solution & Analysis</div>
+        <div class="exp-body">
+          <p><strong>Correct Answer: Option ${q.correct}</strong></p>
+          <p style="margin-top: 0.5rem;">${escapeHtml(q.explanation.why)}</p>
+        </div>
+        <div class="exp-traps">
+          <div style="font-weight: 700; color: #fca5a5; margin-bottom: 0.3rem;">⚠️ Why the other options are distractors:</div>
+          ${trapsHtml}
+        </div>
+        <div class="exam-tip">
+          🎯 <strong>Exam Reflex:</strong> ${escapeHtml(q.explanation.examTip)}
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  updateStats();
+}
+
+function selectOption(qId, optId) {
+  if (validatedQuestions[qId]) return; // locked after validation
+
+  userAnswers[qId] = optId;
+
+  // Update UI selection
+  const qData = questionsData.find(q => q.id === qId);
+  qData.options.forEach(opt => {
+    const item = document.getElementById(`optItem_${qId}_${opt.id}`);
+    const radio = document.getElementById(`radio_${qId}_${opt.id}`);
+    if (opt.id === optId) {
+      item.classList.add('selected');
+      radio.checked = true;
+    } else {
+      item.classList.remove('selected');
+      radio.checked = false;
+    }
+  });
+
+  // Enable validate button
+  document.getElementById(`btnVal_${qId}`).disabled = false;
+}
+
+function validateAnswer(qId) {
+  const selectedOpt = userAnswers[qId];
+  if (!selectedOpt) return;
+
+  const qData = questionsData.find(q => q.id === qId);
+  const isCorrect = (selectedOpt === qData.correct);
+
+  validatedQuestions[qId] = isCorrect;
+
+  // Highlight options
+  qData.options.forEach(opt => {
+    const item = document.getElementById(`optItem_${qId}_${opt.id}`);
+    const radio = document.getElementById(`radio_${qId}_${opt.id}`);
+    radio.disabled = true;
+
+    if (opt.id === qData.correct) {
+      item.classList.add('correct');
+    } else if (opt.id === selectedOpt && !isCorrect) {
+      item.classList.add('wrong');
+    }
+  });
+
+  // Update button and status
+  const btnVal = document.getElementById(`btnVal_${qId}`);
+  btnVal.disabled = true;
+  btnVal.style.display = 'none';
+
+  const statusSpan = document.getElementById(`status_${qId}`);
+  statusSpan.style.display = 'inline-flex';
+  if (isCorrect) {
+    statusSpan.className = 'answer-status status-correct';
+    statusSpan.innerHTML = '✅ Correct!';
+  } else {
+    statusSpan.className = 'answer-status status-wrong';
+    statusSpan.innerHTML = `❌ Incorrect (Correct was: Option ${qData.correct})`;
+  }
+
+  // Show toggle explanation button and reveal explanation automatically
+  const btnToggle = document.getElementById(`btnToggle_${qId}`);
+  btnToggle.style.display = 'inline-block';
+  
+  toggleExplanation(qId, true);
+  updateStats();
+}
+
+function toggleExplanation(qId, forceOpen = false) {
+  const box = document.getElementById(`expBox_${qId}`);
+  const btn = document.getElementById(`btnToggle_${qId}`);
+  if (forceOpen || box.style.display !== 'block') {
+    box.style.display = 'block';
+    btn.innerText = '🔽 Hide Explanation';
+  } else {
+    box.style.display = 'none';
+    btn.innerText = '💡 Reveal Explanation';
+  }
+}
+
+function updateStats() {
+  const answeredCount = Object.keys(validatedQuestions).length;
+  let correctCount = 0;
+  for (const qId in validatedQuestions) {
+    if (validatedQuestions[qId] === true) correctCount++;
+  }
+
+  document.getElementById('answeredCount').innerText = answeredCount;
+  document.getElementById('scoreDisplay').innerText = `${correctCount} / 15`;
+}
+
+function filterCategory(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  questionsData.forEach(q => {
+    const card = document.getElementById(`qCard_${q.id}`);
+    if (!card) return;
+    if (cat === 'all' || q.category === cat) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function resetQuiz() {
+  if (confirm("Reset all your answers and restart the test?")) {
+    userAnswers = {};
+    validatedQuestions = {};
+    initQuiz();
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+// Initial launch
+initQuiz();
+</script>
+
+</body>
+</html>
