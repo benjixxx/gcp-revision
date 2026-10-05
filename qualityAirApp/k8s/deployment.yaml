@@ -21,6 +21,9 @@ spec:
       labels:
         app: quality-air-app
         tier: frontend
+      annotations:
+        # OpenTelemetry auto-instrumentation for Python
+        instrumentation.opentelemetry.io/inject-python: "true"
     spec:
       containers:
       - name: quality-air-app
@@ -33,6 +36,8 @@ spec:
         env:
         - name: PORT
           value: "8080"
+        - name: OTEL_SERVICE_NAME
+          value: "quality-air-app"
         resources:
           requests:
             cpu: "25m"       # Ultra-low CPU: triggers HPA autoscaling at just 5m CPU!
