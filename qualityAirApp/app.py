@@ -4,14 +4,29 @@ import json
 import socket
 import time
 import logging
+import threading
 from datetime import datetime, timezone
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util import Retry
 from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 POD_NAME = socket.gethostname()
+
+# Persistent HTTP session with connection pooling and retries
+http_session = requests.Session()
+_retries = Retry(total=2, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504])
+http_session.mount("https://", HTTPAdapter(pool_connections=10, pool_maxsize=20, max_retries=_retries))
+http_session.mount("http://", HTTPAdapter(pool_connections=10, pool_maxsize=20, max_retries=_retries))
+
+# Thread-safe In-Memory Cache (TTL: 5 minutes for AQI, 1 hour for Geocoding)
+CACHE_TTL_SECONDS = 300
+_cache_lock = threading.Lock()
+_air_quality_cache = {}  # key -> {"data": dict, "timestamp": float}
+_geocode_cache = {}      # key -> {"data": dict, "timestamp": float}
 
 @app.before_request
 def record_start_time():
@@ -167,7 +182,18 @@ def evaluate_aqi_level(aqi):
         }
 
 def get_city_air_quality(city):
-    """Fetch live air quality for a single city object {name, country, lat, lon}."""
+    """Fetch live air quality for a single city object {name, country, lat, lon} with caching and resilient fallback."""
+    cache_key = f"{round(city['lat'], 3)},{round(city['lon'], 3)}"
+    now = time.time()
+
+    # 1. Check in-memory TTL cache (valid for 5 minutes)
+    with _cache_lock:
+        cached_entry = _air_quality_cache.get(cache_key)
+        if cached_entry and (now - cached_entry["timestamp"]) < CACHE_TTL_SECONDS:
+            data = cached_entry["data"].copy()
+            data["status"] = "CACHED"
+            return data
+
     base_url = "https://air-quality-api.open-meteo.com/v1/air-quality"
     params = {
         "latitude": city["lat"],
@@ -177,14 +203,15 @@ def get_city_air_quality(city):
     }
 
     try:
-        resp = requests.get(base_url, params=params, timeout=3.5)
+        # Relaxed timeout: 3.5s connect, 8.0s read (handles Open-Meteo latency without dropping)
+        resp = http_session.get(base_url, params=params, timeout=(3.5, 8.0))
         if resp.status_code == 200:
             data = resp.json()
             current = data.get("current", {})
             aqi = current.get("european_aqi")
             eval_info = evaluate_aqi_level(aqi)
 
-            return {
+            result = {
                 "name": city["name"],
                 "country": city.get("country", ""),
                 "lat": city["lat"],
@@ -202,10 +229,28 @@ def get_city_air_quality(city):
                 "description": eval_info["description"],
                 "status": "LIVE"
             }
+
+            # Store in cache
+            with _cache_lock:
+                _air_quality_cache[cache_key] = {"data": result, "timestamp": now}
+
+            return result
+        else:
+            logging.warning(f"Open-Meteo returned HTTP {resp.status_code} for {city['name']}: {resp.text[:120]}")
     except Exception as e:
         logging.warning(f"Failed to fetch AQI for {city['name']}: {e}")
 
-    # Fallback if API unreachable
+    # 2. Resilient Stale-While-Revalidate: Return last known cached data if API is down
+    with _cache_lock:
+        stale_entry = _air_quality_cache.get(cache_key)
+        if stale_entry:
+            data = stale_entry["data"].copy()
+            age_min = round((now - stale_entry["timestamp"]) / 60, 1)
+            data["status"] = "STALE"
+            data["description"] = f"Using cached metrics ({age_min}m ago) while provider recovers"
+            return data
+
+    # 3. Final Fallback if API is unreachable and no previous cache exists
     return {
         "name": city["name"],
         "country": city.get("country", ""),
@@ -226,28 +271,46 @@ def get_city_air_quality(city):
     }
 
 def geocode_city(city_name):
-    """Resolve any city name to coordinates via built-in dictionary or Open-Meteo Geocoding API."""
+    """Resolve any city name to coordinates via built-in dictionary, cache, or Open-Meteo Geocoding API."""
     key = city_name.strip().lower()
     if key in CITY_COORDINATES:
         return CITY_COORDINATES[key]
 
+    now = time.time()
+    # Check geocode cache (valid for 1 hour)
+    with _cache_lock:
+        cached_geo = _geocode_cache.get(key)
+        if cached_geo and (now - cached_geo["timestamp"]) < 3600:
+            return cached_geo["data"]
+
     url = "https://geocoding-api.open-meteo.com/v1/search"
     params = {"name": city_name, "count": 1, "language": "en", "format": "json"}
     try:
-        res = requests.get(url, params=params, timeout=3.5)
+        res = http_session.get(url, params=params, timeout=(3.5, 6.0))
         if res.status_code == 200:
             data = res.json()
             results = data.get("results")
             if results and len(results) > 0:
                 first = results[0]
-                return {
+                result = {
                     "name": first.get("name", city_name.capitalize()),
                     "country": first.get("country", ""),
                     "lat": first.get("latitude"),
                     "lon": first.get("longitude")
                 }
+                with _cache_lock:
+                    _geocode_cache[key] = {"data": result, "timestamp": now}
+                return result
+        else:
+            logging.warning(f"Geocoding API returned HTTP {res.status_code} for '{city_name}': {res.text[:120]}")
     except Exception as e:
         logging.error(f"Geocoding error for '{city_name}': {e}")
+
+    # Fallback to stale geocode if present
+    with _cache_lock:
+        stale_geo = _geocode_cache.get(key)
+        if stale_geo:
+            return stale_geo["data"]
 
     return None
 
