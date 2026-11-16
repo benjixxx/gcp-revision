@@ -93,6 +93,11 @@ data:
         metric:
           prefix: "custom.googleapis.com"
 
+      otlp/tempo:
+        endpoint: "tempo.opentelemetry.svc.cluster.local:4317"
+        tls:
+          insecure: true
+
       debug:
         verbosity: basic
 
@@ -106,7 +111,7 @@ data:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, resourcedetection, resource, batch]
-          exporters: [googlecloud, debug]
+          exporters: [googlecloud, otlp/tempo, debug]
         metrics:
           receivers: [otlp, kubeletstats, hostmetrics]
           processors: [memory_limiter, k8sattributes, resourcedetection, resource, batch]

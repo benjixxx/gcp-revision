@@ -37,9 +37,13 @@ Ce dossier contient la configuration complète d'un **DaemonSet OpenTelemetry Co
 
 * `00-namespace.yaml` : Namespace dédié `opentelemetry`.
 * `01-rbac.yaml` : ServiceAccount et ClusterRole autorisant la lecture des métadonnées K8s et kubelet.
-* `02-configmap.yaml` : Configuration des pipelines OTel (receivers, processors, exporters).
-* `03-service.yaml` : Service ClusterIP interne.
+* `02-configmap.yaml` : Configuration des pipelines OTel (receivers, processors, exporters vers GCP et Tempo).
+* `03-service.yaml` : Service ClusterIP interne pour le Collector.
 * `04-daemonset.yaml` : DaemonSet déployant `otel/opentelemetry-collector-contrib`.
+* `05-instrumentation.yaml` : Ressource CRD OpenTelemetry pour auto-injecter l'agent Python dans `quality-air-app`.
+* `06-tempo.yaml` : Moteur de stockage de traces distribuées Grafana Tempo (backend OTLP).
+* `07-grafana.yaml` : Dashboard Grafana préconfiguré avec la datasource Tempo.
+* `install-monitoring.sh` : Script d'installation automatisé (cert-manager, OTel Operator, Tempo, Grafana).
 * `kustomization.yaml` : Permet un déploiement en une seule commande via Kustomize.
 
 ---

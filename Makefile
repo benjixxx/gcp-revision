@@ -51,6 +51,10 @@ help:
 	@echo "  make argocd-password      # Get ArgoCD initial admin password"
 	@echo "  make argocd-ui            # Port-forward to ArgoCD Web UI (http://localhost:8080)"
 	@echo "  make destroy-argocd       # Remove ArgoCD & apps"
+	@echo ""
+	@echo "Observability & Tracing (OpenTelemetry + Tempo + Grafana):"
+	@echo "  make deploy-monitoring    # Install cert-manager, OTel Operator, Tempo & Grafana"
+	@echo "  make grafana-ui           # Port-forward to Grafana UI (http://localhost:3000)"
 	@echo "=================================================================="
 
 # ------------------------------------------------------------------------------
@@ -211,3 +215,13 @@ argocd-ui:
 
 destroy-argocd:
 	@bash ./argocd/install.sh uninstall
+
+# ------------------------------------------------------------------------------
+# Observability & Tracing (OpenTelemetry + Tempo + Grafana)
+# ------------------------------------------------------------------------------
+deploy-monitoring:
+	@bash ./openTelemetry/install-monitoring.sh install
+
+grafana-ui:
+	@bash ./openTelemetry/install-monitoring.sh ui
+

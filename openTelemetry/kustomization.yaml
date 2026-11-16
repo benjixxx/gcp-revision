@@ -9,4 +9,7 @@ resources:
   - 02-configmap.yaml
   - 03-service.yaml
   - 04-daemonset.yaml
+  - 05-instrumentation.yaml
+  - 06-tempo.yaml
+  - 07-grafana.yaml
 
