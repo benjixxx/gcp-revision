@@ -16,15 +16,15 @@ spec:
   - type: Resource
     resource:
       name: cpu
-    target:
-      type: Utilization
-      averageUtilization: 60
+      target:
+        type: Utilization
+        averageUtilization: 60
   - type: Resource
     resource:
       name: memory
-    target:
-      type: Utilization
-      averageUtilization: 80
+      target:
+        type: Utilization
+        averageUtilization: 80
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 0
