@@ -1,0 +1,11 @@
+apiVersion: v2
+name: argocd-platform
+description: Package Helm pour la plateforme ArgoCD sur le cluster GKE (main-gke-cluster)
+type: application
+version: 1.0.0
+appVersion: "v2.10.4"
+
+dependencies:
+  - name: argo-cd
+    version: "7.7.0"
+    repository: "https://argoproj.github.io/argo-helm"

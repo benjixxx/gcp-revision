@@ -73,7 +73,8 @@ module "gke" {
   pods_range_name       = module.network.pods_range_name
   services_range_name   = module.network.services_range_name
   service_account_email = module.iam.terraform_service_account_email
-  node_count            = var.gke_node_count
+  min_node_count        = var.gke_min_node_count
+  max_node_count        = var.gke_max_node_count
   machine_type          = var.gke_machine_type
   spot                  = true
   disk_size_gb          = 30
@@ -130,4 +131,28 @@ module "logging_monitoring" {
   dataset_id = module.bigquery.logging_dataset_id
   sink_name  = "k8s-to-bigquery"
   log_filter = "resource.type=\"k8s_container\" AND resource.labels.namespace_name=\"quality-air\""
+}
+
+# ==============================================================================
+# 10. Database Module (Cloud SQL PostgreSQL)
+# ==============================================================================
+module "database" {
+  source = "./modules/database"
+
+  instance_name       = var.db_instance_name
+  database_version    = var.db_version
+  region              = var.region
+  environment         = var.environment
+  tier                = var.db_tier
+  disk_size_gb        = var.db_disk_size_gb
+  disk_type           = var.db_disk_type
+  availability_type   = var.db_availability_type
+  deletion_protection = var.db_deletion_protection
+  enable_backup       = var.db_enable_backup
+  enable_public_ip    = var.db_enable_public_ip
+  enable_private_ip   = var.db_enable_private_ip
+  network_id          = module.network.network_id
+  database_name       = var.db_name
+  database_user       = var.db_user
+  database_password   = var.db_password
 }

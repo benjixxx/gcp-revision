@@ -90,4 +90,38 @@ output "logging_sink_writer_identity" {
   value       = module.logging_monitoring.sink_writer_identity
 }
 
+# ==============================================================================
+# Cloud SQL (PostgreSQL Database)
+# ==============================================================================
+output "db_instance_name" {
+  description = "Cloud SQL PostgreSQL instance name"
+  value       = module.database.instance_name
+}
+
+output "db_instance_connection_name" {
+  description = "Cloud SQL PostgreSQL connection name for Cloud SQL Proxy"
+  value       = module.database.instance_connection_name
+}
+
+output "db_public_ip" {
+  description = "Public IP address of the Cloud SQL PostgreSQL instance"
+  value       = module.database.public_ip_address
+}
+
+output "db_private_ip" {
+  description = "Private IP address of the Cloud SQL PostgreSQL instance"
+  value       = module.database.private_ip_address
+}
+
+output "db_name" {
+  description = "Name of the default PostgreSQL database"
+  value       = module.database.database_name
+}
+
+output "db_user" {
+  description = "PostgreSQL database user"
+  value       = module.database.database_user
+}
+
+
 

@@ -1,0 +1,71 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: quality-air-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/name: quality-air-app
+    app.kubernetes.io/part-of: quality-air
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/benjixxx/gcp-revision.git
+    targetRevision: main
+    path: qualityAirApp/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: quality-air
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: quality-air-app
+      jsonPointers:
+        - /spec/replicas
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opentelemetry-collector
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/name: opentelemetry-collector
+    app.kubernetes.io/part-of: opentelemetry
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/benjixxx/gcp-revision.git
+    targetRevision: main
+    path: openTelemetry
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: opentelemetry
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

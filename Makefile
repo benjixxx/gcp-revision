@@ -14,7 +14,9 @@ VAR_FILE := ./gcp.tfvars
         plan-serverless apply-serverless destroy-serverless \
         plan-bigquery apply-bigquery destroy-bigquery \
         plan-artifactory apply-artifactory destroy-artifactory \
-        plan-ops apply-ops destroy-ops
+        plan-ops apply-ops destroy-ops \
+        plan-sql apply-sql destroy-sql \
+        connect-gke deploy-argocd argocd-password argocd-ui destroy-argocd
 
 # ------------------------------------------------------------------------------
 # Help Menu
@@ -41,6 +43,14 @@ help:
 	@echo "  make plan-bigquery        | make apply-bigquery        | make destroy-bigquery"
 	@echo "  make plan-artifactory     | make apply-artifactory     | make destroy-artifactory"
 	@echo "  make plan-ops             | make apply-ops             | make destroy-ops"
+	@echo "  make plan-sql             | make apply-sql             | make destroy-sql"
+	@echo ""
+	@echo "Kubernetes & GitOps (main-gke-cluster):"
+	@echo "  make connect-gke          # Connect kubectl to main-gke-cluster"
+	@echo "  make deploy-argocd        # Deploy ArgoCD & GitOps apps to GKE"
+	@echo "  make argocd-password      # Get ArgoCD initial admin password"
+	@echo "  make argocd-ui            # Port-forward to ArgoCD Web UI (http://localhost:8080)"
+	@echo "  make destroy-argocd       # Remove ArgoCD & apps"
 	@echo "=================================================================="
 
 # ------------------------------------------------------------------------------
@@ -171,3 +181,33 @@ apply-ops:
 
 destroy-ops:
 	terraform destroy -var-file=$(VAR_FILE) -target=module.logging_monitoring -target=module.bigquery
+
+# ------------------------------------------------------------------------------
+# Cloud SQL (PostgreSQL Database) Module
+# ------------------------------------------------------------------------------
+plan-sql:
+	terraform plan -var-file=$(VAR_FILE) -target=module.database
+
+apply-sql:
+	terraform apply -var-file=$(VAR_FILE) -target=module.database
+
+destroy-sql:
+	terraform destroy -var-file=$(VAR_FILE) -target=module.database
+
+# ------------------------------------------------------------------------------
+# Kubernetes & GitOps (ArgoCD on main-gke-cluster)
+# ------------------------------------------------------------------------------
+connect-gke:
+	gcloud container clusters get-credentials main-gke-cluster --zone europe-west1-b --project myproject-329912
+
+deploy-argocd:
+	@bash ./argocd/install.sh install
+
+argocd-password:
+	@bash ./argocd/install.sh password
+
+argocd-ui:
+	@bash ./argocd/install.sh ui
+
+destroy-argocd:
+	@bash ./argocd/install.sh uninstall

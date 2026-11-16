@@ -58,7 +58,19 @@ variable "service_account_email" {
 variable "node_count" {
   type        = number
   default     = 1
-  description = "Number of nodes per zone in the node pool"
+  description = "Number of nodes per zone in the node pool (legacy/fallback)"
+}
+
+variable "min_node_count" {
+  type        = number
+  default     = 1
+  description = "Minimum number of worker nodes per zone for autoscaling"
+}
+
+variable "max_node_count" {
+  type        = number
+  default     = 5
+  description = "Maximum number of worker nodes per zone for autoscaling"
 }
 
 variable "machine_type" {

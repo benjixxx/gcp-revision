@@ -1,0 +1,84 @@
+# ==============================================================================
+# ArgoCD Platform - Helm Values pour GKE (main-gke-cluster)
+# Package Helm Umbrella (dépendance argo-cd officielle)
+# ==============================================================================
+
+argo-cd:
+  # Installation automatique des CRDs ArgoCD
+  crds:
+    install: true
+
+  # Configuration Globale
+  global:
+    domain: "localhost:8080"
+
+  # Mode Haute Disponibilité désactivé (optimisé pour nœud e2-medium / dev)
+  redis-ha:
+    enabled: false
+
+  # ArgoCD Server (Interface Web UI et API gRPC/REST)
+  server:
+    replicas: 1
+    # Désactive le TLS interne pour un accès local ou reverse-proxy sans avertissement SSL
+    extraArgs:
+      - --insecure
+    service:
+      # Mode par défaut : ClusterIP (accès via port-forward 'kubectl port-forward svc/argocd-server 8080:80')
+      type: ClusterIP
+      # Pour exposer l'UI via une IP publique GCP Network Load Balancer, commentez la ligne ci-dessus et décommentez ci-dessous :
+      # type: LoadBalancer
+      # annotations:
+      #   cloud.google.com/load-balancer-type: "External"
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+  # ArgoCD Application Controller (Boucle de réconciliation GitOps)
+  controller:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+  # ArgoCD Repo Server (Clone Git & Génération des Manifestes / Kustomize / Helm)
+  repoServer:
+    replicas: 1
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 300m
+        memory: 512Mi
+
+  # Redis (Cache interne)
+  redis:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+  # ApplicationSet Controller
+  applicationSet:
+    enabled: true
+    replicas: 1
+
+  # Notification Controller (désactivé par défaut pour économiser la RAM sur e2-medium)
+  notifications:
+    enabled: false
+
+  # Dex Server (désactivé par défaut si SSO OAuth non utilisé)
+  dex:
+    enabled: false
+

@@ -40,6 +40,21 @@ resource "google_compute_router_nat" "nat" {
   region                             = var.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+  
+  # 1. Allocation dynamique des ports (augmente automatiquement sous charge)
+  enable_dynamic_port_allocation = true
+  min_ports_per_vm               = 128
+  max_ports_per_vm               = 2048
+  
+  # 2. Réduire le délai TIME_WAIT pour libérer les ports fermés plus rapidement
+  tcp_transitory_idle_timeout_sec = 15
+  tcp_time_wait_timeout_sec       = 30
+  
+  # 3. Journaliser les erreurs de ports pour le diagnostic dans Cloud Logging
+  log_config {
+    enable = true
+    filter = "ERRORS_ONLY"
+  }
 }
 
 resource "google_compute_firewall" "allow_internal" {

@@ -139,6 +139,18 @@ variable "gke_node_count" {
   description = "Number of worker nodes per zone in the GKE node pool"
 }
 
+variable "gke_min_node_count" {
+  type        = number
+  default     = 1
+  description = "Minimum number of worker nodes per zone in the GKE node pool"
+}
+
+variable "gke_max_node_count" {
+  type        = number
+  default     = 5
+  description = "Maximum number of worker nodes per zone in the GKE node pool"
+}
+
 variable "gke_machine_type" {
   type        = string
   default     = "e2-medium"
@@ -209,4 +221,86 @@ variable "bigquery_clustering_fields" {
   type        = list(string)
   default     = ["customer_id", "status"]
   description = "Columns used for clustering (up to 4)"
+}
+
+# ==============================================================================
+# Cloud SQL (PostgreSQL) Variables
+# ==============================================================================
+variable "db_instance_name" {
+  type        = string
+  default     = "quality-air-db"
+  description = "Base instance name for the PostgreSQL Cloud SQL database"
+}
+
+variable "db_version" {
+  type        = string
+  default     = "POSTGRES_15"
+  description = "Database engine version for PostgreSQL"
+}
+
+variable "db_tier" {
+  type        = string
+  default     = "db-f1-micro"
+  description = "Cloud SQL machine tier (e.g. db-f1-micro for dev, db-custom-1-3840 for prod)"
+}
+
+variable "db_disk_size_gb" {
+  type        = number
+  default     = 10
+  description = "Disk size in GB for the Cloud SQL instance"
+}
+
+variable "db_disk_type" {
+  type        = string
+  default     = "PD_SSD"
+  description = "Storage type for database: PD_SSD or PD_HDD"
+}
+
+variable "db_availability_type" {
+  type        = string
+  default     = "ZONAL"
+  description = "High availability configuration: ZONAL or REGIONAL"
+}
+
+variable "db_deletion_protection" {
+  type        = bool
+  default     = false
+  description = "Prevent accidental deletion via Terraform"
+}
+
+variable "db_enable_backup" {
+  type        = bool
+  default     = false
+  description = "Enable automated daily backups"
+}
+
+variable "db_enable_public_ip" {
+  type        = bool
+  default     = true
+  description = "Enable public IP access to the database"
+}
+
+variable "db_enable_private_ip" {
+  type        = bool
+  default     = false
+  description = "Enable private VPC network access for Cloud SQL"
+}
+
+variable "db_name" {
+  type        = string
+  default     = "quality_air_db"
+  description = "Name of the initial application PostgreSQL database"
+}
+
+variable "db_user" {
+  type        = string
+  default     = "quality_air_admin"
+  description = "Initial PostgreSQL database username"
+}
+
+variable "db_password" {
+  type        = string
+  default     = "QualityAir2026!ChangeMe"
+  sensitive   = true
+  description = "Initial PostgreSQL user password"
 }

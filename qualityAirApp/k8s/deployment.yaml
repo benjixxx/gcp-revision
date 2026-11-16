@@ -40,27 +40,27 @@ spec:
           value: "quality-air-app"
         resources:
           requests:
-            cpu: "25m"       # Ultra-low CPU: triggers HPA autoscaling at just 5m CPU!
-            memory: "64Mi"   # Minimal memory allocation for Gunicorn
+            cpu: "50m"       # Base request for Gunicorn + OpenTelemetry
+            memory: "128Mi"  # Sufficient memory for multi-worker Python runtime
           limits:
-            cpu: "50m"       # Heavily constrained CPU ceiling (0.05 vCPU)
-            memory: "128Mi"  # Tight memory limit
+            cpu: "300m"      # Higher ceiling to prevent CPU throttling on TLS/HTTPS
+            memory: "256Mi"  # Prevents OOMKilled caused by OpenTelemetry overhead
         # Readiness Probe: Traffic won't be sent to this pod until /health returns HTTP 200
         readinessProbe:
           httpGet:
             path: /health
             port: 8080
-          initialDelaySeconds: 5
+          initialDelaySeconds: 10
           periodSeconds: 10
-          timeoutSeconds: 3
+          timeoutSeconds: 5
           failureThreshold: 3
-        # Liveness Probe: Kills and restarts the pod if it hangs or becomes unresponsive
+        # Liveness Probe: Tolerant to traffic bursts to prevent CrashLoopBackOff kills
         livenessProbe:
           httpGet:
             path: /health
             port: 8080
-          initialDelaySeconds: 15
+          initialDelaySeconds: 20
           periodSeconds: 20
-          timeoutSeconds: 3
-          failureThreshold: 3
+          timeoutSeconds: 5
+          failureThreshold: 5
 

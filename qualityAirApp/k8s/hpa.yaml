@@ -16,13 +16,29 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    target:
+      type: Utilization
+      averageUtilization: 60
+  - type: Resource
+    resource:
+      name: memory
+    target:
+      type: Utilization
+      averageUtilization: 80
   behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 2
+        periodSeconds: 15
+      selectPolicy: Max
     scaleDown:
-      # Default is 300s (5 minutes). We lower to 30s so pods downscale rapidly when traffic stops!
-      stabilizationWindowSeconds: 30
+      # 60s stabilization window prevents flapping during traffic bursts
+      stabilizationWindowSeconds: 60
       policies:
       - type: Percent
         value: 100

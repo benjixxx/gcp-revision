@@ -1,0 +1,70 @@
+# ==============================================================================
+# ArgoCD Platform - Standalone Helm Values pour le Chart officiel 'argo/argo-cd'
+# Utilisé avec : helm install argocd argo/argo-cd -n argocd -f values-standalone.yaml
+# ==============================================================================
+
+crds:
+  install: true
+
+global:
+  domain: "localhost:8080"
+
+redis-ha:
+  enabled: false
+
+server:
+  replicas: 1
+  extraArgs:
+    - --insecure
+  service:
+    type: ClusterIP
+    # Pour un Load Balancer externe GCP :
+    # type: LoadBalancer
+    # annotations:
+    #   cloud.google.com/load-balancer-type: "External"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+controller:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+repoServer:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
+
+redis:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+applicationSet:
+  enabled: true
+  replicas: 1
+
+notifications:
+  enabled: false
+
+dex:
+  enabled: false

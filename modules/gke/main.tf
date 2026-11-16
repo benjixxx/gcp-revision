@@ -20,6 +20,10 @@ resource "google_container_cluster" "primary" {
     master_ipv4_cidr_block  = "172.16.0.0/28"
   }
 
+  cluster_autoscaling {
+    autoscaling_profile = "OPTIMIZE_UTILIZATION"
+  }
+
   deletion_protection = false
 
   resource_labels = {
@@ -28,10 +32,22 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_nodes" {
-  name       = "${var.cluster_name}-node-pool"
-  location   = var.zone
-  cluster    = google_container_cluster.primary.name
-  node_count = var.node_count
+  name               = "${var.cluster_name}-node-pool"
+  location           = var.zone
+  cluster            = google_container_cluster.primary.name
+  initial_node_count = var.min_node_count
+
+  autoscaling {
+    min_node_count  = var.min_node_count
+    max_node_count  = var.max_node_count
+    location_policy = "ANY"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      initial_node_count
+    ]
+  }
 
   node_config {
     machine_type    = var.machine_type
