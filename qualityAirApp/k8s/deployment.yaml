@@ -28,7 +28,7 @@ spec:
       containers:
       - name: quality-air-app
         # Update this tag when releasing new versions (e.g., :1.0.0, :1.0.1, or Git short SHA)
-        image: europe-west1-docker.pkg.dev/myproject-329912/quality-air-repo/quality-air-app:1.0.0
+        image: europe-west1-docker.pkg.dev/myproject-329912/quality-air-repo/quality-air-app:1.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

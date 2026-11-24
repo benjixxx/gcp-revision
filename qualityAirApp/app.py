@@ -111,32 +111,36 @@ def log_json_request(response):
 
     return response
 
-# Preset featured cities (Nairobi and New York prominently included)
+# Preset featured cities displayed on the dashboard
 DEFAULT_CITIES = [
-    {"name": "Nairobi", "country": "Kenya", "lat": -1.286389, "lon": 36.817223},
-    {"name": "New York", "country": "United States", "lat": 40.7128, "lon": -74.0060},
-    {"name": "Paris", "country": "France", "lat": 48.8566, "lon": 2.3522},
-    {"name": "London", "country": "United Kingdom", "lat": 51.5074, "lon": -0.1278},
+    {"name": "Dakar", "country": "Senegal", "lat": 14.7167, "lon": -17.4677},
+    {"name": "Montreal", "country": "Canada", "lat": 45.5017, "lon": -73.5673},
     {"name": "Tokyo", "country": "Japan", "lat": 35.6762, "lon": 139.6503},
-    {"name": "Berlin", "country": "Germany", "lat": 52.5200, "lon": 13.4050},
-    {"name": "Madrid", "country": "Spain", "lat": 40.4168, "lon": -3.7038},
-    {"name": "Rome", "country": "Italy", "lat": 41.9028, "lon": 12.4964},
+    {"name": "Sydney", "country": "Australia", "lat": -33.8688, "lon": 151.2093},
+    {"name": "Rio de Janeiro", "country": "Brazil", "lat": -22.9068, "lon": -43.1729},
+    {"name": "Singapore", "country": "Singapore", "lat": 1.3521, "lon": 103.8198},
+    {"name": "Dubai", "country": "United Arab Emirates", "lat": 25.2048, "lon": 55.2708},
+    {"name": "Stockholm", "country": "Sweden", "lat": 59.3293, "lon": 18.0686},
 ]
 
 # Quick coordinates lookup for instant resolution
 CITY_COORDINATES = {
-    "nairobi": {"name": "Nairobi", "country": "Kenya", "lat": -1.286389, "lon": 36.817223},
-    "new york": {"name": "New York", "country": "United States", "lat": 40.7128, "lon": -74.0060},
-    "paris": {"name": "Paris", "country": "France", "lat": 48.8566, "lon": 2.3522},
-    "london": {"name": "London", "country": "United Kingdom", "lat": 51.5074, "lon": -0.1278},
+    "dakar": {"name": "Dakar", "country": "Senegal", "lat": 14.7167, "lon": -17.4677},
+    "montreal": {"name": "Montreal", "country": "Canada", "lat": 45.5017, "lon": -73.5673},
     "tokyo": {"name": "Tokyo", "country": "Japan", "lat": 35.6762, "lon": 139.6503},
+    "sydney": {"name": "Sydney", "country": "Australia", "lat": -33.8688, "lon": 151.2093},
+    "rio de janeiro": {"name": "Rio de Janeiro", "country": "Brazil", "lat": -22.9068, "lon": -43.1729},
+    "singapore": {"name": "Singapore", "country": "Singapore", "lat": 1.3521, "lon": 103.8198},
+    "dubai": {"name": "Dubai", "country": "United Arab Emirates", "lat": 25.2048, "lon": 55.2708},
+    "stockholm": {"name": "Stockholm", "country": "Sweden", "lat": 59.3293, "lon": 18.0686},
+    "paris": {"name": "Paris", "country": "France", "lat": 48.8566, "lon": 2.3522},
+    "new york": {"name": "New York", "country": "United States", "lat": 40.7128, "lon": -74.0060},
+    "nairobi": {"name": "Nairobi", "country": "Kenya", "lat": -1.286389, "lon": 36.817223},
+    "london": {"name": "London", "country": "United Kingdom", "lat": 51.5074, "lon": -0.1278},
     "berlin": {"name": "Berlin", "country": "Germany", "lat": 52.5200, "lon": 13.4050},
     "madrid": {"name": "Madrid", "country": "Spain", "lat": 40.4168, "lon": -3.7038},
     "rome": {"name": "Rome", "country": "Italy", "lat": 41.9028, "lon": 12.4964},
-    "sydney": {"name": "Sydney", "country": "Australia", "lat": -33.8688, "lon": 151.2093},
-    "dakar": {"name": "Dakar", "country": "Senegal", "lat": 14.7167, "lon": -17.4677},
     "cairo": {"name": "Cairo", "country": "Egypt", "lat": 30.0444, "lon": 31.2357},
-    "dubai": {"name": "Dubai", "country": "United Arab Emirates", "lat": 25.2048, "lon": 55.2708},
     "beijing": {"name": "Beijing", "country": "China", "lat": 39.9042, "lon": 116.4074},
     "mumbai": {"name": "Mumbai", "country": "India", "lat": 19.0760, "lon": 72.8777},
     "sao paulo": {"name": "São Paulo", "country": "Brazil", "lat": -23.5505, "lon": -46.6333},
