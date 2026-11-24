@@ -158,7 +158,84 @@ A **Log Sink** exports logs from the Log Router to external storage or tools:
 
 ---
 
-### 3.2 Log-Based Metrics
+### 3.2 Cloud Logging Query Language (LQL) Reference
+
+The **Logging Query Language (LQL)** is Google Cloud's dedicated filter language used in Logs Explorer, Log Sinks, Log-based Metrics, and the `gcloud logging read` CLI.
+
+#### 1. Core LogEntry Anatomy
+Every log entry in GCP adheres to a structured JSON schema:
+* `resource.type`: GCP target service type (e.g. `k8s_container`, `gce_instance`, `cloud_run_revision`, `http_load_balancer`, `audited_resource`).
+* `resource.labels.*`: Resource-specific dimensions (e.g. `namespace_name`, `pod_name`, `container_name`, `instance_id`, `zone`).
+* `severity`: Log level: `DEFAULT` < `DEBUG` < `INFO` < `NOTICE` < `WARNING` < `ERROR` < `CRITICAL` < `ALERT` < `EMERGENCY`.
+* `timestamp`: RFC 3339 / ISO-8601 UTC timestamp (e.g. `timestamp >= "2026-11-24T00:00:00Z"`).
+* `logName`: Full URI of the log stream (e.g. `projects/PROJECT_ID/logs/syslog`, `projects/PROJECT_ID/logs/cloudaudit.googleapis.com%2Factivity`).
+* `textPayload`: Raw unformatted string message.
+* `jsonPayload.*`: Parsed JSON fields from structured logging (e.g. `jsonPayload.status_code`, `jsonPayload.latency_ms`).
+* `protoPayload.*`: Protobuf payload for GCP Audit Logs (e.g. `protoPayload.methodName`, `protoPayload.authenticationInfo.principalEmail`, `protoPayload.status.code`).
+* `httpRequest.*`: HTTP request metadata for ingress/web (e.g. `httpRequest.status`, `httpRequest.latency`, `httpRequest.requestMethod`).
+* `trace`: Correlated distributed trace ID (Cloud Trace / OpenTelemetry).
+
+#### 2. LQL Operators & Syntax
+| Operator | Function | Example |
+| :--- | :--- | :--- |
+| `=`, `!=` | Strict equality / inequality | `resource.type = "k8s_container"` |
+| `>`, `>=`, `<`, `<=` | Numeric comparison or severity level comparison | `severity >= ERROR AND httpRequest.status >= 500` |
+| `:` | Substring match (case-insensitive) | `textPayload: "connection refused"` |
+| `=~`, `!~` | Regular Expression match / negative match | `jsonPayload.status =~ "^(500|502|503)$"` |
+| `AND` / (space) | Logical conjunction (default separator) | `resource.type="gce_instance" severity>=ERROR` |
+| `OR` | Logical disjunction | `severity=ERROR OR httpRequest.status>=500` |
+| `NOT` / `-` | Negation operator | `NOT severity=DEBUG` or `-resource.type="gce_instance"` |
+| `SEARCH("...")` | Full-text global search across all log fields | `SEARCH("OutOfMemory")` |
+
+#### 3. Top SRE & Exam Filter Recipes
+```sql
+-- 1. GKE Container Errors in specific namespace
+resource.type = "k8s_container"
+resource.labels.namespace_name = "quality-air"
+severity >= ERROR
+
+-- 2. Cloud Run 5xx Server Failures
+resource.type = "cloud_run_revision"
+httpRequest.status >= 500
+
+-- 3. Cloud Audit Logs: Resource Deletion Tracking (Who deleted what?)
+logName =~ "cloudaudit.googleapis.com%2Factivity"
+protoPayload.methodName =~ "delete"
+protoPayload.status.code = 0
+
+-- 4. Cloud Audit Logs: IAM Permission Denied (HTTP 403 / code 7)
+logName =~ "cloudaudit.googleapis.com"
+protoPayload.status.code = 7
+
+-- 5. Cloud Load Balancer: High Latency (> 2 seconds)
+resource.type = "http_load_balancer"
+httpRequest.latency > "2s"
+
+-- 6. Compute Engine: OOM (Out Of Memory) Detection
+resource.type = "gce_instance"
+(textPayload =~ "(?i)oom-killer" OR textPayload =~ "(?i)out of memory")
+
+-- 7. Cost Exclusion Filter (drop debug & healthchecks)
+severity = DEBUG OR (httpRequest.status = 200 AND httpRequest.requestUrl =~ "^/healthz")
+```
+
+---
+
+### 3.3 Essential `gcloud logging` CLI Commands
+
+| Operational Goal | Command |
+| :--- | :--- |
+| **Query Historical Logs** | `gcloud logging read 'resource.type="k8s_container" AND severity>=ERROR' --limit=20 --format="table(timestamp,severity,textPayload)"` |
+| **Real-time Live Tail** | `gcloud logging tail 'resource.type="cloud_run_revision"' --format="table(timestamp,httpRequest.status,httpRequest.requestUrl)"` |
+| **List Available Log Streams** | `gcloud logging logs list` |
+| **Create Sink to BigQuery** | `gcloud logging sinks create k8s-sink bigquery.googleapis.com/projects/MY_PROJECT/datasets/k8s_logs --log-filter='resource.type="k8s_container"'` |
+| **Create Sink to Cloud Storage** | `gcloud logging sinks create archive-sink storage.googleapis.com/my-archive-bucket --log-filter='severity>=WARNING'` |
+| **Create Log-based Metric** | `gcloud logging metrics create error-500-count --description="5xx errors" --log-filter='httpRequest.status>=500'` |
+| **List Log Buckets & Retention** | `gcloud logging buckets list --location=global` |
+
+---
+
+### 3.4 Log-Based Metrics
 
 When you want to alert on a specific log event (e.g., alert when an application throws `HTTP 500` or a database connection error):
 
@@ -169,7 +246,7 @@ When you want to alert on a specific log event (e.g., alert when an application 
 
 ---
 
-### 3.3 Cloud Monitoring Architecture & Alerting
+### 3.5 Cloud Monitoring Architecture & Alerting
 
 #### 1. Core Concepts
 - **Metrics Scope (formerly Workspace):** Can monitor up to **375 GCP projects** from a single central host project.
@@ -181,7 +258,7 @@ When you want to alert on a specific log event (e.g., alert when an application 
 
 ---
 
-### 3.4 Practice Exam Scenarios (ACE & PCA Focus)
+### 3.6 Practice Exam Scenarios (ACE & PCA Focus)
 
 #### Question 1 (Log Export & Retention)
 > Your company is required by financial regulators to store all Kubernetes container logs and audit logs for 5 years. Logs older than 30 days are rarely accessed. How should you configure your environment with the lowest possible cost?

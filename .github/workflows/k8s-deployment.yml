@@ -14,7 +14,7 @@ on:
       image_tag:
         description: 'Docker image tag to pull from Artifact Registry'
         required: false
-        default: 'latest'
+        default: '1.0.0'
 
 env:
   PROJECT_ID: myproject-329912
@@ -71,8 +71,9 @@ jobs:
       # 7. Set Deployment to pull image from Artifact Registry & trigger rolling restart
       - name: Deploy Image from Artifact Registry
         run: |
+          APP_VER=$(cat qualityAirApp/VERSION 2>/dev/null | tr -d '[:space:]' || echo "1.0.0")
           TAG="${{ inputs.image_tag }}"
-          TAG="${TAG:-latest}"
+          TAG="${TAG:-$APP_VER}"
           IMAGE_URI="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_REPO }}/${{ env.IMAGE_NAME }}:${TAG}"
 
           echo "Configuring deployment to use Artifact Registry image: ${IMAGE_URI}"

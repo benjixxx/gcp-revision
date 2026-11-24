@@ -6,6 +6,7 @@ on:
       - main
       - master
     paths:
+      - 'qualityAirApp/VERSION'
       - 'qualityAirApp/app.py'
       - 'qualityAirApp/templates/**'
       - 'qualityAirApp/static/**'
@@ -51,26 +52,48 @@ jobs:
         run: |
           gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
 
+      # Compute Dynamic Semantic Version
+      - name: Compute Semantic Version
+        id: semver
+        run: |
+          BASE_VERSION=$(cat qualityAirApp/VERSION 2>/dev/null | tr -d '[:space:]' || echo "1.0.0")
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE_VERSION"
+          
+          # Auto-increment patch based on GitHub Run Number:
+          # Run 1 produces 1.0.0, Run 2 produces 1.0.1, etc.
+          RUN_INDEX=$((${GITHUB_RUN_NUMBER:-1} - 1))
+          AUTO_PATCH=$((PATCH + RUN_INDEX))
+          VERSION="${MAJOR}.${MINOR}.${AUTO_PATCH}"
+          SHORT_SHA=$(echo "${GITHUB_SHA:-latest}" | cut -c1-7)
+
+          echo "Base Version: ${BASE_VERSION}"
+          echo "Auto-incremented Version: ${VERSION}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "short_sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
+
       # Build and Push Docker Image
       - name: Build and Push Docker Image
         working-directory: ./qualityAirApp
         run: |
+          VERSION="${{ steps.semver.outputs.version }}"
+          SHORT_SHA="${{ steps.semver.outputs.short_sha }}"
           IMAGE_URI="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_REPO }}/${{ env.IMAGE_NAME }}"
-          TAG="${{ github.sha }}"
-          SHORT_SHA=$(echo "${TAG}" | cut -c1-7)
 
-          echo "Building image: ${IMAGE_URI}:${SHORT_SHA}"
+          echo "Building image with Version: ${VERSION} (${IMAGE_URI}:${VERSION})"
           docker build \
+            --build-arg APP_VERSION="${VERSION}" \
+            -t "${IMAGE_URI}:${VERSION}" \
             -t "${IMAGE_URI}:${SHORT_SHA}" \
             -t "${IMAGE_URI}:latest" \
             .
 
-          echo "Pushing image tags to Artifact Registry..."
+          echo "Pushing image tags to Artifact Registry (${VERSION}, ${SHORT_SHA}, latest)..."
+          docker push "${IMAGE_URI}:${VERSION}"
           docker push "${IMAGE_URI}:${SHORT_SHA}"
           docker push "${IMAGE_URI}:latest"
 
           echo "=== Successfully pushed container image ==="
-          echo "Image URI: ${IMAGE_URI}:${SHORT_SHA}"
+          echo "Image Version URI: ${IMAGE_URI}:${VERSION}"
 
       # Sync Application Files to Cloud Storage Bucket (for Compute Engine VMs & backups)
       - name: Sync Application Files to Cloud Storage

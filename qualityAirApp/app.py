@@ -16,6 +16,22 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 
 POD_NAME = socket.gethostname()
 
+def load_app_version():
+    """Retrieve app version from env var, VERSION file, or fallback to 1.0.0."""
+    env_ver = os.environ.get("APP_VERSION")
+    if env_ver:
+        return env_ver.strip()
+    version_file = os.path.join(os.path.dirname(__file__), "VERSION")
+    if os.path.exists(version_file):
+        try:
+            with open(version_file, "r") as f:
+                return f.read().strip()
+        except Exception:
+            pass
+    return "1.0.0"
+
+APP_VERSION = load_app_version()
+
 # Persistent HTTP session with connection pooling and retries
 http_session = requests.Session()
 _retries = Retry(total=2, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504])
@@ -329,7 +345,8 @@ def index():
     return render_template(
         "index.html",
         cities=cities_data,
-        last_updated=last_updated
+        last_updated=last_updated,
+        version=APP_VERSION
     )
 
 @app.route("/api/city")
@@ -351,6 +368,7 @@ def api_air_quality():
     """REST endpoint returning full JSON air quality data for featured cities."""
     cities_data = fetch_all_default_cities()
     return jsonify({
+        "version": APP_VERSION,
         "cities": cities_data,
         "fetched_at": datetime.now(timezone.utc).isoformat()
     }), 200
@@ -362,6 +380,7 @@ def health():
     return jsonify({
         "status": "healthy",
         "service": "qualityAirApp",
+        "version": APP_VERSION,
         "timestamp": datetime.now(timezone.utc).isoformat()
     }), 200
 

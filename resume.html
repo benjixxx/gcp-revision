@@ -440,6 +440,19 @@
       color: #b31412;
     }
 
+    pre, .code-box {
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 12.5px;
+      overflow-x: auto;
+      line-height: 1.55;
+      margin: 10px 0;
+      border: 1px solid #334155;
+    }
+
     /* =========================================================
        RICH VISUAL DIAGRAMS (100% CSS/SVG)
     ========================================================= */
@@ -1620,6 +1633,198 @@
               </div>
 
             </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h3 class="sub-title">7.3 Cloud Logging Query Language (LQL) — Synthèse &amp; Syntaxe Complète</h3>
+          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 14px;">
+            Le <strong>Logging Query Language (LQL)</strong> est le langage standard utilisé dans le <em>Logs Explorer</em> de Cloud Logging, dans les filtres d'exportation (<em>Log Sinks</em>), les <em>Log-based Metrics</em>, et les commandes CLI <code>gcloud logging read</code>.
+          </p>
+
+          <!-- Grille des composants d'un LogEntry -->
+          <div class="grid-2" style="margin-bottom: 16px;">
+            <div class="grid-card">
+              <h4>🎯 Structure Clé d'un LogEntry GCP</h4>
+              <ul style="font-size: 12.5px; line-height: 1.6;">
+                <li><code>resource.type</code> : Type de ressource (<code>k8s_container</code>, <code>gce_instance</code>, <code>cloud_run_revision</code>, <code>http_load_balancer</code>, <code>audited_resource</code>).</li>
+                <li><code>resource.labels.*</code> : Métadonnées cibles (ex: <code>namespace_name</code>, <code>pod_name</code>, <code>instance_id</code>, <code>zone</code>).</li>
+                <li><code>severity</code> : Gravité (<code>DEFAULT</code>, <code>DEBUG</code>, <code>INFO</code>, <code>NOTICE</code>, <code>WARNING</code>, <code>ERROR</code>, <code>CRITICAL</code>, <code>ALERT</code>, <code>EMERGENCY</code>).</li>
+                <li><code>timestamp</code> : Horodatage ISO-8601 (ex: <code>&gt;= "2026-11-24T00:00:00Z"</code>).</li>
+                <li><code>logName</code> : URI du flux de log (ex: <code>projects/PROJECT_ID/logs/syslog</code> ou audit).</li>
+              </ul>
+            </div>
+            <div class="grid-card">
+              <h4>📦 Payloads &amp; Métadonnées Avancées</h4>
+              <ul style="font-size: 12.5px; line-height: 1.6;">
+                <li><code>jsonPayload.*</code> : Champs JSON structurés (ex: <code>jsonPayload.status_code</code>, <code>jsonPayload.latency_ms</code>).</li>
+                <li><code>textPayload</code> : Ligne de log brute non structurée (recherche texte ou regex).</li>
+                <li><code>protoPayload.*</code> : Audit Logs Protobuf (ex: <code>protoPayload.methodName</code>, <code>protoPayload.authenticationInfo.principalEmail</code>).</li>
+                <li><code>httpRequest.*</code> : Métriques HTTP (ex: <code>httpRequest.status</code>, <code>httpRequest.latency</code>, <code>httpRequest.requestMethod</code>).</li>
+                <li><code>trace</code> : Corrélation avec Cloud Trace / OpenTelemetry (ID de trace distribuée).</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Tableau des Opérateurs LQL -->
+          <div class="table-container" style="margin-bottom: 16px;">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 22%;">Opérateur LQL</th>
+                  <th style="width: 38%;">Description &amp; Comportement</th>
+                  <th style="width: 40%;">Exemple d'Utilisation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>=</code> &nbsp; <code>!=</code></td>
+                  <td>Égalité / Inégalité stricte (chaîne, nombre ou booléen).</td>
+                  <td><code>resource.type = "k8s_container"</code></td>
+                </tr>
+                <tr>
+                  <td><code>&gt;</code> &nbsp; <code>&gt;=</code> &nbsp; <code>&lt;</code> &nbsp; <code>&lt;=</code></td>
+                  <td>Comparaison numérique ou ordre de sévérité (<code>ERROR &gt; WARNING</code>).</td>
+                  <td><code>severity &gt;= WARNING AND httpRequest.status &gt;= 500</code></td>
+                </tr>
+                <tr>
+                  <td><code>:</code> (Deux-points)</td>
+                  <td>Recherche de sous-chaîne (Substring match) insensible à la casse.</td>
+                  <td><code>textPayload : "Connection refused"</code></td>
+                </tr>
+                <tr>
+                  <td><code>=~</code> &nbsp; <code>!~</code></td>
+                  <td>Correspondance par <strong>Expression Régulière (RegEx)</strong> (match / non-match).</td>
+                  <td><code>jsonPayload.error =~ "^(500|502|503)$"</code></td>
+                </tr>
+                <tr>
+                  <td><code>AND</code> / espace</td>
+                  <td>Conjonction logique. Les termes séparés par un espace sont par défaut en <code>AND</code>.</td>
+                  <td><code>resource.type="gce_instance" severity&gt;=ERROR</code></td>
+                </tr>
+                <tr>
+                  <td><code>OR</code></td>
+                  <td>Disjonction logique. L'une des conditions doit être vraie.</td>
+                  <td><code>severity=ERROR OR httpRequest.status&gt;=500</code></td>
+                </tr>
+                <tr>
+                  <td><code>NOT</code> / <code>-</code></td>
+                  <td>Négation logique ou préfixe d'exclusion.</td>
+                  <td><code>NOT severity=DEBUG</code> ou <code>-resource.type="gce_instance"</code></td>
+                </tr>
+                <tr>
+                  <td><code>SEARCH("...")</code></td>
+                  <td>Recherche plein-texte globale à travers tous les champs du log.</td>
+                  <td><code>SEARCH("OutOfMemory")</code> ou <code>SEARCH(jsonPayload, "timeout")</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Top Requêtes LQL Incontournables -->
+          <h4 style="font-family: 'Google Sans', sans-serif; font-size: 14px; margin-top: 18px; margin-bottom: 8px; color: #202124;">
+            📋 Top 6 Requêtes Types LQL (Pratiques SRE &amp; Examen)
+          </h4>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 28%;">Cas d'Usage</th>
+                  <th style="width: 47%;">Requête LQL</th>
+                  <th style="width: 25%;">Explication</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>GKE Container Errors</strong></td>
+                  <td><code>resource.type="k8s_container"<br>resource.labels.namespace_name="quality-air"<br>severity &gt;= ERROR</code></td>
+                  <td>Filtre les erreurs applicatives uniquement dans le namespace ciblé.</td>
+                </tr>
+                <tr>
+                  <td><strong>Cloud Run / HTTP 5xx</strong></td>
+                  <td><code>resource.type="cloud_run_revision"<br>httpRequest.status &gt;= 500</code></td>
+                  <td>Isole toutes les requêtes en échec 500/502/503/504 servies par Cloud Run.</td>
+                </tr>
+                <tr>
+                  <td><strong>Audit : Qui a supprimé une ressource ?</strong></td>
+                  <td><code>logName =~ "cloudaudit.googleapis.com%2Factivity"<br>protoPayload.methodName =~ "delete"<br>protoPayload.status.code = 0</code></td>
+                  <td>Trace l'auteur (<code>principalEmail</code>) d'une suppression validée par l'API.</td>
+                </tr>
+                <tr>
+                  <td><strong>Audit : Refus d'accès IAM (403 Forbidden)</strong></td>
+                  <td><code>logName =~ "cloudaudit.googleapis.com"<br>protoPayload.status.code = 7</code></td>
+                  <td>Le code 7 correspond à <code>PERMISSION_DENIED</code> dans l'API Google Cloud.</td>
+                </tr>
+                <tr>
+                  <td><strong>Latence HTTP &gt; 2s (Load Balancer)</strong></td>
+                  <td><code>resource.type="http_load_balancer"<br>httpRequest.latency &gt; "2s"</code></td>
+                  <td>Détecte les goulets d'étranglement réseau ou les services backend lents.</td>
+                </tr>
+                <tr>
+                  <td><strong>Filtre d'Exclusion (Cost Optimization)</strong></td>
+                  <td><code>severity=DEBUG OR (httpRequest.status=200 AND httpRequest.requestUrl=~"^/healthz")</code></td>
+                  <td>Exclut les healthchecks réussis et logs debug pour réduire les coûts d'ingestion.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert-box alert-tip" style="margin-top: 14px;">
+            <div class="alert-icon">⚡</div>
+            <div class="alert-text">
+              <strong>Astuce Examen &amp; Production :</strong> Le bucket <code>_Required</code> ingère obligatoirement les <em>Admin Activity Audit Logs</em> gratuitement pendant 400 jours. Pour exporter les logs vers BigQuery ou Cloud Storage, le filtre du <strong>Log Sink</strong> utilise exactement cette syntaxe LQL.
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h3 class="sub-title">7.4 Commandes CLI <code>gcloud logging</code> — Cheat Sheet</h3>
+          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px;">
+            Les commandes terminal essentielles pour inspecter, streamer en direct (tail) et automatiser la gestion des logs via le Cloud SDK.
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Action</th>
+                  <th style="width: 50%;">Commande <code>gcloud logging</code></th>
+                  <th style="width: 25%;">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Lire les logs avec filtre</strong></td>
+                  <td><code>gcloud logging read 'resource.type="k8s_container" AND severity&gt;=ERROR' --limit=20 --format="table(timestamp,severity,textPayload)"</code></td>
+                  <td>Interroge les logs historiques correspondant au filtre LQL avec un formatage clair.</td>
+                </tr>
+                <tr>
+                  <td><strong>Streaming en direct (Live Tail)</strong></td>
+                  <td><code>gcloud logging tail 'resource.type="cloud_run_revision"' --format="table(timestamp,httpRequest.status,httpRequest.requestUrl)"</code></td>
+                  <td>Flux continu temps réel dans le terminal (équivalent de <code>tail -f</code>).</td>
+                </tr>
+                <tr>
+                  <td><strong>Lister les flux de logs</strong></td>
+                  <td><code>gcloud logging logs list</code></td>
+                  <td>Affiche tous les identifiants de journaux disponibles dans le projet courant.</td>
+                </tr>
+                <tr>
+                  <td><strong>Créer un Log Sink (BigQuery)</strong></td>
+                  <td><code>gcloud logging sinks create k8s-sink bigquery.googleapis.com/projects/MY_PROJECT/datasets/k8s_logs --log-filter='resource.type="k8s_container"'</code></td>
+                  <td>Exporte en temps réel les logs filtrés vers une table partitionnée BigQuery.</td>
+                </tr>
+                <tr>
+                  <td><strong>Créer une métrique basée sur les logs</strong></td>
+                  <td><code>gcloud logging metrics create error-500-count --description="5xx errors" --log-filter='httpRequest.status&gt;=500'</code></td>
+                  <td>Crée une métrique compteur utilisable dans les alertes Cloud Monitoring.</td>
+                </tr>
+                <tr>
+                  <td><strong>Vérifier les Log Buckets</strong></td>
+                  <td><code>gcloud logging buckets list --location=global</code></td>
+                  <td>Affiche les buckets <code>_Required</code> et <code>_Default</code> avec leur période de rétention.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 

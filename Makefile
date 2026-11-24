@@ -16,7 +16,8 @@ VAR_FILE := ./gcp.tfvars
         plan-artifactory apply-artifactory destroy-artifactory \
         plan-ops apply-ops destroy-ops \
         plan-sql apply-sql destroy-sql \
-        connect-gke deploy-argocd argocd-password argocd-ui destroy-argocd
+        connect-gke deploy-argocd argocd-password argocd-ui destroy-argocd \
+        bump-version bump-minor bump-major version-get build-quality-air push-quality-air
 
 # ------------------------------------------------------------------------------
 # Help Menu
@@ -55,6 +56,14 @@ help:
 	@echo "Observability & Tracing (OpenTelemetry + Tempo + Grafana):"
 	@echo "  make deploy-monitoring    # Install cert-manager, OTel Operator, Tempo & Grafana"
 	@echo "  make grafana-ui           # Port-forward to Grafana UI (http://localhost:3000)"
+	@echo ""
+	@echo "QualityAirApp Versioning & Container Lifecycle:"
+	@echo "  make version-get          # Print current application version"
+	@echo "  make bump-version         # Increment patch version (e.g. 1.0.0 -> 1.0.1)"
+	@echo "  make bump-minor           # Increment minor version (e.g. 1.0.0 -> 1.1.0)"
+	@echo "  make bump-major           # Increment major version (e.g. 1.0.0 -> 2.0.0)"
+	@echo "  make build-quality-air    # Build docker image with current version"
+	@echo "  make push-quality-air     # Push docker image with current version to Artifact Registry"
 	@echo "=================================================================="
 
 # ------------------------------------------------------------------------------
@@ -224,4 +233,35 @@ deploy-monitoring:
 
 grafana-ui:
 	@bash ./openTelemetry/install-monitoring.sh ui
+
+# ------------------------------------------------------------------------------
+# QualityAirApp Versioning & Container Lifecycle
+# ------------------------------------------------------------------------------
+QA_IMAGE_REPO := europe-west1-docker.pkg.dev/myproject-329912/quality-air-repo/quality-air-app
+QA_VERSION    := $(shell cat qualityAirApp/VERSION 2>/dev/null || echo "1.0.0")
+
+version-get:
+	@echo "Current QualityAirApp version: $(QA_VERSION)"
+
+bump-version:
+	@bash ./qualityAirApp/bump_version.sh patch
+
+bump-minor:
+	@bash ./qualityAirApp/bump_version.sh minor
+
+bump-major:
+	@bash ./qualityAirApp/bump_version.sh major
+
+build-quality-air:
+	@echo "Building QualityAirApp container image with version $(QA_VERSION)..."
+	docker build \
+		--build-arg APP_VERSION=$(QA_VERSION) \
+		-t $(QA_IMAGE_REPO):$(QA_VERSION) \
+		-t $(QA_IMAGE_REPO):latest \
+		./qualityAirApp
+
+push-quality-air:
+	@echo "Pushing QualityAirApp container images ($(QA_VERSION) & latest) to Artifact Registry..."
+	docker push $(QA_IMAGE_REPO):$(QA_VERSION)
+	docker push $(QA_IMAGE_REPO):latest
 

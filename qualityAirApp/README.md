@@ -78,12 +78,43 @@ Ensure your VPC firewall rules allow ingress traffic on TCP port `8080` (especia
 
 ---
 
-## 🐳 Docker Deployment (Optional)
+## 🐳 Docker Deployment & Semantic Versioning
 
-Build and run locally or in Container-Optimized OS:
+The application uses **Semantic Versioning (SemVer)** (starting at `1.0.0`) instead of mutable tags like `:latest`.
+
+### 1. Version Source of Truth
+* The base version is managed in `qualityAirApp/VERSION` (initialized to `1.0.0`).
+* Python loads it automatically via `qualityAirApp/app.py` and displays it in the web UI header (`v1.0.0`), in `/health`, and `/api/air-quality`.
+* Can be overridden at runtime via the `APP_VERSION` environment variable.
+
+### 2. Automated Version Incrementation
+* **CI/CD Pipeline (GitHub Actions):** On every push to `main`, the workflow calculates the auto-incremented patch based on the build sequence (`1.0.0`, `1.0.1`, `1.0.2`...) and tags the container image accordingly.
+* **CLI / Makefile:** You can increment versions locally anytime:
+  ```bash
+  # Increment patch: 1.0.0 -> 1.0.1
+  make bump-version
+  # or ./bump_version.sh patch
+
+  # Increment minor: 1.0.0 -> 1.1.0
+  make bump-minor
+
+  # Increment major: 1.0.0 -> 2.0.0
+  make bump-major
+
+  # Set explicit version
+  ./bump_version.sh set 1.2.0
+  ```
+  *Bumping automatically synchronizes `qualityAirApp/VERSION`, `qualityAirApp/k8s/deployment.yaml`, and `qualityAirApp/k8s/kustomization.yaml`.*
+
+### 3. Build & Run Docker Image
 ```bash
-docker build -t quality-air-app .
-docker run -p 8080:8080 quality-air-app
+# Build locally with the current version
+make build-quality-air
+
+# Or using docker directly
+export VERSION=$(cat VERSION)
+docker build --build-arg APP_VERSION=${VERSION} -t quality-air-app:${VERSION} -t quality-air-app:latest .
+docker run -p 8080:8080 quality-air-app:${VERSION}
 ```
 
 ---

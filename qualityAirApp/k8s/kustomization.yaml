@@ -10,5 +10,5 @@ resources:
 
 images:
   - name: europe-west1-docker.pkg.dev/myproject-329912/quality-air-repo/quality-air-app
-    newTag: latest
+    newTag: "1.0.0"
 
