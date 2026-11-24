@@ -78,6 +78,8 @@ gcloud resource-manager liens delete LIEN_NAME
 
 ## 2. Serverless Compute: App Engine (Standard vs. Flexible)
 
+> 📖 **Fiche Complète & Cheatsheet Commandes :** Voir le guide dédié complet [APP_ENGINE_EXAM_CHEATSHEET.md](file:///Users/benjixxx/gcp-revision/APP_ENGINE_EXAM_CHEATSHEET.md).
+
 ### 2.1 Core Architectural Differences
 
 | Feature | Standard Environment | Flexible Environment |

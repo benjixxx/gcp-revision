@@ -265,3 +265,7 @@ push-quality-air:
 	docker push $(QA_IMAGE_REPO):$(QA_VERSION)
 	docker push $(QA_IMAGE_REPO):latest
 
+deploy-appengine:
+	@echo "Deploying QualityAirApp directly to App Engine Standard (without Docker)..."
+	cd qualityAirApp && gcloud app deploy app.yaml
+

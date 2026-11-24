@@ -1,0 +1,14 @@
+.gcloudignore
+.git
+.gitignore
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+Dockerfile
+.dockerignore
+k8s/
+ci/
+LOAD_TESTING.md
+load_generator.py
